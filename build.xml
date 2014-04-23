@@ -10,7 +10,7 @@
     <property name="build.dir" value="build"/>
     
     <!-- main targets -->
-    <target name="all" depends="json2xml"/>
+    <target name="all" depends="charDecl,eps2png"/>
     <target name="rebuild" depends="clean,all"/>
     
     <target name="clean-all">
@@ -66,18 +66,27 @@
         <unzip src="${build.dir}/bravura.zip" dest="${build.dir}"/>
     </target>
     
-    <target name="otf2svg" depends="init, download-smufl-font">
-        <description>Create svg shapes for every glyph</description>
-        <mkdir dir="${build.dir}/svg-glyphs"/>
-        <exec executable="${fontforge.cmd}" dir="${build.dir}/svg-glyphs">
+    <target name="otf2eps" depends="init, download-smufl-font">
+        <description>Create eps shapes for every glyph</description>
+        <mkdir dir="${build.dir}/eps-glyphs"/>
+        <exec executable="${fontforge.cmd}" dir="${build.dir}/eps-glyphs">
             <arg value="-lang=ff"/>
-            <arg line="-c 'Open(&quot;../otf/BravuraText.otf&quot;); SelectWorthOutputting(); Export(&quot;U+%U.svg&quot;);'"/>
+            <arg line="-c 'Open(&quot;../otf/BravuraText.otf&quot;); SelectWorthOutputting(); Export(&quot;%U.eps&quot;);'"/>
         </exec>
     </target>
     
-    <!--<target name="svg2png"></target>-->
+    <target name="eps2png" depends="init, otf2eps" unless="skip.images">
+        <!-- At present there is no better way of creating png images rather than going via eps?!?! -->
+        <description>Create png images from the eps files for every glyph</description>
+        <mkdir dir="resources/images"/>
+        <apply executable="${mogrify.cmd}" parallel="yes">
+            <arg line="-format png"/>
+            <fileset dir="${build.dir}/eps-glyphs" includes="E*.eps"/>
+        </apply>
+    </target>
     
-    <target name="charDecl" depends="init, json2xml">
+    <target name="charDecl" depends="init, json2xml" unless="skip.images">
+        <description>Merge SMuFL metadata to one TEI file</description>
         <xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${build.dir}/charDecl.xml">
             <param name="ranges" expression="${build.dir}/ranges.xml"/>
             <param name="classes" expression="${build.dir}/classes.xml"/>

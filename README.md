@@ -16,6 +16,7 @@ Depedencies
 * [Apache ANT](http://ant.apache.org)
 * [XML Shell](http://www.xmlsh.org/HomePage)
 * [Saxon](http://www.saxonica.com)
+* [ImageMagick](http://www.imagemagick.org)
 * [eXist-db](http://exist-db.org) (for the viewer)
 
 
