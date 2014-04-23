@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meta xmlns="http://exist-db.org/xquery/repo">
+    <description>SMuFL-Browser is a web based viewer for the Standard Music Font Layout specification.</description>
+    <author>Peter Stadler</author>
+    <website>https://github.com/Edirom/SMuFL-Browser</website>
+    <status>alpha</status>
+    <license>BSD 2-Clause and Creative Commons Attribution 3.0 Unported License (CC BY 3.0)</license>
+    <copyright>true</copyright>
+    <type>application</type>
+    <target>smufl-browser</target>
+    <prepare>pre-install.xql</prepare>
+    <finish/>
+</meta>

@@ -16,7 +16,10 @@
     <target name="clean-all">
         <description>Delete the whole build directory with all temporary files and eXist packages</description>
         <delete dir="${build.dir}"/>
-        <!--<delete file="expath-pkg.xml"/>-->
+        <delete dir="data"/>
+        <delete dir="resources/images"/>
+        <delete dir="resources/fonts"/>
+        <delete file="expath-pkg.xml"/>
     </target>
     
     <target name="clean">
@@ -24,7 +27,7 @@
         <delete includeemptydirs="true">
             <fileset dir="${build.dir}" includes="**/*" excludes="*.xar" defaultexcludes="false"/>
         </delete>
-        <!--<delete file="expath-pkg.xml"/>-->
+        <delete file="expath-pkg.xml"/>
     </target>
     
     <target name="init">
@@ -66,7 +69,7 @@
         <unzip src="${build.dir}/bravura.zip" dest="${build.dir}"/>
     </target>
     
-    <target name="otf2eps" depends="init, download-smufl-font">
+    <target name="otf2eps" depends="init, download-smufl-font" unless="skip.images">
         <description>Create eps shapes for every glyph</description>
         <mkdir dir="${build.dir}/eps-glyphs"/>
         <exec executable="${fontforge.cmd}" dir="${build.dir}/eps-glyphs">
@@ -85,7 +88,7 @@
         </apply>
     </target>
     
-    <target name="charDecl" depends="init, json2xml" unless="skip.images">
+    <target name="charDecl" depends="init, json2xml">
         <description>Merge SMuFL metadata to one TEI file</description>
         <xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${build.dir}/charDecl.xml">
             <param name="ranges" expression="${build.dir}/ranges.xml"/>
@@ -95,26 +98,44 @@
         </xslt>
     </target>
     
-    <!--<target name="xar">
-        <mkdir dir="${build.dir}"/>
-        <copy file="expath-pkg.xml.tmpl" tofile="expath-pkg.xml" filtering="true" overwrite="true">
+    <target name="xar" depends="init, charDecl, eps2png">
+        <copy file="expath-pkg.xml.template" tofile="expath-pkg.xml" filtering="true" overwrite="true">
             <filterset>
                 <filter token="project.version" value="${project.version}"/>
+                <filter token="project.app" value="${project.app}"/>
             </filterset>
+        </copy>
+        <mkdir dir="data"/>
+        <mkdir dir="resources/images"/>
+        <mkdir dir="resources/fonts"/>
+        <copy file="${build.dir}/charDecl.xml" todir="data"/>
+        <copy todir="resources/images">
+            <fileset dir="${build.dir}/eps-glyphs">
+                <include name="*.png"/>
+            </fileset>
+        </copy>
+        <copy todir="resources/fonts">
+            <fileset dir="${build.dir}">
+                <include name="eot/"/>
+                <include name="woff/"/>
+                <include name="otf/"/>
+                <include name="svg/"/>
+            </fileset>
         </copy>
         <zip destfile="${build.dir}/${project.app}-${project.version}.xar">
             <fileset dir=".">
                 <include name="*.*"/>
                 <include name="modules/**"/>
+                <include name="data/**"/>
                 <include name="resources/**"/>
-                <include name="catalogues/**"/>
-                <include name="indices/**"/>
+                <include name="templates/**"/>
                 <include name="xsl/**"/>
                 <exclude name="${build}/*"/>
                 <exclude name="build.xml"/>
-                <exclude name=".git*"/>
-                <exclude name="*.tmpl"/>
+                <exclude name="*.template"/>
+                <exclude name="*.properties"/>
+                <exclude name="*.xsl"/>
             </fileset>
         </zip>
-    </target>-->
+    </target>
 </project>

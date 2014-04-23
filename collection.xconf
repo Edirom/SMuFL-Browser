@@ -1,0 +1,10 @@
+<collection xmlns="http://exist-db.org/collection-config/1.0">
+    <index xmlns:tei="http://www.tei-c.org/ns/1.0">
+        <create qname="charName" type="xs:string"/>
+        <create qname="mapping" type="xs:string"/>
+        <create qname="item" type="xs:string"/>
+        <create qname="desc" type="xs:string"/>
+        <create qname="@type" type="xs:string"/>
+        <fulltext default="none" attributes="false"/>
+    </index>
+</collection>

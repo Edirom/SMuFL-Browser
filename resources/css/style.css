@@ -1,0 +1,13 @@
+/* Application styles could go here */
+.charImage {
+    max-width:100%;
+    max-height:250px;
+}
+
+.center-col {
+    text-align:center;
+}
+
+.charDesc {
+    font-size:larger;
+}
