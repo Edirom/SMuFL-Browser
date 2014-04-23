@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="json2xml" name="SMuFL-Browser" basedir=".">
+    
+    <!-- import default properties from file -->
+    <property file="local.build.properties"/>
+    <property file="build.properties"/>
+    
+    <property name="project.version" value="0.9"/>
+    <property name="project.app" value="SMuFL-Browser"/>
+    <property name="build.dir" value="build"/>
+    
+    <!-- main targets -->
+    <target name="all" depends="json2xml"/>
+    <target name="rebuild" depends="clean,all"/>
+    
+    <target name="clean-all">
+        <description>Delete the whole build directory with all temporary files and eXist packages</description>
+        <delete dir="${build.dir}"/>
+        <!--<delete file="expath-pkg.xml"/>-->
+    </target>
+    
+    <target name="clean">
+        <description>Delete all temporary files except eXist packages with the extension .xar</description>
+        <delete includeemptydirs="true">
+            <fileset dir="${build.dir}" includes="**/*" excludes="*.xar" defaultexcludes="false"/>
+        </delete>
+        <!--<delete file="expath-pkg.xml"/>-->
+    </target>
+    
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+    </target>
+    
+    <target name="json2xml" depends="init, download-smufl-metadata">
+        <description>Transforms SMuFL metadata files from json to xml</description>
+        <!-- xmlsh is needed for json2xml transformation -->
+        <echo>Transforming classes.json</echo>
+        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${build.dir}" output="${build.dir}/classes.xml">
+            <arg value="-c"/>
+            <arg line="'json2xml classes.json'"/>
+            <env key="XMLSH" value="${xmlsh.home}"/>
+        </exec>
+        <echo>Transforming ranges.json</echo>
+        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${build.dir}" output="${build.dir}/ranges.xml">
+            <arg value="-c"/>
+            <arg line="'json2xml ranges.json'"/>
+            <env key="XMLSH" value="${xmlsh.home}"/>
+        </exec>
+        <echo>Transforming glyphnames.json</echo>
+        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${build.dir}" output="${build.dir}/glyphnames.xml">
+            <arg value="-c"/>
+            <arg line="'json2xml glyphnames.json'"/>
+            <env key="XMLSH" value="${xmlsh.home}"/>
+        </exec>
+    </target>
+    
+    <target name="download-smufl-metadata" depends="init">
+        <description>Download SMuFL metadata from the official website</description>
+        <get src="${smufl.metadata}" dest="${build.dir}/metadata.zip" skipexisting="yes"/>
+        <unzip src="${build.dir}/metadata.zip" dest="${build.dir}"/>
+    </target>
+    
+    <target name="download-smufl-font" depends="init">
+        <description>Download Bravura font from the official website</description>
+        <get src="${smufl.font}" dest="${build.dir}/bravura.zip" skipexisting="yes"/>
+        <unzip src="${build.dir}/bravura.zip" dest="${build.dir}"/>
+    </target>
+    
+    <target name="otf2svg" depends="init, download-smufl-font">
+        <description>Create svg shapes for every glyph</description>
+        <mkdir dir="${build.dir}/svg-glyphs"/>
+        <exec executable="${fontforge.cmd}" dir="${build.dir}/svg-glyphs">
+            <arg value="-lang=ff"/>
+            <arg line="-c 'Open(&quot;../otf/BravuraText.otf&quot;); SelectWorthOutputting(); Export(&quot;U+%U.svg&quot;);'"/>
+        </exec>
+    </target>
+    
+    <!--<target name="svg2png"></target>-->
+    
+    <target name="charDecl" depends="init, json2xml">
+        <xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${build.dir}/charDecl.xml">
+            <param name="ranges" expression="${build.dir}/ranges.xml"/>
+            <param name="classes" expression="${build.dir}/classes.xml"/>
+            <param name="glyphnames" expression="${build.dir}/glyphnames.xml"/>
+            <param name="current.version" expression="${project.version}"/>
+        </xslt>
+    </target>
+    
+    <!--<target name="xar">
+        <mkdir dir="${build.dir}"/>
+        <copy file="expath-pkg.xml.tmpl" tofile="expath-pkg.xml" filtering="true" overwrite="true">
+            <filterset>
+                <filter token="project.version" value="${project.version}"/>
+            </filterset>
+        </copy>
+        <zip destfile="${build.dir}/${project.app}-${project.version}.xar">
+            <fileset dir=".">
+                <include name="*.*"/>
+                <include name="modules/**"/>
+                <include name="resources/**"/>
+                <include name="catalogues/**"/>
+                <include name="indices/**"/>
+                <include name="xsl/**"/>
+                <exclude name="${build}/*"/>
+                <exclude name="build.xml"/>
+                <exclude name=".git*"/>
+                <exclude name="*.tmpl"/>
+            </fileset>
+        </zip>
+    </target>-->
+</project>
