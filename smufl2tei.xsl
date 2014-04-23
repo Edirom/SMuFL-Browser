@@ -66,6 +66,9 @@
                     <xsl:value-of select="$glyph//jxml:member[@name='alternateCodepoint']/normalize-space(jxml:string)"/>
                 </xsl:element>
             </xsl:if>
+            <xsl:element name="graphic">
+                <xsl:attribute name="url" select="concat('../resources/images/', substring-after($glyph//jxml:member[@name='codepoint']/normalize-space(jxml:string), 'U+'), '.png')"/>
+            </xsl:element>
             <xsl:call-template name="classes"/>
         </xsl:element>
     </xsl:template>
