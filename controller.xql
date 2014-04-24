@@ -57,7 +57,19 @@ else if (matches($exist:resource, '^index.html?$')) then
 			<forward url="{$exist:controller}/modules/view.xql"/>
 		</error-handler>
     </dispatch>
-    
+
+else if (matches($exist:resource, '^about.html?$')) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="templates/about.html"/>
+        <view>
+            <forward url="{$exist:controller}/modules/view.xql"/>
+        </view>
+		<error-handler>
+			<forward url="{$exist:controller}/templates/error-page.html" method="get"/>
+			<forward url="{$exist:controller}/modules/view.xql"/>
+		</error-handler>
+    </dispatch>
+
 (: Resource paths starting with $shared are loaded from the shared-resources app :)
 else if (contains($exist:path, "/$shared/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
