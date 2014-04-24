@@ -55,3 +55,35 @@ declare function app:charImage($node as node(), $model as map(*)) as element(img
     return 
         <img src="{concat('resources/images/', $url)}" class="charImage"/>
 };
+
+declare %templates:wrap function app:ranges-list($node as node(), $model as map(*)) as element(option)* {
+    let $ranges := $config:charDecl//tei:desc
+    return 
+        for $range in $ranges
+        order by $range ascending
+        return 
+            <option>{normalize-space($range)}</option>
+};
+
+declare %templates:wrap function app:glyphnames-list($node as node(), $model as map(*)) as element(option)* {
+    let $glyphs := $config:charDecl//tei:char
+    return 
+        for $glyph in $glyphs
+        order by $glyph/@xml:id ascending
+        return 
+            <option>{normalize-space($glyph/@xml:id)}</option>
+};
+
+declare %templates:wrap function app:classes-list($node as node(), $model as map(*)) as element(option)* {
+    let $classes := distinct-values($config:charDecl//tei:item)
+    return 
+        for $class in $classes
+        order by $class ascending
+        return 
+            <option>{normalize-space($class)}</option>
+};
+
+declare %templates:wrap function app:list-chars($node as node(), $model as map(*)) as map(*){
+    map { "chars" := subsequence($config:charDecl//tei:char, 1, 20) }
+};
+

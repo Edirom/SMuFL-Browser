@@ -1,89 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
-    <!--<div class="page-header">
-                <h1 data-template="config:app-title">Generated page</h1>
-            </div>-->
     <div class="row">
-        <div class="col-md-8">
-            <h1>SMuFL-Browser</h1>
-        </div>
-        <div class="col-md-4">
-            <h1><small>Browse</small></h1>
-        </div>
+        <h1>SMuFL-Browser</h1>
     </div>
     <div class="row">
-        <div class="col-md-8">
-            <div class="row">
+        <div class="col-md-8" data-template="app:list-chars">
+            <div class="row"  data-template="templates:each" data-template-from="chars" data-template-to="char">
                 <div class="col-md-3">
-                    <p>Bildle</p>
+                    <img data-template="app:charImage" src="resources/images/E080.png"/>
                 </div>
                 <div class="col-md-9">
-                    <p>Text zum Bidle</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <p>Bildle</p>
-                </div>
-                <div class="col-md-9">
-                    <p>Text zum Bidle</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <p>Bildle</p>
-                </div>
-                <div class="col-md-9">
-                    <p>Text zum Bidle</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <p>Bildle</p>
-                </div>
-                <div class="col-md-9">
-                    <p>Text zum Bidle</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <p>Bildle</p>
-                </div>
-                <div class="col-md-9">
-                    <p>Text zum Bidle</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <p>Bildle</p>
-                </div>
-                <div class="col-md-9">
-                    <p>Text zum Bidle</p>
+                    <dl data-template="app:charDesc">
+                        <dt>Character name</dt>
+                        <dd/>
+                    </dl>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <form class="form-horizontal" role="form">
                 <div class="form-group">
-                    <!--                        <label for="bs3Select" class="col-lg-2 control-label">Test bootstrap 3 form</label>-->
-                    <h3>Classes</h3>
-                    <select id="bs3Select" class="selectpicker form-control" multiple="multiple" data-live-search="true">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option>Relish</option>
-                    </select>
-                    <h3>Glyphnames</h3>
-                    <select class="selectpicker form-control" multiple="multiple" data-live-search="true">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option>Relish</option>
-                    </select>
                     <h3>Ranges</h3>
-                    <select class="selectpicker form-control" multiple="multiple" data-live-search="true">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option>Relish</option>
-                    </select>
+                    <select id="ranges-list" class="selectpicker show-tick form-control" multiple="" data-live-search="true" data-template="app:ranges-list"/>
+                    <h3>Glyphnames</h3>
+                    <select id="glyphnames-list" class="selectpicker show-tick form-control" multiple="" data-live-search="true" data-template="app:glyphnames-list"/>
+                    <h3>Classes</h3>
+                    <select id="classes-list" class="selectpicker show-tick form-control" multiple="" data-live-search="true" data-template="app:classes-list"/>
                 </div>
             </form>
         </div>
