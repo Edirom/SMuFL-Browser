@@ -11,3 +11,7 @@
 .charDesc {
     font-size:larger;
 }
+
+.pagination {
+    float:none !important;
+}

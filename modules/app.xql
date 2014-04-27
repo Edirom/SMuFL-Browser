@@ -83,7 +83,25 @@ declare %templates:wrap function app:classes-list($node as node(), $model as map
             <option>{normalize-space($class)}</option>
 };
 
-declare %templates:wrap function app:list-chars($node as node(), $model as map(*)) as map(*){
-    map { "chars" := subsequence($config:charDecl//tei:char, 1, 20) }
+declare 
+    %templates:wrap
+    %templates:default("page", "1")
+    %templates:default("ranges", "all")
+    %templates:default("classes", "all")
+    %templates:default("glyphnames", "all")
+    function app:list-chars($node as node(), $model as map(*), $page as xs:string, $ranges as xs:string*, $classes as xs:string, $glyphnames as xs:string*) as map(*){
+    let $entriesPerPage := 10
+    let $page := if($page castable as xs:int) then xs:int($page) else 1
+    let $chars-by-class := 
+        if($classes eq 'all') then $config:charDecl//tei:char
+        else $config:charDecl//tei:char[.//tei:item = $classes]
+    let $chars-by-range := 
+        if($ranges eq 'all') then $config:charDecl//tei:char
+        else $config:charDecl//tei:char[parent::tei:charDecl/tei:desc = $ranges]
+    let $chars-by-glyphname := 
+        if($glyphnames eq 'all') then $config:charDecl//tei:char
+        else $config:charDecl//id($glyphnames)
+    return 
+        map { "chars" := subsequence($chars-by-class intersect $chars-by-range intersect $chars-by-glyphname, ($page - 1) * 10 + 1, $entriesPerPage) }
 };
 

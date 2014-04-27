@@ -4,7 +4,14 @@
     </div>
     <div class="row">
         <div class="col-md-8" data-template="app:list-chars">
-            <div class="row"  data-template="templates:each" data-template-from="chars" data-template-to="char">
+            <div class="row pagination">
+                <a href="#" class="first" data-action="first">&#x00AB;</a>
+                <a href="#" class="previous" data-action="previous">&#x2039;</a>
+                <input type="text" readonly="readonly" data-max-page="20" />
+                <a href="#" class="next" data-action="next">&#x203A;</a>
+                <a href="#" class="last" data-action="last">&#x00BB;</a>
+            </div>
+            <div class="row" data-template="templates:each" data-template-from="chars" data-template-to="char">
                 <div class="col-md-3">
                     <img data-template="app:charImage" src="resources/images/E080.png"/>
                 </div>
@@ -14,6 +21,13 @@
                         <dd/>
                     </dl>
                 </div>
+            </div>
+            <div class="row pagination">
+                <a href="#" class="first" data-action="first">&#x00AB;</a>
+                <a href="#" class="previous" data-action="previous">&#x2039;</a>
+                <input type="text" readonly="readonly" data-max-page="20" />
+                <a href="#" class="next" data-action="next">&#x203A;</a>
+                <a href="#" class="last" data-action="last">&#x00BB;</a>
             </div>
         </div>
         <div class="col-md-4">

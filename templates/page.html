@@ -7,12 +7,22 @@
         <link rel="stylesheet" type="text/css" href="$shared/resources/css/bootstrap-3.0.3.min.css"/>
         <link rel="stylesheet" type="text/css" href="./resources/css/style.css"/>
         <link rel="stylesheet" type="text/css" href="./resources/css/bootstrap-select.css"/>
+        <link rel="stylesheet" type="text/css" href="./resources/css/jqpagination.css"/>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="$shared/resources/scripts/loadsource.js"/>
         <script type="text/javascript" src="$shared/resources/scripts/bootstrap-3.0.3.min.js"/>
         <script type="text/javascript" src="./resources/js/bootstrap-select.js"/>
+        <script type="text/javascript" src="./resources/js/jquery.jqpagination.js"/>
+        <script type="text/javascript" src="./resources/js/scripts.js"/>
         <script type="text/javascript">
         $(window).on('load', function () {
+        
+            $('.pagination').jqPagination({
+    paged: function(page) {
+        // do something with the page variable
+        gotoPage(page);
+    }
+});
 
             $('.selectpicker').selectpicker({
                 'selectedText': 'cat'
