@@ -43,6 +43,10 @@
             <xsl:for-each select=".//jxml:member[@name='glyphs']/jxml:array/jxml:string">
                 <xsl:call-template name="char"/>
             </xsl:for-each>
+            <xsl:if test="count(.//jxml:member[@name='glyphs']/jxml:array/jxml:string) eq 0">
+                <!-- Provide an empty char to make the resulting file valid … -->
+                <xsl:element name="char"/>
+            </xsl:if>
         </xsl:element>
     </xsl:template>
     

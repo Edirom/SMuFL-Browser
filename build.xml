@@ -5,10 +5,6 @@
     <property file="local.build.properties"/>
     <property file="build.properties"/>
     
-    <property name="project.version" value="0.9"/>
-    <property name="project.app" value="SMuFL-Browser"/>
-    <property name="build.dir" value="build"/>
-    
     <!-- main targets -->
     <target name="all" depends="charDecl,eps2png"/>
     <target name="rebuild" depends="clean,all"/>

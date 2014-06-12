@@ -3,13 +3,16 @@
    <teiHeader>
       <fileDesc>
          <titleStmt>
-            <title>SmuFl Browser</title>
+            <title>SMuFl Browser</title>
             <author>Peter Stadler</author>
             <author>Anna Maria Komprecht</author>
          </titleStmt>
          <publicationStmt>
+            <publisher>
+               <orgName><ref target="http://edirom.de">Virtueller Forschungsverbund Edirom</ref></orgName>
+            </publisher>
             <availability status="free">
-               <p>This work is available under dual license: BSD 2-Clause and Creative Commons Attribution 3.0 Unported License (CC BY 3.0)</p>
+               <p>This work is available under dual license: <ref target="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</ref> and <ref target="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License (CC BY 3.0)</ref></p>
             </availability>
          </publicationStmt>
          <sourceDesc>
