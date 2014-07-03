@@ -12,7 +12,9 @@
                <orgName><ref target="http://edirom.de">Virtueller Forschungsverbund Edirom</ref></orgName>
             </publisher>
             <availability status="free">
-               <p>This work is available under dual license: <ref target="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</ref> and <ref target="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License (CC BY 3.0)</ref></p>
+               <p>This work is available under dual license:</p>
+               <licence target="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</licence>
+               <licence target="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License (CC BY 3.0)</licence>
             </availability>
          </publicationStmt>
          <sourceDesc>
