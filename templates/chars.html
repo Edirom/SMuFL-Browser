@@ -1,0 +1,46 @@
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <h1>SMuFL-Browser</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-8" data-template="app:list-chars">
+            <div class="row pagination">
+                <a href="#" class="first" data-action="first">&#x00AB;</a>
+                <a href="#" class="previous" data-action="previous">&#x2039;</a>
+                <input type="text" readonly="readonly" data-max-page="20" />
+                <a href="#" class="next" data-action="next">&#x203A;</a>
+                <a href="#" class="last" data-action="last">&#x00BB;</a>
+            </div>
+            <div class="row" data-template="templates:each" data-template-from="chars" data-template-to="char">
+                <div class="col-md-3">
+                    <img data-template="app:charImage" src="resources/images/E080.png"/>
+                </div>
+                <div class="col-md-9">
+                    <dl data-template="app:charDesc">
+                        <dt>Character name</dt>
+                        <dd/>
+                    </dl>
+                </div>
+            </div>
+            <div class="row pagination">
+                <a href="#" class="first" data-action="first">&#x00AB;</a>
+                <a href="#" class="previous" data-action="previous">&#x2039;</a>
+                <input type="text" readonly="readonly" data-max-page="20" />
+                <a href="#" class="next" data-action="next">&#x203A;</a>
+                <a href="#" class="last" data-action="last">&#x00BB;</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <h3>Ranges</h3>
+                    <select id="ranges-list" class="selectpicker show-tick form-control" multiple="" data-live-search="true" data-template="app:ranges-list"/>
+                    <h3>Glyphnames</h3>
+                    <select id="glyphnames-list" class="selectpicker show-tick form-control" multiple="" data-live-search="true" data-template="app:glyphnames-list"/>
+                    <h3>Classes</h3>
+                    <select id="classes-list" class="selectpicker show-tick form-control" multiple="" data-live-search="true" data-template="app:classes-list"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
