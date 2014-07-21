@@ -4,14 +4,14 @@
     max-height:250px;
 }
 
-.center-col {
-    text-align:center;
-}
-
 .charDesc {
     font-size:larger;
 }
 
-.pagination {
-    float:none !important;
+footer {
+    color: #666;
+    background: #323232;
+    display:block;
+    border-top: 1px solid #000;
+    padding: 50px 20px;
 }

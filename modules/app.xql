@@ -7,6 +7,9 @@ import module namespace config="http://edirom.de/smufl-browser/config" at "confi
 import module namespace functx="http://www.functx.com";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
+declare namespace request="http://exist-db.org/xquery/request";
+
+declare variable $app:entriesPerPage := 10 ;
 
 (:~
  : This is a sample templating function. It will be called by the templating module if
@@ -32,8 +35,6 @@ declare function app:charDesc($node as node(), $model as map(*)) as element(dl) 
         <dl class="charDesc">
             <dt>Character name</dt>
             <dd>{normalize-space($char/tei:charName)}</dd>
-            <dt>Range</dt>
-            <dd>{normalize-space($char/ancestor::tei:charDecl/tei:desc)}</dd>
             <dt>SMuFL codepoint</dt>
             <dd>{normalize-space($char/tei:mapping[@type='smufl'])}</dd>
             <dt>HTML entity (hex)</dt>
@@ -42,6 +43,8 @@ declare function app:charDesc($node as node(), $model as map(*)) as element(dl) 
             <dt>Unicode</dt>,
             <dd>{normalize-space($char/tei:mapping[@type='unicode'])}</dd>)
             else ()}
+            <dt>Range</dt>
+            <dd>{normalize-space($char/ancestor::tei:charDecl/tei:desc)}</dd>
             <dt>Classes</dt>
             <dd>{string-join($char//tei:item/normalize-space(), ', ')}</dd>
             <dt>TEI code for embedding</dt>
@@ -56,52 +59,120 @@ declare function app:charImage($node as node(), $model as map(*)) as element(img
         <img src="{concat('resources/images/', $url)}" class="charImage"/>
 };
 
-declare %templates:wrap function app:ranges-list($node as node(), $model as map(*)) as element(option)* {
-    let $ranges := $config:charDecl//tei:desc
-    return 
-        for $range in $ranges
-        order by $range ascending
+declare 
+    %templates:wrap
+    %templates:default("ranges", "all")
+    function app:ranges-list($node as node(), $model as map(*), $ranges as xs:string*) as element(option)* {
+        for $range in $config:charDecl//tei:desc
+        let $name := normalize-space($range)
+        order by $name ascending
         return 
-            <option>{normalize-space($range)}</option>
-};
-
-declare %templates:wrap function app:glyphnames-list($node as node(), $model as map(*)) as element(option)* {
-    let $glyphs := $config:charDecl//tei:char
-    return 
-        for $glyph in $glyphs
-        order by $glyph/@xml:id ascending
-        return 
-            <option>{normalize-space($glyph/@xml:id)}</option>
-};
-
-declare %templates:wrap function app:classes-list($node as node(), $model as map(*)) as element(option)* {
-    let $classes := distinct-values($config:charDecl//tei:item)
-    return 
-        for $class in $classes
-        order by $class ascending
-        return 
-            <option>{normalize-space($class)}</option>
+            <option value="{$name}">{
+                if($ranges = $name) then attribute {'selected'} {'selected'} 
+                else (),
+                $name
+            }</option>
 };
 
 declare 
     %templates:wrap
-    %templates:default("page", "1")
+    %templates:default("glyphnames", "all")
+    function app:glyphnames-list($node as node(), $model as map(*), $glyphnames as xs:string*) as element(option)* {
+        for $glyph in $config:charDecl//tei:char
+        let $name := normalize-space($glyph/@xml:id)
+        order by $name ascending
+        return 
+            <option value="{$name}">{
+                if($glyphnames = $name) then attribute {'selected'} {'selected'} 
+                else (),
+                $name
+            }</option>
+};
+
+declare 
+    %templates:wrap 
+    %templates:default("classes", "all")
+    function app:classes-list($node as node(), $model as map(*), $classes as xs:string*) as element(option)* {
+        for $class in distinct-values($config:charDecl//tei:item)
+        let $name := normalize-space($class)
+        order by $name ascending
+        return 
+            <option value="{$name}">{
+                if($classes = $name) then attribute {'selected'} {'selected'} 
+                else (),
+                $name
+            }</option>
+};
+
+declare 
+    %templates:wrap
     %templates:default("ranges", "all")
     %templates:default("classes", "all")
     %templates:default("glyphnames", "all")
-    function app:list-chars($node as node(), $model as map(*), $page as xs:string, $ranges as xs:string*, $classes as xs:string, $glyphnames as xs:string*) as map(*){
-    let $entriesPerPage := 10
-    let $page := if($page castable as xs:int) then xs:int($page) else 1
-    let $chars-by-class := 
-        if($classes eq 'all') then $config:charDecl//tei:char
-        else $config:charDecl//tei:char[.//tei:item = $classes]
-    let $chars-by-range := 
-        if($ranges eq 'all') then $config:charDecl//tei:char
-        else $config:charDecl//tei:char[parent::tei:charDecl/tei:desc = $ranges]
-    let $chars-by-glyphname := 
-        if($glyphnames eq 'all') then $config:charDecl//tei:char
-        else $config:charDecl//id($glyphnames)
-    return 
-        map { "chars" := subsequence($chars-by-class intersect $chars-by-range intersect $chars-by-glyphname, ($page - 1) * 10 + 1, $entriesPerPage) }
+    function app:list-chars($node as node(), $model as map(*), $ranges as xs:string*, $classes as xs:string*, $glyphnames as xs:string*) as map(*) {
+        let $chars-by-class := function() {
+            $config:charDecl//tei:char[.//tei:item = $classes]
+        }
+        let $chars-by-range := function() {
+            $config:charDecl//tei:char[parent::tei:charDecl/tei:desc = $ranges]
+        }
+        let $chars-by-glyphname := function() { 
+            $config:charDecl//id($glyphnames)
+        }
+        let $chars := 
+            if(($ranges,$classes,$glyphnames) != 'all') then ($chars-by-class(), $chars-by-range(), $chars-by-glyphname())
+            else $config:charDecl//tei:char
+        return 
+            map { "chars" := $chars }
 };
 
+declare
+    %templates:default("page", "1")
+    function app:one-page($node as node(), $model as map(*), $page as xs:string) as map(*) {
+        let $page := if($page castable as xs:int) then xs:int($page) else 1
+        return
+            map { "chars" := subsequence($model('chars'), ($page - 1) * 10 + 1, $app:entriesPerPage) }
+};
+
+
+declare
+    %templates:wrap
+    %templates:default("page", "1")
+    function app:pagination($node as node(), $model as map(*), $page as xs:string) as element(li)* {
+        let $page := if($page castable as xs:int) then xs:int($page) else 1
+        let $page-link := function ($page as xs:int){
+            'chars.html?page=' || $page || string-join(
+                request:get-parameter-names()[. != 'page'] ! (
+                    '&amp;' || string(.) || '=' || string-join(
+                        request:get-parameter(., ''),
+                        '&amp;' || string(.) || '=')
+                    ), 
+                '')
+            }
+        let $last-page := ceiling(count($model('chars')) div $app:entriesPerPage) 
+        return (
+            <li>{
+                if($page le 1) then (
+                    attribute {'class'}{'disabled'},
+                    <span>&#x00AB; previous</span>
+                )
+                else <a href="{$page-link($page - 1)}">&#x00AB; previous</a> 
+            }</li>,
+            if($page gt 3) then <li><a href="{$page-link(1)}">1</a></li> else (),
+            if($page gt 4) then <li><a href="{$page-link(2)}">2</a></li> else (),
+            if($page gt 5) then <li><span>…</span></li> else (),
+            ($page - 2, $page - 1)[. gt 0] ! <li><a href="{$page-link(.)}">{string(.)}</a></li>,
+            <li class="active"><span>{$page}</span></li>,
+            ($page + 1, $page + 2)[. le $last-page] ! <li><a href="{$page-link(.)}">{string(.)}</a></li>,
+            if($page + 4 lt $last-page) then <li><span>…</span></li> else (),
+            if($page + 3 lt $last-page) then <li><a href="{$page-link($last-page - 1)}">{$last-page - 1}</a></li> else (),
+            if($page + 2 lt $last-page) then <li><a href="{$page-link($last-page)}">{$last-page}</a></li> else (),
+            <li>{
+                if($page ge $last-page) then (
+                    attribute {'class'}{'disabled'},
+                    <span>next &#x00BB;</span>
+                )
+                else <a href="{$page-link($page + 1)}">next &#x00BB;</a> 
+            }</li>
+        )
+};

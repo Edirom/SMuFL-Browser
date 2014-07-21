@@ -4,33 +4,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta data-template="config:app-meta"/>
         <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
-        <link rel="stylesheet" type="text/css" href="$shared/resources/css/bootstrap-3.0.3.min.css"/>
-        <link rel="stylesheet" type="text/css" href="./resources/css/style.css"/>
-        <link rel="stylesheet" type="text/css" href="./resources/css/bootstrap-select.css"/>
-        <link rel="stylesheet" type="text/css" href="./resources/css/jqpagination.css"/>
-        <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/loadsource.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/bootstrap-3.0.3.min.js"/>
-        <script type="text/javascript" src="./resources/js/bootstrap-select.js"/>
-        <script type="text/javascript" src="./resources/js/jquery.jqpagination.js"/>
-        <script type="text/javascript" src="./resources/js/scripts.js"/>
-        <script type="text/javascript">
-        $(window).on('load', function () {
         
-            $('.pagination').jqPagination({
-    paged: function(page) {
-        // do something with the page variable
-        gotoPage(page);
-    }
-});
-
-            $('.selectpicker').selectpicker({
-                'selectedText': 'cat'
-            });
-
-            // $('.selectpicker').selectpicker('hide');
-        });
-    </script>
+        <link href="resources/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/selectize.bootstrap3.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/style.css" rel="stylesheet" type="text/css"/>
     </head>
     <body id="body">
         <nav class="navbar navbar-default" role="navigation">
@@ -55,5 +32,32 @@
             </div>
         </nav>
         <div id="content" class="container"/>
+        
+        <footer>
+            <div class="text-center">
+                <p>Some footer bla</p>
+            </div>
+        </footer>
+        
+        <script src="resources/js/jquery.min.js" type="text/javascript"/>
+        <script src="resources/js/bootstrap.min.js" type="text/javascript"/>
+        <script src="resources/js/selectize.min.js" type="text/javascript"/>
+        
+        <script type="text/javascript">
+            $(document).ready(function()  {
+                 $("#ranges-list").selectize({
+                    plugins: ['remove_button'],
+                    hideSelected: true,
+                 });
+                $("#glyphnames-list").selectize({
+                    plugins: ['remove_button'],
+                    hideSelected: true
+                });
+                $("#classes-list").selectize({
+                    plugins: ['remove_button'],
+                    hideSelected: true
+                });
+            });
+        </script>
     </body>
 </html>

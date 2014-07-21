@@ -131,6 +131,12 @@ else if (starts-with($exist:path, '/resources/')) then
         <cache-control cache="yes"/>
     </dispatch>
 
+(: other (during development) resources are loaded from the app's components collection :)
+else if (starts-with($exist:path, '/components/')) then 
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <cache-control cache="yes"/>
+    </dispatch>
+    
 (: everything else will result in an error page:)
 else
     local:dispatch-chars($exist:resource)
