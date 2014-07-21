@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="json2xml" name="SMuFL-Browser" basedir=".">
+<project default="dist" name="SMuFL-Browser" basedir=".">
     
     <!-- import default properties from file -->
     <property file="local.build.properties"/>
@@ -12,10 +12,12 @@
     <target name="clean-all">
         <description>Delete the whole build directory with all temporary files and eXist packages</description>
         <delete dir="${build.dir}"/>
-        <delete dir="data"/>
-        <delete dir="resources/images"/>
-        <delete dir="resources/fonts"/>
-        <delete file="expath-pkg.xml"/>
+        <delete dir="${tmp.dir}"/>
+        <delete dir="${dist.dir}"/>
+<!--        <delete dir="data"/>-->
+<!--        <delete dir="resources/images"/>-->
+<!--        <delete dir="resources/fonts"/>-->
+<!--        <delete file="expath-pkg.xml"/>-->
     </target>
     
     <target name="clean">
@@ -28,25 +30,27 @@
     
     <target name="init">
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${tmp.dir}"/>
+        <mkdir dir="${dist.dir}"/>
     </target>
     
     <target name="json2xml" depends="init, download-smufl-metadata">
         <description>Transforms SMuFL metadata files from json to xml</description>
         <!-- xmlsh is needed for json2xml transformation -->
         <echo>Transforming classes.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${build.dir}" output="${build.dir}/classes.xml">
+        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/classes.xml">
             <arg value="-c"/>
             <arg line="'json2xml classes.json'"/>
             <env key="XMLSH" value="${xmlsh.home}"/>
         </exec>
         <echo>Transforming ranges.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${build.dir}" output="${build.dir}/ranges.xml">
+        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/ranges.xml">
             <arg value="-c"/>
             <arg line="'json2xml ranges.json'"/>
             <env key="XMLSH" value="${xmlsh.home}"/>
         </exec>
         <echo>Transforming glyphnames.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${build.dir}" output="${build.dir}/glyphnames.xml">
+        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/glyphnames.xml">
             <arg value="-c"/>
             <arg line="'json2xml glyphnames.json'"/>
             <env key="XMLSH" value="${xmlsh.home}"/>
@@ -55,20 +59,20 @@
     
     <target name="download-smufl-metadata" depends="init">
         <description>Download SMuFL metadata from the official website</description>
-        <get src="${smufl.metadata}" dest="${build.dir}/metadata.zip" skipexisting="yes"/>
-        <unzip src="${build.dir}/metadata.zip" dest="${build.dir}"/>
+        <get src="${smufl.metadata}" dest="${tmp.dir}/metadata.zip" skipexisting="yes"/>
+        <unzip src="${tmp.dir}/metadata.zip" dest="${tmp.dir}"/>
     </target>
     
     <target name="download-smufl-font" depends="init">
         <description>Download Bravura font from the official website</description>
-        <get src="${smufl.font}" dest="${build.dir}/bravura.zip" skipexisting="yes"/>
-        <unzip src="${build.dir}/bravura.zip" dest="${build.dir}"/>
+        <get src="${smufl.font}" dest="${tmp.dir}/bravura.zip" skipexisting="yes"/>
+        <unzip src="${tmp.dir}/bravura.zip" dest="${tmp.dir}"/>
     </target>
     
     <target name="otf2eps" depends="init, download-smufl-font" unless="skip.images">
         <description>Create eps shapes for every glyph</description>
-        <mkdir dir="${build.dir}/eps-glyphs"/>
-        <exec executable="${fontforge.cmd}" dir="${build.dir}/eps-glyphs">
+        <mkdir dir="${tmp.dir}/eps-glyphs"/>
+        <exec executable="${fontforge.cmd}" dir="${tmp.dir}/eps-glyphs">
             <arg value="-lang=ff"/>
             <arg line="-c 'Open(&quot;../otf/BravuraText.otf&quot;); SelectWorthOutputting(); Export(&quot;%U.eps&quot;);'"/>
         </exec>
@@ -77,48 +81,31 @@
     <target name="eps2png" depends="init, otf2eps" unless="skip.images">
         <!-- At present there is no better way of creating png images rather than going via eps?!?! -->
         <description>Create png images from the eps files for every glyph</description>
-        <mkdir dir="resources/images"/>
         <apply executable="${mogrify.cmd}" parallel="yes">
             <arg line="-format png"/>
-            <fileset dir="${build.dir}/eps-glyphs" includes="E*.eps"/>
+            <fileset dir="${tmp.dir}/eps-glyphs" includes="E*.eps"/>
         </apply>
     </target>
     
     <target name="charDecl" depends="init, json2xml">
         <description>Merge SMuFL metadata to one TEI file</description>
-        <xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${build.dir}/charDecl.xml">
-            <param name="ranges" expression="${build.dir}/ranges.xml"/>
-            <param name="classes" expression="${build.dir}/classes.xml"/>
-            <param name="glyphnames" expression="${build.dir}/glyphnames.xml"/>
+        <mkdir dir="${dist.dir}/data"/>
+        <xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${dist.dir}/data/charDecl.xml">
+            <param name="ranges" expression="${tmp.dir}/ranges.xml"/>
+            <param name="classes" expression="${tmp.dir}/classes.xml"/>
+            <param name="glyphnames" expression="${tmp.dir}/glyphnames.xml"/>
             <param name="current.version" expression="${project.version}"/>
         </xslt>
     </target>
     
-    <target name="xar" depends="init, charDecl, eps2png">
-        <copy file="expath-pkg.xml.template" tofile="expath-pkg.xml" filtering="true" overwrite="true">
+    <target name="dist" depends="init, charDecl, eps2png">
+        <copy file="expath-pkg.xml.template" tofile="${dist.dir}/expath-pkg.xml" filtering="true" overwrite="true">
             <filterset>
                 <filter token="project.version" value="${project.version}"/>
                 <filter token="project.app" value="${project.app}"/>
             </filterset>
         </copy>
-        <mkdir dir="data"/>
-        <mkdir dir="resources/images"/>
-        <mkdir dir="resources/fonts"/>
-        <copy file="${build.dir}/charDecl.xml" todir="data"/>
-        <copy todir="resources/images">
-            <fileset dir="${build.dir}/eps-glyphs">
-                <include name="*.png"/>
-            </fileset>
-        </copy>
-        <copy todir="resources/fonts">
-            <fileset dir="${build.dir}">
-                <include name="eot/"/>
-                <include name="woff/"/>
-                <include name="otf/"/>
-                <include name="svg/"/>
-            </fileset>
-        </copy>
-        <zip destfile="${build.dir}/${project.app}-${project.version}.xar">
+        <copy todir="${dist.dir}">
             <fileset dir=".">
                 <include name="*.*"/>
                 <include name="modules/**"/>
@@ -126,12 +113,59 @@
                 <include name="resources/**"/>
                 <include name="templates/**"/>
                 <include name="xsl/**"/>
-                <exclude name="${build}/*"/>
+                <!--<exclude name="${dist.dir}/*"/>-->
+                <!--<exclude name="${tmp.dir}/*"/>-->
+                <!--<exclude name="${build.dir}/*"/>-->
                 <exclude name="build.xml"/>
+                <exclude name="bower.json"/>
                 <exclude name="*.template"/>
                 <exclude name="*.properties"/>
                 <exclude name="*.xsl"/>
             </fileset>
+        </copy>
+        <mkdir dir="${dist.dir}/resources/images"/>
+        <mkdir dir="${dist.dir}/resources/fonts"/>
+        <copy todir="${dist.dir}/resources/images">
+            <fileset dir="${tmp.dir}/eps-glyphs">
+                <include name="*.png"/>
+            </fileset>
+        </copy>
+        <copy todir="${dist.dir}/resources/fonts">
+            <fileset dir="${tmp.dir}">
+                <include name="eot/"/>
+                <include name="woff/"/>
+                <include name="otf/"/>
+                <include name="svg/"/>
+            </fileset>
+            <fileset dir="bower_components/bootstrap/dist/fonts">
+                <include name="*.*"/>
+            </fileset>
+        </copy>
+        <copy todir="${dist.dir}/resources/css">
+            <fileset dir="bower_components/bootstrap/dist/css">
+                <include name="bootstrap.min.css"/>
+            </fileset>
+            <fileset dir="bower_components/selectize/dist/css">
+                <include name="selectize.bootstrap3.css"/>
+            </fileset>
+        </copy>
+        <copy todir="${dist.dir}/resources/js">
+            <fileset dir="bower_components/bootstrap/dist/js">
+                <include name="bootstrap.min.js"/>
+            </fileset>
+            <fileset dir="bower_components/jquery/dist">
+                <include name="jquery.min.js"/>
+                <include name="jquery.min.map"/>
+            </fileset>
+            <fileset dir="bower_components/selectize/dist/js/standalone/">
+                <include name="selectize.min.js"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="xar" depends="dist">
+        <zip destfile="${build.dir}/${project.app}-${project.version}.xar">
+            <fileset dir="${dist.dir}"/>
         </zip>
     </target>
 </project>
