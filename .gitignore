@@ -1,6 +1,6 @@
-build
 .DS_Store
-resources/images
-resources/fonts
-data
+build
+tmp
+dist
+bower_components
 expath-pkg.xml
