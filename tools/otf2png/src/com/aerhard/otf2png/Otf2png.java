@@ -106,7 +106,7 @@ public class Otf2png {
 
             System.out.println("Processing...");
 
-            for (int c = 0; c <= 65536; c++) {
+            for (int c = 0; c < 65536; c++) {
                 if (font.canDisplay(c)) {
                     text = Character.toString((char) c);
                     hexCodePoint = String.format("%X", c);
