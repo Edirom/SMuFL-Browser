@@ -5,8 +5,12 @@
     <property file="local.build.properties"/>
     <property file="build.properties"/>
     
+    <condition property="xmlsh.cmdpath" value="win32/xmlsh.bat" else="${xmlsh.cmdpath}">
+        <os family="windows"/>
+    </condition>
+    
     <!-- main targets -->
-    <target name="all" depends="charDecl,eps2png"/>
+    <target name="all" depends="charDecl,otf2png"/>
     <target name="rebuild" depends="clean,all"/>
     
     <target name="clean-all">
@@ -38,19 +42,19 @@
         <description>Transforms SMuFL metadata files from json to xml</description>
         <!-- xmlsh is needed for json2xml transformation -->
         <echo>Transforming classes.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/classes.xml">
+        <exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/classes.xml">
             <arg value="-c"/>
             <arg line="'json2xml classes.json'"/>
             <env key="XMLSH" value="${xmlsh.home}"/>
         </exec>
         <echo>Transforming ranges.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/ranges.xml">
+        <exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/ranges.xml">
             <arg value="-c"/>
             <arg line="'json2xml ranges.json'"/>
             <env key="XMLSH" value="${xmlsh.home}"/>
         </exec>
         <echo>Transforming glyphnames.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/glyphnames.xml">
+        <exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/glyphnames.xml">
             <arg value="-c"/>
             <arg line="'json2xml glyphnames.json'"/>
             <env key="XMLSH" value="${xmlsh.home}"/>
@@ -69,22 +73,19 @@
         <unzip src="${tmp.dir}/bravura.zip" dest="${tmp.dir}"/>
     </target>
     
-    <target name="otf2eps" depends="init, download-smufl-font" unless="skip.images">
-        <description>Create eps shapes for every glyph</description>
-        <mkdir dir="${tmp.dir}/eps-glyphs"/>
-        <exec executable="${fontforge.cmd}" dir="${tmp.dir}/eps-glyphs">
-            <arg value="-lang=ff"/>
-            <arg line="-c 'Open(&quot;../otf/BravuraText.otf&quot;); SelectWorthOutputting(); Export(&quot;%U.eps&quot;);'"/>
-        </exec>
-    </target>
-    
-    <target name="eps2png" depends="init, otf2eps" unless="skip.images">
-        <!-- At present there is no better way of creating png images rather than going via eps?!?! -->
-        <description>Create png images from the eps files for every glyph</description>
-        <apply executable="${mogrify.cmd}" parallel="yes">
-            <arg line="-format png"/>
-            <fileset dir="${tmp.dir}/eps-glyphs" includes="E*.eps"/>
-        </apply>
+    <target name="otf2png" depends="init, download-smufl-font" unless="skip.images">
+        <description>Create png images for every glyph</description>
+        <java classname="com.aerhard.otf2png.Otf2png">
+            <arg value="${tmp.dir}/otf/BravuraText.otf"/>
+            <arg value="${tmp.dir}/png-glyphs"/>
+            <arg value="E.*"/>
+            <arg value="0"/>
+            <arg value="1000"/>
+            <classpath>
+                <pathelement location="tools/otf2png.jar"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+        </java>
     </target>
     
     <target name="charDecl" depends="init, json2xml">
@@ -98,7 +99,7 @@
         </xslt>
     </target>
     
-    <target name="dist" depends="init, charDecl, eps2png">
+    <target name="dist" depends="init, charDecl, otf2png">
         <copy file="expath-pkg.xml.template" tofile="${dist.dir}/expath-pkg.xml" filtering="true" overwrite="true">
             <filterset>
                 <filter token="project.version" value="${project.version}"/>
@@ -126,7 +127,7 @@
         <mkdir dir="${dist.dir}/resources/images"/>
         <mkdir dir="${dist.dir}/resources/fonts"/>
         <copy todir="${dist.dir}/resources/images">
-            <fileset dir="${tmp.dir}/eps-glyphs">
+            <fileset dir="${tmp.dir}/png-glyphs">
                 <include name="*.png"/>
             </fileset>
         </copy>
