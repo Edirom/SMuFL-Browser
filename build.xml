@@ -82,7 +82,7 @@
             <arg value="0"/>
             <arg value="1000"/>
             <classpath>
-                <pathelement location="tools/otf2png.jar"/>
+                <pathelement location="tools/otf2png/otf2png.jar"/>
                 <pathelement path="${java.class.path}"/>
             </classpath>
         </java>
