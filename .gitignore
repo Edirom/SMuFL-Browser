@@ -4,3 +4,6 @@ tmp
 dist
 bower_components
 expath-pkg.xml
+tools/otf2png/.classpath
+tools/otf2png/.project
+tools/otf2png/bin

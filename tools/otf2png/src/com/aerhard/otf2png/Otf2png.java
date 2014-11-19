@@ -58,16 +58,14 @@ public class Otf2png {
         // ensure each dimension is 1px at minimum
         int height = Math.max(1, bounds.height + 2 * padding);
         int width = Math.max(1, bounds.width + 2 * padding);
-
         BufferedImage img = new BufferedImage(width, height,
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) img.getGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.black);
-
         g2.fill(outline);
-
+        g2.dispose();    
         return img;
     }
 
