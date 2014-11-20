@@ -1,5 +1,9 @@
 package com.aerhard.otf2png;
 
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.Option;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -21,14 +25,44 @@ import javax.imageio.ImageIO;
 
 public class Otf2png {
 
-    private Pattern pattern;
-    private int padding;
-    private float fontSize;
+    private String fontPath = null;
+    private String outPath = null;
+    private String regex = null;
+
+    @Option(name="-padding",usage="Specifies the padding (in pixels) of the glyphs in the generated images")
+    private int padding = 0;
+    @Option(name="-fontsize",usage="Specifies the font size (in pixels)")
+    private float fontSize = 1000;
+
+    private Pattern pattern = null;
     private Font font = null;
+
+
     private FontRenderContext frc;
 
-    public Otf2png() {
+    @Option(name="-font",usage="The path of the font file")
+    public void setFontPath(String fontPath) {
+        System.out.println(fontPath);
+        this.fontPath = fontPath;
+    }
 
+    @Option(name="-out",usage="The output path")
+    public void setOutPath(String outPath) {
+        this.outPath = outPath;
+    }
+
+    @Option(name="-regex",usage="A regular expression to select glyphs by hex code points")
+    public void setRegex(String regex) {
+        this.regex = regex;
+        pattern = Pattern.compile(regex);
+    }
+
+    public void test() {
+        System.out.println(fontPath);
+        System.out.println(outPath);
+        System.out.println(regex);
+        System.out.println(padding);
+        System.out.println(fontSize);
     }
 
     public Font createFont(File fontPath) throws FontFormatException,
@@ -125,26 +159,46 @@ public class Otf2png {
 
     };
 
-    public static void main(String[] arguments) throws IOException,
+    public static void main(String[] args) throws IOException,
             FontFormatException {
+
+        Otf2png o2p = new Otf2png();
+        CmdLineParser parser = new CmdLineParser(o2p);
+        try {
+            parser.parseArgument(args);
+
+            if( o2p.fontPath == null ) {
+                throw new CmdLineException(parser,"No font file specified");
+            }
+
+            o2p.test();
+        } catch (CmdLineException e) {
+            System.err.println(e.getMessage());
+            parser.printUsage(System.err);
+        }
+
+
 
         String fontPath, outPath, regex;
         int padding;
         float fontSize;
 
-        if (arguments.length != 5) {
-            throw new IllegalArgumentException(
-                    "Required command line arguments:\n\n"
-                            + "otf2png [fontfile] [targetfolder] [regex*] [padding*] [fontsize*]\n"
-                            + "* = optional\n"
-                            + "Example: otf2png BravuraText.otf resources/images E.* 50 1000\n");
-        }
 
-        fontPath = arguments[0];
-        outPath = arguments[1];
-        regex = arguments[2];
-        padding = Integer.parseInt(arguments[3]);
-        fontSize = Float.parseFloat(arguments[4]);
+
+
+//        if (arguments.length != 5) {
+//            throw new IllegalArgumentException(
+//                    "Required command line arguments:\n\n"
+//                            + "otf2png [fontfile] [targetfolder] [regex*] [padding*] [size*]\n"
+//                            + "* = optional\n"
+//                            + "Example: otf2png BravuraText.otf resources/images E.* 50 1000\n");
+//        }
+//
+//        fontPath = arguments[0];
+//        outPath = arguments[1];
+//        regex = arguments[2];
+//        padding = Integer.parseInt(arguments[3]);
+//        fontSize = Float.parseFloat(arguments[4]);
 
 //         fontPath =
 //         "C:/eXist-db/webapp/ahlsen/smufl-browser/tmp/otf/BravuraText.otf";
@@ -153,22 +207,22 @@ public class Otf2png {
 //         padding = 0;
 //         fontSize = 1000;
 
-        Otf2png o2p = new Otf2png();
+//        Otf2png o2p = new Otf2png();
 
-        File fontFile = new File(fontPath);
-        File outFile = new File(outPath);
-
-        if (!fontFile.exists()) {
-            throw new FileNotFoundException("Could not find font file: "
-                    + fontFile.toString());
-        }
-
-        else if (!outFile.exists() && !outFile.mkdir()) {
-            throw new RuntimeException("Could not create output path: "
-                    + outFile.toString());
-        } else {
-            o2p.extract(fontFile, outFile, padding, fontSize, regex);
-        }
+//        File fontFile = new File(fontPath);
+//        File outFile = new File(outPath);
+//
+//        if (!fontFile.exists()) {
+//            throw new FileNotFoundException("Could not find font file: "
+//                    + fontFile.toString());
+//        }
+//
+//        else if (!outFile.exists() && !outFile.mkdir()) {
+//            throw new RuntimeException("Could not create output path: "
+//                    + outFile.toString());
+//        } else {
+//            o2p.extract(fontFile, outFile, padding, fontSize, regex);
+//        }
     }
 
 }
