@@ -76,11 +76,7 @@
     <target name="otf2png" depends="init, download-smufl-font" unless="skip.images">
         <description>Create png images for every glyph</description>
         <java classname="com.aerhard.otf2png.Otf2png">
-            <arg value="${tmp.dir}/otf/BravuraText.otf"/>
-            <arg value="${tmp.dir}/png-glyphs"/>
-            <arg value="E.*"/>
-            <arg value="0"/>
-            <arg value="1000"/>
+            <arg line="-font ${tmp.dir}/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs -regex E.* -padding 0 -fontsize 1000"/>
             <classpath>
                 <pathelement location="tools/otf2png/build/otf2png.jar"/>
                 <pathelement path="${java.class.path}"/>

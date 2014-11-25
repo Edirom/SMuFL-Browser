@@ -16,79 +16,121 @@ import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.imageio.ImageIO;
 
 public class Otf2png {
 
-    private String fontPath = null;
-    private String outPath = null;
-    private String regex = null;
+    private File fontFile;
+    private File outPath;
 
-    @Option(name="-padding",usage="Specifies the padding (in pixels) of the glyphs in the generated images")
+    @Option(name = "-font", usage = "The path of the font file [required]", required = true)
+    public void setFontFile(File fontFile) {
+        if (fontFile.exists()) this.fontFile = fontFile;
+    }
+
+    @Option(name = "-out", usage = "The output path [required]", required = true)
+    public void setOutPath(File outPath) {
+        if (outPath.exists() || outPath.mkdir()) this.outPath = outPath;
+    }
+
+    @Option(name = "-regex", usage = "A regular expression to select glyphs by hex code points [default: .*]")
+    private String regex = ".*";
+
+    @Option(name = "-padding", usage = "The padding (in pixels) of the glyphs in the generated images [default: 0]")
     private int padding = 0;
-    @Option(name="-fontsize",usage="Specifies the font size (in pixels)")
+
+    @Option(name = "-fontsize", usage = "The font size (in pixels) [default: 1000]")
     private float fontSize = 1000;
+
+    @Option(name = "-verbose", usage = "Extra status messages [default: false]")
+    private boolean verbose = false;
 
     private Pattern pattern = null;
     private Font font = null;
-
-
     private FontRenderContext frc;
 
-    @Option(name="-font",usage="The path of the font file")
-    public void setFontPath(String fontPath) {
-        System.out.println(fontPath);
-        this.fontPath = fontPath;
+    public void init() {
+        if (fontFile == null) {
+            fail("Could not find font file.");
+        }
+        if (outPath == null) {
+            fail("Could not create output directory.");
+        }
+        try {
+            pattern = Pattern.compile(regex);
+        } catch (PatternSyntaxException e) {
+            fail("Could not create output directory.");
+        }
+        frc = new FontRenderContext(null, true, true);
+        System.out.println("Font file: " + fontFile.toString());
+        System.out.println("Output folder: " + outPath.toString());
+        System.out.println("Regex: " + regex);
+        System.out.println("Padding: " + padding);
+        System.out.println("Font size: " + fontSize);
     }
 
-    @Option(name="-out",usage="The output path")
-    public void setOutPath(String outPath) {
-        this.outPath = outPath;
+    private void fail(String msg) {
+        System.out.println(msg);
+        System.exit(-1);
     }
 
-    @Option(name="-regex",usage="A regular expression to select glyphs by hex code points")
-    public void setRegex(String regex) {
-        this.regex = regex;
-        pattern = Pattern.compile(regex);
+    public void extractGlyphs() {
+        int processedCharCount = 0;
+        if (font != null) {
+            System.out.println("Processing...");
+            try {
+                for (int c = 0; c < 65536; c++) {
+                    if (font.canDisplay(c)) {
+                        String hexCodePoint = String.format("%X", c);
+                        Matcher matcher = pattern.matcher(hexCodePoint);
+                        if (matcher.matches()) {
+                            if (verbose) {
+                                System.out.println(c + " - " + hexCodePoint);
+                            }
+                            ImageIO.write(getImage(c), "png", new File(outPath, hexCodePoint + ".png"));
+                            processedCharCount++;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                fail("Error writing image file. "+ e.toString());
+            }
+            System.out.println("Done. Processed glyphs: " + processedCharCount);
+        }
     }
 
-    public void test() {
-        System.out.println(fontPath);
-        System.out.println(outPath);
-        System.out.println(regex);
-        System.out.println(padding);
-        System.out.println(fontSize);
+    public void createFont() {
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+            font = font.deriveFont(fontSize);
+            System.out.println("Font \"" + font.getName() + "\" loaded.");
+        } catch (FontFormatException e) {
+            fail("Error processing font. " + e.toString());
+        } catch (IOException e) {
+            fail("Error processing font. " + e.toString());
+        }
     }
 
-    public Font createFont(File fontPath) throws FontFormatException,
-            IOException {
-        Font font = null;
-        font = Font.createFont(Font.TRUETYPE_FONT, fontPath);
-        font = font.deriveFont(fontSize);
-        System.out.println("Font \"" + font.getName() + "\" loaded.");
-        return font;
-    }
+    public BufferedImage getImage(int codePoint) {
 
-    public BufferedImage getImage(String text) {
+        GlyphVector gv = font.createGlyphVector(frc, Character.toString((char) codePoint));
+        Rectangle bounds = gv.getPixelBounds(frc, 0, 0);
 
-        GlyphVector gv = font.createGlyphVector(frc, text);
-        Rectangle bounds;
-//        bounds = gv.getVisualBounds().getBounds();
-        bounds = gv.getPixelBounds(frc, 0, 0);
-        
         AffineTransform at = new AffineTransform();
         at.translate(bounds.x * -1 + padding, bounds.y * -1
                 + padding);
         Shape outline = gv.getOutline();
         outline = at.createTransformedShape(outline);
 
-//        System.out.println(bounds);
-        
+        if (verbose) {
+            System.out.println(bounds);
+        }
+
         // ensure each dimension is 1px at minimum
         int height = Math.max(1, bounds.height + 2 * padding);
         int width = Math.max(1, bounds.width + 2 * padding);
@@ -99,65 +141,9 @@ public class Otf2png {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.black);
         g2.fill(outline);
-        g2.dispose();    
+        g2.dispose();
         return img;
     }
-
-    public void extract(File fontPath, File outPath, int padding,
-            float fontSize, String regex) throws IOException,
-            FontFormatException {
-
-        String text;
-        BufferedImage image;
-        File outFile;
-        String hexCodePoint;
-
-        this.padding = padding;
-        this.fontSize = fontSize;
-
-        System.out.println("Font file: " + fontPath.toString());
-        System.out.println("Output folder: " + outPath.toString());
-        System.out.println("Regex: " + regex);
-        System.out.println("Padding: " + padding);
-        System.out.println("Font size: " + fontSize);
-
-        pattern = Pattern.compile(regex);
-
-//        BufferedImage img = new BufferedImage(1, 1,
-//                BufferedImage.TYPE_INT_ARGB);
-//        Graphics2D g2 = (Graphics2D) img.getGraphics();
-//        frc = g2.getFontRenderContext();
-        
-        frc = new FontRenderContext(null, true, true);
-
-        int processedCharCount = 0;
-
-        font = createFont(fontPath);
-
-        if (font != null) {
-
-            System.out.println("Processing...");
-
-            for (int c = 0; c < 65536; c++) {
-                if (font.canDisplay(c)) {
-                    text = Character.toString((char) c);
-                    hexCodePoint = String.format("%X", c);
-                    Matcher matcher = pattern.matcher(hexCodePoint);
-                    if (matcher.matches()) {
-                        processedCharCount++;
-                        image = getImage(text);
-                        // System.out.println(c + " - " + hexCodePoint);
-                        outFile = new File(outPath, hexCodePoint + ".png");
-                        ImageIO.write(image, "png", outFile);
-                    }
-                }
-            }
-
-            System.out.println("Done. Processed glyphs: " + processedCharCount);
-
-        }
-
-    };
 
     public static void main(String[] args) throws IOException,
             FontFormatException {
@@ -166,63 +152,17 @@ public class Otf2png {
         CmdLineParser parser = new CmdLineParser(o2p);
         try {
             parser.parseArgument(args);
-
-            if( o2p.fontPath == null ) {
-                throw new CmdLineException(parser,"No font file specified");
-            }
-
-            o2p.test();
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
+            System.err.println("java -jar otf2png.jar [options...]");
             parser.printUsage(System.err);
+            System.exit(-1);
         }
 
+        o2p.init();
+        o2p.createFont();
+        o2p.extractGlyphs();
 
-
-        String fontPath, outPath, regex;
-        int padding;
-        float fontSize;
-
-
-
-
-//        if (arguments.length != 5) {
-//            throw new IllegalArgumentException(
-//                    "Required command line arguments:\n\n"
-//                            + "otf2png [fontfile] [targetfolder] [regex*] [padding*] [size*]\n"
-//                            + "* = optional\n"
-//                            + "Example: otf2png BravuraText.otf resources/images E.* 50 1000\n");
-//        }
-//
-//        fontPath = arguments[0];
-//        outPath = arguments[1];
-//        regex = arguments[2];
-//        padding = Integer.parseInt(arguments[3]);
-//        fontSize = Float.parseFloat(arguments[4]);
-
-//         fontPath =
-//         "C:/eXist-db/webapp/ahlsen/smufl-browser/tmp/otf/BravuraText.otf";
-//         outPath = "C:/eXist-db/webapp/ahlsen/smufl-browser/tmp/png-glyphs";
-//         regex = "E.*";
-//         padding = 0;
-//         fontSize = 1000;
-
-//        Otf2png o2p = new Otf2png();
-
-//        File fontFile = new File(fontPath);
-//        File outFile = new File(outPath);
-//
-//        if (!fontFile.exists()) {
-//            throw new FileNotFoundException("Could not find font file: "
-//                    + fontFile.toString());
-//        }
-//
-//        else if (!outFile.exists() && !outFile.mkdir()) {
-//            throw new RuntimeException("Could not create output path: "
-//                    + outFile.toString());
-//        } else {
-//            o2p.extract(fontFile, outFile, padding, fontSize, regex);
-//        }
+//         -font C:/eXist-db/webapp/ahlsen/smufl-browser/tmp/otf/BravuraText.otf -out C:/eXist-db/webapp/ahlsen/smufl-browser/tmp/png-glyphs -regex E.* -padding 0 -fontsize 1000
     }
-
 }
