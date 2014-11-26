@@ -64,7 +64,7 @@ public class Otf2png {
         try {
             pattern = Pattern.compile(regex);
         } catch (PatternSyntaxException e) {
-            fail("Could not create output directory.");
+            fail("Could not compile regular expression \"" + regex + "\".");
         }
         frc = new FontRenderContext(null, true, true);
         System.out.println("Font file: " + fontFile.toString());
