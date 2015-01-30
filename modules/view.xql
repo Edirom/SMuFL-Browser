@@ -14,7 +14,7 @@ import module namespace templates="http://exist-db.org/xquery/templates" ;
 import module namespace config="http://edirom.de/smufl-browser/config" at "config.xqm";
 import module namespace app="http://edirom.de/smufl-browser/templates" at "app.xql";
 
-declare option exist:serialize "method=html5 media-type=text/html enforce-xhtml=yes";
+declare option exist:serialize "method=xhtml5 media-type=text/html enforce-xhtml=yes";
 
 let $config := map {
     $templates:CONFIG_APP_ROOT := $config:app-root,
