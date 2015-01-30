@@ -4,3 +4,4 @@ tmp
 dist
 bower_components
 expath-pkg.xml
+local.build.properties
