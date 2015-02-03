@@ -26,16 +26,11 @@ public class FitToHeightOutlineTransformer implements OutlineTransformer {
         int centerX = width / 2;
         int centerY = height / 2;
 
-        int x1 = (bounds.x + bounds.width);
-        int glyphCenterX = (bounds.x + x1) / 2;
-        float offsetX = (glyphCenterX) * scaleFactor;
-
-        int y1 = (bounds.y + bounds.height);
-        int glyphCenterY = (bounds.y + y1) / 2;
-        float offsetY = (glyphCenterY) * scaleFactor;
+        float scaledOffsetX = (bounds.x + (bounds.width / 2)) * scaleFactor;
+        float scaledOffsetY = (bounds.y + (bounds.height / 2)) * scaleFactor;
 
         AffineTransform at = new AffineTransform();
-        at.translate(centerX - offsetX, centerY - offsetY);
+        at.translate(centerX - scaledOffsetX, centerY - scaledOffsetY);
         at.scale(scaleFactor, scaleFactor);
 
         return at.createTransformedShape(outline);

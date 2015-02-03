@@ -49,7 +49,7 @@ public class FixedHeightOutlineTransformer implements OutlineTransformer {
     @Override
     public Dimension getResultDimension() {
 
-        // ensure each dimension is 1px at minimum
+        // make nsure each dimension is 1px at minimum
 
 //        int defaultResultImageHeight = Math.round(offsetY) + 2 * padding;
 

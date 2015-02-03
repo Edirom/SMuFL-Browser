@@ -24,7 +24,7 @@ public class VariableHeightOutlineTransformer implements OutlineTransformer {
     @Override
     public Dimension getResultDimension() {
 
-        // ensure each dimension is 1px at minimum
+        // make sure each dimension is 1px at minimum
         int resultImageHeight = Math.max(1, bounds.height + 2 * padding);
         int resultImageWidth = Math.max(1, bounds.width + 2 * padding);
         return new Dimension(resultImageWidth, resultImageHeight);
