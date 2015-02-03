@@ -4,17 +4,9 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.Option;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -27,6 +19,41 @@ public class Otf2png {
 
     private File fontFile;
     private File outPath;
+    @Option(name = "-regex", usage = "A regular expression to select glyphs by hex code points [default: .*]")
+    private String regex = ".*";
+    @Option(name = "-padding", usage = "The padding (in pixels) of the glyphs in the generated images [default: 0]")
+    private int padding = 0;
+    @Option(name = "-fontsize", usage = "The font size (in pixels) [default: 1000]")
+    private float fontSize = 1000;
+    @Option(name = "-height", usage = "The height of the result image (in pixels). If not set or 0, the glyph images' heights equal the glyphs' bounding box heights")
+    private int height = 0;
+    @Option(name = "-width", usage = "The width of the result image (in pixels)")
+    private int width = 0;
+
+//    TODO update description
+    @Option(name = "-mode", usage = "Specifies if each glyph image should be scaled to fill the height specified with -height. Values: fit, fixed, variable. This option only takes effect if the height option is set")
+    private String mode = "variable";
+    @Option(name = "-verbose", usage = "Extra status messages [default: false]")
+    private boolean verbose = false;
+    private Pattern pattern = null;
+    private Font font = null;
+    private ImageExtractor imageExtractor;
+
+    public static void main(String[] args) throws IOException,
+            FontFormatException {
+        Otf2png o2p = new Otf2png();
+        CmdLineParser parser = new CmdLineParser(o2p);
+        try {
+            parser.parseArgument(args);
+        } catch (CmdLineException e) {
+            System.err.println(e.getMessage());
+            System.err.println("java -jar otf2png.jar [options...]");
+            parser.printUsage(System.err);
+            System.exit(-1);
+        }
+        o2p.init();
+        o2p.extractGlyphs();
+    }
 
     @Option(name = "-font", usage = "The path of the font file [required]", required = true)
     public void setFontFile(File fontFile) {
@@ -37,22 +64,6 @@ public class Otf2png {
     public void setOutPath(File outPath) {
         if (outPath.exists() || outPath.mkdir()) this.outPath = outPath;
     }
-
-    @Option(name = "-regex", usage = "A regular expression to select glyphs by hex code points [default: .*]")
-    private String regex = ".*";
-
-    @Option(name = "-padding", usage = "The padding (in pixels) of the glyphs in the generated images [default: 0]")
-    private int padding = 0;
-
-    @Option(name = "-fontsize", usage = "The font size (in pixels) [default: 1000]")
-    private float fontSize = 1000;
-
-    @Option(name = "-verbose", usage = "Extra status messages [default: false]")
-    private boolean verbose = false;
-
-    private Pattern pattern = null;
-    private Font font = null;
-    private FontRenderContext frc;
 
     public void init() {
         if (fontFile == null) {
@@ -66,12 +77,40 @@ public class Otf2png {
         } catch (PatternSyntaxException e) {
             fail("Could not compile regular expression \"" + regex + "\".");
         }
-        frc = new FontRenderContext(null, true, true);
+        FontRenderContext frc = new FontRenderContext(null, true, true);
+        createFont();
+
+        //TODO add other parameters
         System.out.println("Font file: " + fontFile.toString());
         System.out.println("Output folder: " + outPath.toString());
         System.out.println("Regex: " + regex);
         System.out.println("Padding: " + padding);
         System.out.println("Font size: " + fontSize);
+        System.out.print("Image sizing mode: ");
+
+        OutlineTransformer outlineTransformer;
+        if ("fit".equals(mode)) {
+            if (width == 0 || height == 0) {
+                fail("Width and height parameters must be specified and > 0 in \"fit\" mode.");
+            }
+            outlineTransformer = new FitToHeightOutlineTransformer(width, height, padding);
+            System.out.println("fit");
+        } else if ("fixed".equals(mode)) {
+
+//                    Canvas c = new Canvas();
+//        FontMetrics fm = c.getFontMetrics(font);
+//            Rectangle fontBounds = fm.getMaxCharBounds(c.getGraphics());
+
+            Rectangle2D fontBounds = font.getMaxCharBounds(frc);
+
+            outlineTransformer = new FixedHeightOutlineTransformer(fontBounds, padding);
+            System.out.println("fixed");
+        } else  {
+            outlineTransformer = new VariableHeightOutlineTransformer(padding);
+            System.out.println("variable");
+        }
+        imageExtractor = new ImageExtractor(font, frc, verbose);
+        imageExtractor.setOutlineTransformer(outlineTransformer);
     }
 
     private void fail(String msg) {
@@ -92,13 +131,13 @@ public class Otf2png {
                             if (verbose) {
                                 System.out.println(c + " - " + hexCodePoint);
                             }
-                            ImageIO.write(getImage(c), "png", new File(outPath, hexCodePoint + ".png"));
+                            ImageIO.write(imageExtractor.getImage(c), "png", new File(outPath, hexCodePoint + ".png"));
                             processedCharCount++;
                         }
                     }
                 }
             } catch (IOException e) {
-                fail("Error writing image file. "+ e.toString());
+                fail("Error writing image file. " + e.toString());
             }
             System.out.println("Done. Processed glyphs: " + processedCharCount);
         }
@@ -114,55 +153,5 @@ public class Otf2png {
         } catch (IOException e) {
             fail("Error processing font. " + e.toString());
         }
-    }
-
-    public BufferedImage getImage(int codePoint) {
-
-        GlyphVector gv = font.createGlyphVector(frc, Character.toString((char) codePoint));
-        Rectangle bounds = gv.getPixelBounds(frc, 0, 0);
-
-        AffineTransform at = new AffineTransform();
-        at.translate(bounds.x * -1 + padding, bounds.y * -1
-                + padding);
-        Shape outline = gv.getOutline();
-        outline = at.createTransformedShape(outline);
-
-        if (verbose) {
-            System.out.println(bounds);
-        }
-
-        // ensure each dimension is 1px at minimum
-        int height = Math.max(1, bounds.height + 2 * padding);
-        int width = Math.max(1, bounds.width + 2 * padding);
-        BufferedImage img = new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = (Graphics2D) img.getGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.black);
-        g2.fill(outline);
-        g2.dispose();
-        return img;
-    }
-
-    public static void main(String[] args) throws IOException,
-            FontFormatException {
-
-        Otf2png o2p = new Otf2png();
-        CmdLineParser parser = new CmdLineParser(o2p);
-        try {
-            parser.parseArgument(args);
-        } catch (CmdLineException e) {
-            System.err.println(e.getMessage());
-            System.err.println("java -jar otf2png.jar [options...]");
-            parser.printUsage(System.err);
-            System.exit(-1);
-        }
-
-        o2p.init();
-        o2p.createFont();
-        o2p.extractGlyphs();
-
-//         -font C:/eXist-db/webapp/ahlsen/smufl-browser/tmp/otf/BravuraText.otf -out C:/eXist-db/webapp/ahlsen/smufl-browser/tmp/png-glyphs -regex E.* -padding 0 -fontsize 1000
     }
 }
