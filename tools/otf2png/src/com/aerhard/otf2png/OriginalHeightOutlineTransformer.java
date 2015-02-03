@@ -3,12 +3,12 @@ package com.aerhard.otf2png;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class VariableHeightOutlineTransformer implements OutlineTransformer {
+public class OriginalHeightOutlineTransformer implements OutlineTransformer {
 
     private int padding;
     private Rectangle bounds;
 
-    public VariableHeightOutlineTransformer(int padding) {
+    public OriginalHeightOutlineTransformer(int padding) {
         this.padding = padding;
     }
 

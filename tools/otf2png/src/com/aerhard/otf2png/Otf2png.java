@@ -17,6 +17,10 @@ import javax.imageio.ImageIO;
 
 public class Otf2png {
 
+    private static final String MODE_ORIGINAL = "original";
+    private static final String MODE_FIXED = "fixed";
+    private static final String MODE_FIT = "fit";
+
     private File fontFile;
     private File outPath;
     @Option(name = "-regex", usage = "A regular expression to select glyphs by hex code points [default: .*]")
@@ -25,14 +29,12 @@ public class Otf2png {
     private int padding = 0;
     @Option(name = "-fontsize", usage = "The font size (in pixels) [default: 1000]")
     private float fontSize = 1000;
-    @Option(name = "-height", usage = "The height of the result image (in pixels). If not set or 0, the glyph images' heights equal the glyphs' bounding box heights")
+    @Option(name = "-height", usage = "The height of the result image (in pixels); only relevant in \"fit\" and \"fixed\" mode. If not set or 0, the glyph images' heights equal the glyphs' bounding box heights")
     private int height = 0;
-    @Option(name = "-width", usage = "The width of the result image (in pixels)")
+    @Option(name = "-width", usage = "The width of the result image (in pixels); only relevant in \"fit\" mode")
     private int width = 0;
-
-//    TODO update description
-    @Option(name = "-mode", usage = "Specifies if each glyph image should be scaled to fill the height specified with -height. Values: fit, fixed, variable. This option only takes effect if the height option is set")
-    private String mode = "variable";
+    @Option(name = "-mode", usage = "Specifies the scaling mode. \"original\" outputs glyphs whose dimensions are solely based on the chosen font size; the result images' size can be increased additionally by providing a \"padding\" parameter; depending on the glyph's original height, the heights of the output images may vary. Images created in \"fit\" mode all have the same size; the depicted glyphs maximally fill the dimensions specified with the \"width\" and \"height\" parameters minus padding; in this mode, scaling may vary between glyphs. Images created in \"fixed\" mode all have the same height specified with the \"height\" parameter; the same scaling factor is applied to all glyphs; widths may vary between images.")
+    private String mode = MODE_ORIGINAL;
     @Option(name = "-verbose", usage = "Extra status messages [default: false]")
     private boolean verbose = false;
     private Pattern pattern = null;
@@ -41,6 +43,7 @@ public class Otf2png {
 
     public static void main(String[] args) throws IOException,
             FontFormatException {
+
         Otf2png o2p = new Otf2png();
         CmdLineParser parser = new CmdLineParser(o2p);
         try {
@@ -89,13 +92,18 @@ public class Otf2png {
         System.out.print("Image sizing mode: ");
 
         OutlineTransformer outlineTransformer;
-        if ("fit".equals(mode)) {
+        if (MODE_FIT.equals(mode)) {
             if (width == 0 || height == 0) {
                 fail("Width and height parameters must be specified and > 0 in \"fit\" mode.");
             }
-            outlineTransformer = new FitToHeightOutlineTransformer(width, height, padding);
-            System.out.println("fit");
-        } else if ("fixed".equals(mode)) {
+            outlineTransformer = new FitToBoundsOutlineTransformer(width, height, padding);
+            System.out.println(MODE_FIT);
+            System.out.println("Height: " + height);
+            System.out.println("Width: " + width);
+        } else if (MODE_FIXED.equals(mode)) {
+            if (height == 0) {
+                fail("height parameters must be specified and > 0 in \"fixed\" mode.");
+            }
 
 //                    Canvas c = new Canvas();
 //        FontMetrics fm = c.getFontMetrics(font);
@@ -103,11 +111,12 @@ public class Otf2png {
 
             Rectangle2D fontBounds = font.getMaxCharBounds(frc);
 
-            outlineTransformer = new FixedHeightOutlineTransformer(fontBounds, padding);
-            System.out.println("fixed");
+            outlineTransformer = new FixedHeightOutlineTransformer(fontBounds, height, padding);
+            System.out.println(MODE_FIXED);
+            System.out.println("Height: " + height);
         } else  {
-            outlineTransformer = new VariableHeightOutlineTransformer(padding);
-            System.out.println("variable");
+            outlineTransformer = new OriginalHeightOutlineTransformer(padding);
+            System.out.println(MODE_ORIGINAL);
         }
         imageExtractor = new ImageExtractor(font, frc, verbose);
         imageExtractor.setOutlineTransformer(outlineTransformer);

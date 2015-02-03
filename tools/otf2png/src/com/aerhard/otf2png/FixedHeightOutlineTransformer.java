@@ -6,59 +6,42 @@ import java.awt.geom.Rectangle2D;
 
 public class FixedHeightOutlineTransformer implements OutlineTransformer {
 
+    private final int glyphHeight;
+    private int height;
     private int padding;
     private Rectangle bounds;
     private double offsetY;
     private Rectangle2D fontBounds;
+    private double scalingFactor;
 
-    public FixedHeightOutlineTransformer(Rectangle2D fontBounds, int padding) {
+    public FixedHeightOutlineTransformer(Rectangle2D fontBounds, int height, int padding) {
         this.padding = padding;
         this.fontBounds = fontBounds;
-        this.offsetY = fontBounds.getY();
-
-//        System.out.println(fontBounds);
+        this.height = height;
+        this.glyphHeight = height - 2 * padding;
+        this.scalingFactor = glyphHeight / fontBounds.getHeight();
+        this.offsetY = (fontBounds.getY() * scalingFactor);
     }
-
-    // TODO auto-margin
-
-    // TODO rename padding to margin
-
-    // TODO report if there occur out-of-bounds coordinates
 
     @Override
     public Shape transform(Shape outline, Rectangle bounds) {
         this.bounds = bounds;
         AffineTransform at = new AffineTransform();
-//        at.translate(bounds.x * -1 + padding, bounds.y * -1
-//                + padding);
-
-//        System.out.println(bounds.y * -1
-//                + padding);
-
-        at.translate(bounds.x * -1 + padding, offsetY * -1
-                + padding);
-
-        return at.createTransformedShape(outline);
+        at.translate((bounds.x * -1), (offsetY * -1));
+        at.scale(scalingFactor, scalingFactor);
+        Shape newOutline = at.createTransformedShape(outline);
+        Rectangle newBounds = newOutline.getBounds();
+        at = new AffineTransform();
+        at.translate((newBounds.x * -1) + padding, (newBounds.y * -1) + padding);
+        return at.createTransformedShape(newOutline);
     }
-
-    //        System.out.println(font.getMaxCharBounds(frc));
-//        Canvas c = new Canvas();
-//        FontMetrics fm = c.getFontMetrics(font);
-//        System.out.println(fm);
 
     @Override
     public Dimension getResultDimension() {
 
-        // make nsure each dimension is 1px at minimum
-
-//        int defaultResultImageHeight = Math.round(offsetY) + 2 * padding;
-
-//        int resultImageHeight = Math.max(defaultResultImageHeight, bounds.height + 2 * padding);
-
-        int resultImageHeight = Math.round((int) fontBounds.getHeight()) + 2 * padding;
-
-        int resultImageWidth = Math.max(1, bounds.width + 2 * padding);
-        return new Dimension(resultImageWidth, resultImageHeight);
+        // make sure the width 1px at minimum
+        int resultImageWidth = Math.max(1, (int) (bounds.width * scalingFactor) + 2 * padding);
+        return new Dimension(resultImageWidth, height);
 
     }
 }

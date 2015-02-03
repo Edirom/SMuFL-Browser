@@ -3,13 +3,13 @@ package com.aerhard.otf2png;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class FitToHeightOutlineTransformer implements OutlineTransformer {
+public class FitToBoundsOutlineTransformer implements OutlineTransformer {
 
     private int width;
     private int height;
     private int padding;
 
-    public FitToHeightOutlineTransformer(int width, int height, int padding) {
+    public FitToBoundsOutlineTransformer(int width, int height, int padding) {
         this.padding = padding;
         this.width = width;
         this.height = height;
