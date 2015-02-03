@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="dist" name="SMuFL-Browser" basedir=".">
+<project default="xar" name="SMuFL-Browser" basedir=".">
     
     <!-- import default properties from file -->
     <property file="local.build.properties"/>
@@ -8,16 +8,21 @@
     <condition property="xmlsh.cmdpath" value="win32/xmlsh.bat" else="${xmlsh.cmdpath}">
         <os family="windows"/>
     </condition>
+
+    <condition property="bower.executable" value="${bower.executable.windows}" else="bower">
+        <os family="windows"/>
+    </condition>
     
     <!-- main targets -->
     <target name="all" depends="charDecl,otf2png"/>
     <target name="rebuild" depends="clean,all"/>
     
-    <target name="clean-all">
+    <target name="clean-all" depends="clean">
         <description>Delete the whole build directory with all temporary files and eXist packages</description>
         <delete dir="${build.dir}"/>
         <delete dir="${tmp.dir}"/>
         <delete dir="${dist.dir}"/>
+        <delete dir="bower_components"/>
 <!--        <delete dir="data"/>-->
 <!--        <delete dir="resources/images"/>-->
 <!--        <delete dir="resources/fonts"/>-->
@@ -36,6 +41,13 @@
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${tmp.dir}"/>
         <mkdir dir="${dist.dir}"/>
+    </target>
+    
+    <target name="bower" depends="init">
+        <description>Update javascript libraries via bower</description>
+        <exec executable="${bower.executable}">
+            <arg value="update"/>
+        </exec>
     </target>
     
     <target name="json2xml" depends="init, download-smufl-metadata">
@@ -95,7 +107,7 @@
         </xslt>
     </target>
     
-    <target name="dist" depends="init, charDecl, otf2png">
+    <target name="dist" depends="init, bower, charDecl, otf2png">
         <copy file="expath-pkg.xml.template" tofile="${dist.dir}/expath-pkg.xml" filtering="true" overwrite="true">
             <filterset>
                 <filter token="project.version" value="${project.version}"/>
