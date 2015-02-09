@@ -4,7 +4,7 @@
 
     <target name="compile">
         <mkdir dir="bin"/>
-        <javac srcdir="src" destdir="bin" debug="on" source="1.7">
+        <javac srcdir="src" destdir="bin" debug="on" source="1.7" includeantruntime="false">
             <classpath>
                 <fileset dir="lib"/>
             </classpath>
