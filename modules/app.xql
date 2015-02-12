@@ -114,14 +114,14 @@ declare
             $config:charDecl//tei:char[.//tei:item = $classes]
         }
         let $chars-by-range := function() {
-            $config:charDecl//tei:char[parent::tei:charDecl/tei:desc = $ranges]
+            $config:charDecl//tei:char[parent::tei:charDecl/tei:desc = $ranges][@xml:id]
         }
         let $chars-by-glyphname := function() { 
             $config:charDecl//id($glyphnames)
         }
         let $chars := 
             if(($ranges,$classes,$glyphnames) != 'all') then ($chars-by-class(), $chars-by-range(), $chars-by-glyphname())
-            else $config:charDecl//tei:char
+            else $config:charDecl//tei:char[@xml:id]
         return 
             map { "chars" := $chars }
 };
