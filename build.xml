@@ -163,6 +163,9 @@
 			<fileset dir="bower_components/bootstrap/dist/fonts">
 				<include name="*.*"/>
 			</fileset>
+			<fileset dir="bower_components/fontawesome/fonts/">
+				<include name="fontawesome-webfont.*"/>
+			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/css">
 			<fileset dir="bower_components/bootstrap/dist/css">
@@ -170,6 +173,9 @@
 			</fileset>
 			<fileset dir="bower_components/selectize/dist/css">
 				<include name="selectize.bootstrap3.css"/>
+			</fileset>
+			<fileset dir="bower_components/fontawesome/css">
+				<include name="font-awesome.min.css"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/js">

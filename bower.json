@@ -14,6 +14,7 @@
   ],
   "dependencies": {
     "bootstrap": ">= 3.1.1",
+    "fontawesome": ">=4.1.0",
     "selectize": "~0.10.1"
   }
 }
