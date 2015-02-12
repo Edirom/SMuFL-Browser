@@ -94,15 +94,23 @@
 		<unzip src="${tmp.dir}/bravura.zip" dest="${tmp.dir}"/>
 	</target>
 	
-	<target name="build-otf2png" unless="skip.build-otf2png">
+	<target name="build-otf2png">
 		<description>Build the otf2png tool by invoking the ant file in the tool's folder</description>
 		<ant antfile="tools/otf2png/build.xml" inheritall="false" />
 	</target>
 	
 	<target name="otf2png" depends="init, download-smufl-font, build-otf2png" unless="skip.images">
 		<description>Create png images for every glyph</description>
+		<mkdir dir="${tmp.dir}/png-glyphs"/>
 		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
-			<arg line="-font ${tmp.dir}/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs -regex E.* -padding 0 -fontsize 1000 -height 70 -width 70 -mode fit"/>
+			<arg line="-font ${tmp.dir}/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs/hi -regex E.* -padding 0 -fontsize 1000 -height 120 -width 120 -mode fit"/>
+			<classpath>
+				<pathelement location="tools/otf2png/build/otf2png.jar"/>
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+		</java>
+		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
+			<arg line="-font ${tmp.dir}/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs/low -regex E.* -padding 0 -fontsize 1000 -height 40 -width 40 -mode fit"/>
 			<classpath>
 				<pathelement location="tools/otf2png/build/otf2png.jar"/>
 				<pathelement path="${java.class.path}"/>
@@ -144,13 +152,14 @@
 				<exclude name="*.template"/>
 				<exclude name="*.properties"/>
 				<exclude name="*.xsl"/>
+				<exclude name="*.xpr"/>
 			</fileset>
 		</copy>
 		<mkdir dir="${dist.dir}/resources/images"/>
 		<mkdir dir="${dist.dir}/resources/fonts"/>
 		<copy todir="${dist.dir}/resources/images">
 			<fileset dir="${tmp.dir}/png-glyphs">
-				<include name="*.png"/>
+				<include name="**/*.png"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/fonts">
