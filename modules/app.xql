@@ -106,21 +106,16 @@ declare
 
 declare 
     %templates:wrap
-    %templates:default("ranges", "all")
-    %templates:default("classes", "all")
-    %templates:default("glyphnames", "all")
-    function app:list-chars($node as node(), $model as map(*), $ranges as xs:string*, $classes as xs:string*, $glyphnames as xs:string*) as map(*) {
-        let $chars-by-class := function() {
-            $config:charDecl//tei:char[.//tei:item = $classes]
-        }
-        let $chars-by-range := function() {
-            $config:charDecl//tei:char[parent::tei:charDecl/tei:desc = $ranges][@xml:id]
-        }
-        let $chars-by-glyphname := function() { 
-            $config:charDecl//id($glyphnames)
-        }
+    %templates:default("range", "all")
+    %templates:default("class", "all")
+    %templates:default("glyphname", "all")
+    function app:list-chars($node as node(), $model as map(*), $range as xs:string*, $class as xs:string*, $glyphname as xs:string*) as map(*) {
         let $chars := 
-            if(($ranges,$classes,$glyphnames) != 'all') then ($chars-by-class(), $chars-by-range(), $chars-by-glyphname())
+            if(($range,$class,$glyphname) != 'all') then (
+                $config:charDecl//tei:char[.//tei:item = $class] | 
+                $config:charDecl//tei:char[parent::tei:charDecl/tei:desc = $range][@xml:id] |
+                $config:charDecl//id($glyphname)
+            )
             else $config:charDecl//tei:char[@xml:id]
         return 
             map { "chars" := $chars }

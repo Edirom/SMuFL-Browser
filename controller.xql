@@ -19,7 +19,7 @@ import module namespace json="http://www.json.org";
  : Content Negotiation 
  : Evaluate Accept header and resource suffix to serve appropriate media type
  :
- : @return 'html' or 'xml' 
+ : @return ('html' | 'json' | 'tei' | 'png') 
 ~:)
 declare function local:media-type() as xs:string {
     let $suffix := substring-after($exist:resource, '.')
@@ -33,7 +33,7 @@ declare function local:media-type() as xs:string {
         
         (: Accept header follows if no suffix is given :)
         else if($accepted-content-types[1] = ('text/html', 'application/xhtml+xml')) then 'html'
-        else if($accepted-content-types[1] = ('application/xml', 'application/tei+xml')) then 'xml'
+        else if($accepted-content-types[1] = ('application/xml', 'application/tei+xml')) then 'tei'
         else if($accepted-content-types[1] = ('application/json')) then 'json'
         else if($accepted-content-types[1] = ('image/png', 'application/png', 'application/x-png')) then 'png'
         
@@ -41,8 +41,11 @@ declare function local:media-type() as xs:string {
         else 'tei'
 };
 
+
+(:~
+ : Dispatch single chars according to the requested media type
+~:)
 declare function local:dispatch() {
-(:    let $ext := substring-after($resource, '.'):)
     let $resourceName := substring-before($exist:resource, '.')
     let $char :=
         if(matches($resourceName, $config:valid-unicode-range-regex)) then config:get-char-by-codepoint($resourceName)
@@ -59,6 +62,29 @@ declare function local:dispatch() {
         else local:error()
 };
 
+(:~
+ : Dispatch the index of chars according to the requested media type
+~:)
+declare function local:dispatch-index() {
+    switch(local:media-type())
+        case 'tei' return $config:charDecl
+        case 'html' return
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{$exist:controller}/templates/index.html"/>
+                <view>
+                    <forward url="{$exist:controller}/modules/view.xql"/>
+                </view>
+        		<error-handler>
+        			<forward url="{$exist:controller}/templates/error-page.html" method="get"/>
+        			<forward url="{$exist:controller}/modules/view.xql"/>
+        		</error-handler>
+            </dispatch>
+        default return local:error()
+};
+
+(:~
+ : Return a single char as json
+~:)
 declare function local:return-json($char as element(tei:char)?) {
     let $serializationParameters := ('method=text', 'media-type=text/javascript', 'indent=no', 'omit-xml-declaration=no', 'encoding=utf-8')
     return
@@ -68,6 +94,9 @@ declare function local:return-json($char as element(tei:char)?) {
             )
 };
 
+(:~
+ : Return a single char as html via the eXist templating module
+~:)
 declare function local:dispatch-char($char as element(tei:char)?) as element(exist:dispatch) {
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/templates/char.html"/>
@@ -83,14 +112,9 @@ declare function local:dispatch-char($char as element(tei:char)?) as element(exi
     </dispatch>
 };
 
-declare function local:error() as element(exist:dispatch) {
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-    	<forward url="{$exist:controller}/templates/error-page.html">
-    	   <cache-control cache="yes"/>
-    	</forward>
-    </dispatch>
-};
-
+(:~
+ : Return a png image of a single char
+~:)
 declare function local:dispatch-image($char as element(tei:char)?) as element(exist:dispatch) {
     let $res := request:get-parameter('size', 'hi')[. = ('low', 'hi')] (: Two allowed values only :)
     let $codepoint := substring($char/tei:mapping[@type='smufl'], 3) 
@@ -104,6 +128,18 @@ declare function local:dispatch-image($char as element(tei:char)?) as element(ex
         else local:error()
 };
 
+(:~
+ : Return the 404 error page
+~:)
+declare function local:error() as element(exist:dispatch) {
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    	<forward url="{$exist:controller}/templates/error-page.html">
+    	   <cache-control cache="yes"/>
+    	</forward>
+    </dispatch>
+};
+
+
 (:
  : Main routines start here
 :)
@@ -116,10 +152,13 @@ if ($exist:path eq '') then
 else if ($exist:path eq "/") then
     (: forward root path to index.html :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <redirect url="index.html"/>
+        <redirect url="index"/>
     </dispatch>
 
-else if (matches($exist:path, '^/index.html?$')) then
+else if (starts-with($exist:path, '/index')) then 
+    local:dispatch-index()
+    
+(:else if (matches($exist:path, '^/index.html?$')) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/templates/index.html"/>
         <view>
@@ -130,7 +169,7 @@ else if (matches($exist:path, '^/index.html?$')) then
 			<forward url="{$exist:controller}/modules/view.xql"/>
 		</error-handler>
     </dispatch>
-
+:)
 else if (matches($exist:path, '^/about.html?$')) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/templates/about.html"/>
