@@ -1,179 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="xar" name="SMuFL-Browser" basedir=".">
-    
-    <!-- import default properties from file -->
-    <property file="local.build.properties"/>
-    <property file="build.properties"/>
-    
-    <!-- main targets -->
-    <target name="all" depends="charDecl,eps2png"/>
-    <target name="rebuild" depends="clean,all"/>
-    
-    <target name="clean-all" depends="clean">
-        <description>Delete the whole build directory with all temporary files and eXist packages</description>
-        <delete dir="${build.dir}"/>
-        <delete dir="${tmp.dir}"/>
-        <delete dir="${dist.dir}"/>
-        <delete dir="bower_components"/>
-<!--        <delete dir="data"/>-->
-<!--        <delete dir="resources/images"/>-->
-<!--        <delete dir="resources/fonts"/>-->
-<!--        <delete file="expath-pkg.xml"/>-->
-    </target>
-    
-    <target name="clean">
-        <description>Delete all temporary files except eXist packages with the extension .xar</description>
-        <delete includeemptydirs="true">
-            <fileset dir="${build.dir}" includes="**/*" excludes="*.xar" defaultexcludes="false"/>
-        </delete>
-        <delete file="expath-pkg.xml"/>
-    </target>
-    
-    <target name="init">
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${tmp.dir}"/>
-        <mkdir dir="${dist.dir}"/>
-    </target>
-    
-    <target name="bower" depends="init">
-        <description>Update javascript libraries via bower</description>
-        <exec executable="bower">
-            <arg value="update"/>
-        </exec>
-    </target>
-    
-    <target name="json2xml" depends="init, download-smufl-metadata">
-        <description>Transforms SMuFL metadata files from json to xml</description>
-        <!-- xmlsh is needed for json2xml transformation -->
-        <echo>Transforming classes.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/classes.xml">
-            <arg value="-c"/>
-            <arg line="'json2xml classes.json'"/>
-            <env key="XMLSH" value="${xmlsh.home}"/>
-        </exec>
-        <echo>Transforming ranges.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/ranges.xml">
-            <arg value="-c"/>
-            <arg line="'json2xml ranges.json'"/>
-            <env key="XMLSH" value="${xmlsh.home}"/>
-        </exec>
-        <echo>Transforming glyphnames.json</echo>
-        <exec executable="${xmlsh.home}/unix/xmlsh" dir="${tmp.dir}" output="${tmp.dir}/glyphnames.xml">
-            <arg value="-c"/>
-            <arg line="'json2xml glyphnames.json'"/>
-            <env key="XMLSH" value="${xmlsh.home}"/>
-        </exec>
-    </target>
-    
-    <target name="download-smufl-metadata" depends="init">
-        <description>Download SMuFL metadata from the official website</description>
-        <get src="${smufl.metadata}" dest="${tmp.dir}/metadata.zip" skipexisting="yes"/>
-        <unzip src="${tmp.dir}/metadata.zip" dest="${tmp.dir}"/>
-    </target>
-    
-    <target name="download-smufl-font" depends="init">
-        <description>Download Bravura font from the official website</description>
-        <get src="${smufl.font}" dest="${tmp.dir}/bravura.zip" skipexisting="yes"/>
-        <unzip src="${tmp.dir}/bravura.zip" dest="${tmp.dir}"/>
-    </target>
-    
-    <target name="otf2eps" depends="init, download-smufl-font" unless="skip.images">
-        <description>Create eps shapes for every glyph</description>
-        <mkdir dir="${tmp.dir}/eps-glyphs"/>
-        <exec executable="${fontforge.cmd}" dir="${tmp.dir}/eps-glyphs">
-            <arg value="-lang=ff"/>
-            <arg line="-c 'Open(&quot;../otf/BravuraText.otf&quot;); SelectWorthOutputting(); Export(&quot;%U.eps&quot;);'"/>
-        </exec>
-    </target>
-    
-    <target name="eps2png" depends="init, otf2eps" unless="skip.images">
-        <!-- At present there is no better way of creating png images rather than going via eps?!?! -->
-        <description>Create png images from the eps files for every glyph</description>
-        <apply executable="${mogrify.cmd}" parallel="yes">
-            <arg line="-format png"/>
-            <fileset dir="${tmp.dir}/eps-glyphs" includes="E*.eps"/>
-        </apply>
-    </target>
-    
-    <target name="charDecl" depends="init, json2xml">
-        <description>Merge SMuFL metadata to one TEI file</description>
-        <mkdir dir="${dist.dir}/data"/>
-        <xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${dist.dir}/data/charDecl.xml">
-            <param name="ranges" expression="${tmp.dir}/ranges.xml"/>
-            <param name="classes" expression="${tmp.dir}/classes.xml"/>
-            <param name="glyphnames" expression="${tmp.dir}/glyphnames.xml"/>
-            <param name="current.version" expression="${project.version}"/>
-        </xslt>
-    </target>
-    
-    <target name="dist" depends="init, bower, charDecl, eps2png">
-        <copy file="expath-pkg.xml.template" tofile="${dist.dir}/expath-pkg.xml" filtering="true" overwrite="true">
-            <filterset>
-                <filter token="project.version" value="${project.version}"/>
-                <filter token="project.app" value="${project.app}"/>
-            </filterset>
-        </copy>
-        <copy todir="${dist.dir}">
-            <fileset dir=".">
-                <include name="*.*"/>
-                <include name="modules/**"/>
-                <include name="data/**"/>
-                <include name="resources/**"/>
-                <include name="templates/**"/>
-                <include name="xsl/**"/>
-                <!--<exclude name="${dist.dir}/*"/>-->
-                <!--<exclude name="${tmp.dir}/*"/>-->
-                <!--<exclude name="${build.dir}/*"/>-->
-                <exclude name="build.xml"/>
-                <exclude name="bower.json"/>
-                <exclude name="*.template"/>
-                <exclude name="*.properties"/>
-                <exclude name="*.xsl"/>
-            </fileset>
-        </copy>
-        <mkdir dir="${dist.dir}/resources/images"/>
-        <mkdir dir="${dist.dir}/resources/fonts"/>
-        <copy todir="${dist.dir}/resources/images">
-            <fileset dir="${tmp.dir}/eps-glyphs">
-                <include name="*.png"/>
-            </fileset>
-        </copy>
-        <copy todir="${dist.dir}/resources/fonts">
-            <fileset dir="${tmp.dir}">
-                <include name="eot/"/>
-                <include name="woff/"/>
-                <include name="otf/"/>
-                <include name="svg/"/>
-            </fileset>
-            <fileset dir="bower_components/bootstrap/dist/fonts">
-                <include name="*.*"/>
-            </fileset>
-        </copy>
-        <copy todir="${dist.dir}/resources/css">
-            <fileset dir="bower_components/bootstrap/dist/css">
-                <include name="bootstrap.min.css"/>
-            </fileset>
-            <fileset dir="bower_components/selectize/dist/css">
-                <include name="selectize.bootstrap3.css"/>
-            </fileset>
-        </copy>
-        <copy todir="${dist.dir}/resources/js">
-            <fileset dir="bower_components/bootstrap/dist/js">
-                <include name="bootstrap.min.js"/>
-            </fileset>
-            <fileset dir="bower_components/jquery/dist">
-                <include name="jquery.min.js"/>
-                <include name="jquery.min.map"/>
-            </fileset>
-            <fileset dir="bower_components/selectize/dist/js/standalone/">
-                <include name="selectize.min.js"/>
-            </fileset>
-        </copy>
-    </target>
-    
-    <target name="xar" depends="dist">
-        <zip destfile="${build.dir}/${project.app}-${project.version}.xar">
-            <fileset dir="${dist.dir}"/>
-        </zip>
-    </target>
+	
+	<!-- import default properties from file -->
+	<property file="local.build.properties"/>
+	<property file="build.properties"/>
+	
+	<condition property="xmlsh.cmdpath" value="win32/xmlsh.bat" else="${xmlsh.cmdpath}">
+		<os family="windows"/>
+	</condition>
+	
+	<condition property="bower.executable" value="${bower.executable.windows}" else="bower">
+		<os family="windows"/>
+	</condition>
+	
+	<!-- main targets -->
+	<target name="all" depends="charDecl,otf2png"/>
+	<target name="rebuild" depends="clean,all"/>
+	
+	<target name="clean-all" depends="clean">
+		<description>Delete the whole build directory with all temporary files and eXist packages</description>
+		<delete dir="${build.dir}"/>
+		<delete dir="${tmp.dir}"/>
+		<delete dir="${dist.dir}"/>
+		<delete dir="bower_components"/>
+		<!--        <delete dir="data"/>-->
+		<!--        <delete dir="resources/images"/>-->
+		<!--        <delete dir="resources/fonts"/>-->
+		<!--        <delete file="expath-pkg.xml"/>-->
+	</target>
+	
+	<target name="clean">
+		<description>Delete all temporary files except eXist packages with the extension .xar</description>
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/*" excludes="*.xar" defaultexcludes="false"/>
+		</delete>
+		<delete file="expath-pkg.xml"/>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${tmp.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+	
+	<target name="bower" depends="init">
+		<description>Update javascript libraries via bower</description>
+		<exec executable="${bower.executable}">
+			<arg value="update"/>
+		</exec>
+	</target>
+	
+	<target name="json2xml" depends="init, download-smufl-metadata">
+		<description>Transforms SMuFL metadata files from json to xml</description>
+		<!-- xmlsh is needed for json2xml transformation -->
+		<echo>Transforming classes.json</echo>
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/classes.xml">
+			<arg value="-c"/>
+			<arg line="'json2xml classes.json'"/>
+			<env key="XMLSH" value="${xmlsh.home}"/>
+		</exec>
+		<echo>Transforming ranges.json</echo>
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/ranges.xml">
+			<arg value="-c"/>
+			<arg line="'json2xml ranges.json'"/>
+			<env key="XMLSH" value="${xmlsh.home}"/>
+		</exec>
+		<echo>Transforming glyphnames.json</echo>
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/glyphnames.xml">
+			<arg value="-c"/>
+			<arg line="'json2xml glyphnames.json'"/>
+			<env key="XMLSH" value="${xmlsh.home}"/>
+		</exec>
+	</target>
+	
+	<target name="download-smufl-metadata" depends="init">
+		<description>Download SMuFL metadata from the official website</description>
+		<get src="${smufl.metadata}" dest="${tmp.dir}/metadata.zip" skipexisting="yes"/>
+		<unzip src="${tmp.dir}/metadata.zip" dest="${tmp.dir}"/>
+	</target>
+	
+	<target name="download-smufl-font" depends="init">
+		<description>Download Bravura font from the official website</description>
+		<get src="${smufl.font}" dest="${tmp.dir}/bravura.zip" skipexisting="yes"/>
+		<unzip src="${tmp.dir}/bravura.zip" dest="${tmp.dir}"/>
+	</target>
+	
+	<target name="build-otf2png" unless="skip.build-otf2png">
+		<description>Build the otf2png tool by invoking the ant file in the tool's folder</description>
+		<ant antfile="tools/otf2png/build.xml" inheritall="false" />
+	</target>
+	
+	<target name="otf2png" depends="init, download-smufl-font, build-otf2png" unless="skip.images">
+		<description>Create png images for every glyph</description>
+		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
+			<arg line="-font ${tmp.dir}/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs -regex E.* -padding 0 -fontsize 1000 -height 70 -width 70 -mode fit"/>
+			<classpath>
+				<pathelement location="tools/otf2png/build/otf2png.jar"/>
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="charDecl" depends="init, json2xml">
+		<description>Merge SMuFL metadata to one TEI file</description>
+		<mkdir dir="${dist.dir}/data"/>
+		<xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${dist.dir}/data/charDecl.xml">
+			<param name="ranges" expression="${tmp.dir}/ranges.xml"/>
+			<param name="classes" expression="${tmp.dir}/classes.xml"/>
+			<param name="glyphnames" expression="${tmp.dir}/glyphnames.xml"/>
+			<param name="current.version" expression="${project.version}"/>
+		</xslt>
+	</target>
+	
+	<target name="dist" depends="init, bower, charDecl, otf2png">
+		<copy file="expath-pkg.xml.template" tofile="${dist.dir}/expath-pkg.xml" filtering="true" overwrite="true">
+			<filterset>
+				<filter token="project.version" value="${project.version}"/>
+				<filter token="project.app" value="${project.app}"/>
+			</filterset>
+		</copy>
+		<copy todir="${dist.dir}">
+			<fileset dir=".">
+				<include name="*.*"/>
+				<include name="modules/**"/>
+				<include name="data/**"/>
+				<include name="resources/**"/>
+				<include name="templates/**"/>
+				<include name="xsl/**"/>
+				<!--<exclude name="${dist.dir}/*"/>-->
+				<!--<exclude name="${tmp.dir}/*"/>-->
+				<!--<exclude name="${build.dir}/*"/>-->
+				<exclude name="build.xml"/>
+				<exclude name="bower.json"/>
+				<exclude name="*.template"/>
+				<exclude name="*.properties"/>
+				<exclude name="*.xsl"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${dist.dir}/resources/images"/>
+		<mkdir dir="${dist.dir}/resources/fonts"/>
+		<copy todir="${dist.dir}/resources/images">
+			<fileset dir="${tmp.dir}/png-glyphs">
+				<include name="*.png"/>
+			</fileset>
+		</copy>
+		<copy todir="${dist.dir}/resources/fonts">
+			<fileset dir="${tmp.dir}">
+				<include name="eot/"/>
+				<include name="woff/"/>
+				<include name="otf/"/>
+				<include name="svg/"/>
+			</fileset>
+			<fileset dir="bower_components/bootstrap/dist/fonts">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+		<copy todir="${dist.dir}/resources/css">
+			<fileset dir="bower_components/bootstrap/dist/css">
+				<include name="bootstrap.min.css"/>
+			</fileset>
+			<fileset dir="bower_components/selectize/dist/css">
+				<include name="selectize.bootstrap3.css"/>
+			</fileset>
+		</copy>
+		<copy todir="${dist.dir}/resources/js">
+			<fileset dir="bower_components/bootstrap/dist/js">
+				<include name="bootstrap.min.js"/>
+			</fileset>
+			<fileset dir="bower_components/jquery/dist">
+				<include name="jquery.min.js"/>
+				<include name="jquery.min.map"/>
+			</fileset>
+			<fileset dir="bower_components/selectize/dist/js/standalone/">
+				<include name="selectize.min.js"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="xar" depends="dist">
+		<zip destfile="${build.dir}/${project.app}-${project.version}.xar">
+			<fileset dir="${dist.dir}"/>
+		</zip>
+	</target>
 </project>

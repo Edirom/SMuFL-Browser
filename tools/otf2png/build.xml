@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="jar" name="Create Runnable Jar for Project otf2png">
+    <!-- ANT 1.7 is required -->
+
+    <target name="compile">
+        <mkdir dir="bin"/>
+        <javac srcdir="src" destdir="bin" debug="on" source="1.7" includeantruntime="false">
+            <classpath>
+                <fileset dir="lib"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="build/otf2png.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="com.aerhard.otf2png.Otf2png"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="bin"/>
+            <zipgroupfileset dir="lib"/>
+        </jar>
+    </target>
+</project>
