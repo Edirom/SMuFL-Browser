@@ -13,6 +13,7 @@
     <xsl:param name="classes"/>
     <xsl:param name="glyphnames"/>
     <xsl:param name="current.version"/>
+    <xsl:param name="image.server"/>
     
     <xsl:key name="glyphs" match="jxml:member" use="normalize-space(@name)"/>
     
@@ -73,7 +74,7 @@
             <xsl:if test="not(contains($glyph/@name, 'Unused'))">
                 <!-- A dirty hack to exclude those 4 accSagittalUnused* glyphs which only exist in the metadata files but not in the Bravura font -->
                 <xsl:element name="graphic">
-                    <xsl:attribute name="url" select="concat('../resources/images/', substring-after($glyph//jxml:member[@name='codepoint']/normalize-space(jxml:string), 'U+'), '.png')"/>
+                    <xsl:attribute name="url" select="concat($image.server, substring-after($glyph//jxml:member[@name='codepoint']/normalize-space(jxml:string), 'U+'), '.png')"/>
                 </xsl:element>
             </xsl:if>
             <xsl:call-template name="classes"/>

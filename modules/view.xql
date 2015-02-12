@@ -12,7 +12,7 @@ import module namespace templates="http://exist-db.org/xquery/templates" ;
  : templating.
  :)
 import module namespace config="http://edirom.de/smufl-browser/config" at "config.xqm";
-import module namespace app="http://edirom.de/smufl-browser/templates" at "app.xql";
+import module namespace app="http://edirom.de/smufl-browser/app" at "app.xql";
 
 declare option exist:serialize "method=xhtml5 media-type=text/html enforce-xhtml=yes";
 

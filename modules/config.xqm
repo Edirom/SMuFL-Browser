@@ -38,6 +38,10 @@ declare variable $config:expath-descriptor := doc(concat($config:app-root, "/exp
 
 declare variable $config:charDecl := doc(concat($config:app-root, "/data/charDecl.xml"));
 
+declare variable $config:valid-unicode-range-regex := '^[Ee][a-fA-F0-9]{3}$';
+
+declare variable $config:server-url := 'http://edirom.de/smufl-browser';
+
 (:~
  : Resolve the given path using the current application context.
  : If the app resides in the file system,
@@ -102,10 +106,24 @@ declare function config:app-info($node as node(), $model as map(*)) {
         </table>
 };
 
+(:~
+ : Lookup char by name
+ : 
+ : @param $name the name of a SMuFl character, e.g. 'accidentalBakiyeSharp'
+ : @return the corresponding tei:char element if succesful, the empty sequence otherwise
+~:)
 declare function config:get-char-by-name($name as xs:string?) as element(tei:char)? {
     $config:charDecl//id($name)
 };
 
+(:~
+ : Lookup char by codepoint
+ : Codepoint can be given with or without leading 'U+'
+ : 
+ : @param $codepoint the codepoint of a SMuFl character, e.g. 'E445' or 'U+E445' for convenience
+ : @return the corresponding tei:char element if succesful, the empty sequence otherwise 
+~:)
 declare function config:get-char-by-codepoint($codepoint as xs:string?) as element(tei:char)? {
-    $config:charDecl//tei:char[tei:mapping = $codepoint]
+    if(starts-with($codepoint, 'U+')) then $config:charDecl//tei:char[tei:mapping = $codepoint]
+    else $config:charDecl//tei:char[tei:mapping = concat('U+', $codepoint)]
 };

@@ -26,24 +26,26 @@ declare function local:media-type() as xs:string {
     let $accepted-content-types := tokenize(normalize-space(request:get-header('accept')), ',\s?')
     return
         (: explicit suffix takes precedence :)
-        if(matches($suffix, '^x?html?$')) then 'html'
-        else if(matches($suffix, '^(xml)|(tei)$')) then 'tei'
-        else if(matches($suffix, '^js(on)?$')) then 'json'
+        if(matches($suffix, '^x?html?$', 'i')) then 'html'
+        else if(matches($suffix, '^(xml)|(tei)$', 'i')) then 'tei'
+        else if(matches($suffix, '^js(on)?$', 'i')) then 'json'
+        else if(matches($suffix, '^png$', 'i')) then 'png'
         
         (: Accept header follows if no suffix is given :)
         else if($accepted-content-types[1] = ('text/html', 'application/xhtml+xml')) then 'html'
         else if($accepted-content-types[1] = ('application/xml', 'application/tei+xml')) then 'xml'
         else if($accepted-content-types[1] = ('application/json')) then 'json'
+        else if($accepted-content-types[1] = ('image/png', 'application/png', 'application/x-png')) then 'png'
         
-        (: if nothing matches fall back to xml :)
+        (: if nothing matches fall back to TEI-XML :)
         else 'tei'
 };
 
-declare function local:dispatch-chars() {
+declare function local:dispatch() {
 (:    let $ext := substring-after($resource, '.'):)
     let $resourceName := substring-before($exist:resource, '.')
     let $char :=
-        if(matches($resourceName, '^[A-F0-9]{4}$')) then config:get-char-by-codepoint(concat('U+', $resourceName))
+        if(matches($resourceName, $config:valid-unicode-range-regex)) then config:get-char-by-codepoint($resourceName)
         else config:get-char-by-name($resourceName)
     return 
         if($char) then 
@@ -52,6 +54,7 @@ declare function local:dispatch-chars() {
                 case 'rdf' return local:error()
                 case 'html' return local:dispatch-char($char)
                 case 'json' return local:return-json($char)
+                case 'png' return local:dispatch-image($char)
                 default return local:error()
         else local:error()
 };
@@ -88,6 +91,18 @@ declare function local:error() as element(exist:dispatch) {
     </dispatch>
 };
 
+declare function local:dispatch-image($char as element(tei:char)?) as element(exist:dispatch) {
+    let $res := request:get-parameter('size', 'hi')[. = ('low', 'hi')] (: Two allowed values only :)
+    let $codepoint := substring($char/tei:mapping[@type='smufl'], 3) 
+    return
+        if($res and $codepoint) then 
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{$exist:controller}/resources/images/{$res}/{$codepoint}.png">
+            	   <cache-control cache="yes"/>
+            	</forward>
+            </dispatch>
+        else local:error()
+};
 
 (:
  : Main routines start here
@@ -140,7 +155,7 @@ else if (starts-with($exist:path, '/resources/')) then
         <cache-control cache="yes"/>
     </dispatch>:)
     
-(: everything else will be run through the char-dispatcher --
+(: everything else will be run through the general dispatcher --
     if it fails there, an error will be returned :)
 else
-    local:dispatch-chars()
+    local:dispatch()

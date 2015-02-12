@@ -126,6 +126,7 @@
 			<param name="classes" expression="${tmp.dir}/classes.xml"/>
 			<param name="glyphnames" expression="${tmp.dir}/glyphnames.xml"/>
 			<param name="current.version" expression="${project.version}"/>
+			<param name="image.server" expression="${image.server}"/>
 		</xslt>
 	</target>
 	

@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-module namespace app="http://edirom.de/smufl-browser/templates";
+module namespace app="http://edirom.de/smufl-browser/app";
 
 import module namespace templates="http://exist-db.org/xquery/templates" ;
 import module namespace config="http://edirom.de/smufl-browser/config" at "config.xqm";
@@ -48,15 +48,15 @@ declare function app:charDesc($node as node(), $model as map(*)) as element(dl) 
             <dt>Classes</dt>
             <dd>{string-join($char//tei:item/normalize-space(), ', ')}</dd>
             <dt>TEI code for embedding</dt>
-            <dd><code>&lt;g ref="{'http://edirom.de/smufl-browser/' || normalize-space($char/@xml:id) || '.xml'}"/&gt;</code></dd>
+            <dd><code>&lt;g ref="{string-join(($config:server-url, normalize-space($char/@xml:id) || '.xml'), '/')}"/&gt;</code></dd>
         </dl>
 };
 
 declare function app:charImage($node as node(), $model as map(*)) as element(img) {
     let $char := map:get($model, 'char')
-    let $url := functx:substring-after-last($char/tei:graphic/normalize-space(@url), '/')
+    let $url := $char/tei:graphic/normalize-space(@url)
     return 
-        <img src="{concat('resources/images/', $url)}" class="charImage"/>
+        <img src="{$url}" class="charImage"/>
 };
 
 declare 
@@ -141,7 +141,7 @@ declare
     function app:pagination($node as node(), $model as map(*), $page as xs:string) as element(li)* {
         let $page := if($page castable as xs:int) then xs:int($page) else 1
         let $page-link := function ($page as xs:int){
-            'chars.html?page=' || $page || string-join(
+            'index.html?page=' || $page || string-join(
                 request:get-parameter-names()[. != 'page'] ! (
                     '&amp;' || string(.) || '=' || string-join(
                         request:get-parameter(., ''),
