@@ -15,17 +15,40 @@ import module namespace config="http://edirom.de/smufl-browser/config" at "modul
 import module namespace json="http://www.json.org";
 (:import module namespace functx="http://www.functx.com";:)
 
-(: noch Request headers einbauen! :)
-declare function local:dispatch-chars($resource as xs:string) {
-    let $ext := substring-after($resource, '.')
-    let $resourceName := substring-before($resource, '.')
+(:~
+ : Content Negotiation 
+ : Evaluate Accept header and resource suffix to serve appropriate media type
+ :
+ : @return 'html' or 'xml' 
+~:)
+declare function local:media-type() as xs:string {
+    let $suffix := substring-after($exist:resource, '.')
+    let $accepted-content-types := tokenize(normalize-space(request:get-header('accept')), ',\s?')
+    return
+        (: explicit suffix takes precedence :)
+        if(matches($suffix, '^x?html?$')) then 'html'
+        else if(matches($suffix, '^(xml)|(tei)$')) then 'tei'
+        else if(matches($suffix, '^js(on)?$')) then 'json'
+        
+        (: Accept header follows if no suffix is given :)
+        else if($accepted-content-types[1] = ('text/html', 'application/xhtml+xml')) then 'html'
+        else if($accepted-content-types[1] = ('application/xml', 'application/tei+xml')) then 'xml'
+        else if($accepted-content-types[1] = ('application/json')) then 'json'
+        
+        (: if nothing matches fall back to xml :)
+        else 'tei'
+};
+
+declare function local:dispatch-chars() {
+(:    let $ext := substring-after($resource, '.'):)
+    let $resourceName := substring-before($exist:resource, '.')
     let $char :=
         if(matches($resourceName, '^[A-F0-9]{4}$')) then config:get-char-by-codepoint(concat('U+', $resourceName))
         else config:get-char-by-name($resourceName)
     return 
         if($char) then 
-            switch($ext)
-                case 'xml' return $char
+            switch(local:media-type())
+                case 'tei' return $char
                 case 'rdf' return local:error()
                 case 'html' return local:dispatch-char($char)
                 case 'json' return local:return-json($char)
@@ -93,18 +116,6 @@ else if (matches($exist:path, '^/index.html?$')) then
 		</error-handler>
     </dispatch>
 
-else if (matches($exist:path, '^/chars.html?$')) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/templates/chars.html"/>
-        <view>
-            <forward url="{$exist:controller}/modules/view.xql"/>
-        </view>
-		<error-handler>
-			<forward url="{$exist:controller}/templates/error-page.html" method="get"/>
-			<forward url="{$exist:controller}/modules/view.xql"/>
-		</error-handler>
-    </dispatch>
-    
 else if (matches($exist:path, '^/about.html?$')) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/templates/about.html"/>
@@ -117,14 +128,6 @@ else if (matches($exist:path, '^/about.html?$')) then
 		</error-handler>
     </dispatch>
 
-(: Resource paths starting with $shared are loaded from the shared-resources app :)
-else if (contains($exist:path, "/$shared/")) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="/shared-resources/{substring-after($exist:path, '/$shared/')}">
-            <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
-        </forward>
-    </dispatch>
-
 (: other resources are loaded from the app's resources collection :)
 else if (starts-with($exist:path, '/resources/')) then 
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -132,11 +135,12 @@ else if (starts-with($exist:path, '/resources/')) then
     </dispatch>
 
 (: other (during development) resources are loaded from the app's components collection :)
-else if (starts-with($exist:path, '/components/')) then 
+(:else if (starts-with($exist:path, '/components/')) then 
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>
-    </dispatch>
+    </dispatch>:)
     
-(: everything else will result in an error page:)
+(: everything else will be run through the char-dispatcher --
+    if it fails there, an error will be returned :)
 else
-    local:dispatch-chars($exist:resource)
+    local:dispatch-chars()

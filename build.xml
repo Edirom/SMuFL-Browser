@@ -5,17 +5,8 @@
 	<property file="local.build.properties"/>
 	<property file="build.properties"/>
 	
-	<condition property="xmlsh.cmdpath" value="win32/xmlsh.bat" else="${xmlsh.cmdpath}">
-		<os family="windows"/>
-	</condition>
-	
-	<condition property="bower.executable" value="${bower.executable.windows}" else="bower">
-		<os family="windows"/>
-	</condition>
-	
 	<!-- main targets -->
-	<target name="all" depends="charDecl,otf2png"/>
-	<target name="rebuild" depends="clean,all"/>
+	<target name="rebuild" depends="clean,xar"/>
 	
 	<target name="clean-all" depends="clean">
 		<description>Delete the whole build directory with all temporary files and eXist packages</description>
@@ -37,11 +28,29 @@
 		<delete file="expath-pkg.xml"/>
 	</target>
 	
-	<target name="init">
+    <target name="init" depends="set-paths-for-external-programs">
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${tmp.dir}"/>
 		<mkdir dir="${dist.dir}"/>
 	</target>
+    
+    <target name="set-paths-for-external-programs">
+        <description>Set paths for external programs (i.e. Bower and XMLShell)</description>
+        <condition property="xmlsh.cmdpath" value="win32/xmlsh.bat">
+            <os family="windows"/>
+        </condition>
+        <condition property="xmlsh.cmdpath" value="unix/xmlsh">
+            <os family="unix"/>
+        </condition>
+        <condition property="xmlsh.cmdpath" value="unix/xmlsh">
+            <os family="mac"/>
+        </condition>
+        
+        <condition property="bower.executable" value="${bower.executable.windows}" else="bower">
+            <os family="windows"/>
+        </condition>
+        
+    </target>
 	
 	<target name="bower" depends="init">
 		<description>Update javascript libraries via bower</description>

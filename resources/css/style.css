@@ -8,10 +8,22 @@
     font-size:larger;
 }
 
-footer {
-    color: #666;
-    background: #323232;
-    display:block;
-    border-top: 1px solid #000;
-    padding: 50px 20px;
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 100px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 100px;
+  background-color: #4d4d4d;
+  padding: 40px 20px;
 }
