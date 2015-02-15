@@ -11,6 +11,7 @@ declare variable $exist:prefix external;
 declare variable $exist:root external;
 
 import module namespace config="http://edirom.de/smufl-browser/config" at "modules/config.xqm";
+import module namespace tei-funcs="http://edirom.de/smufl-browser/tei-funcs" at "modules/tei-funcs.xqm";
 (:import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";:)
 import module namespace json="http://www.json.org";
 (:import module namespace functx="http://www.functx.com";:)
@@ -67,7 +68,7 @@ declare function local:dispatch() {
 ~:)
 declare function local:dispatch-index() {
     switch(local:media-type())
-        case 'tei' return $config:charDecl
+        case 'tei' return tei-funcs:index()
         case 'html' return
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/templates/index.html"/>
