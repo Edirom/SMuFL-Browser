@@ -16,10 +16,8 @@ Dependencies
 * [Apache ANT](http://ant.apache.org)
 * [XML Shell](http://www.xmlsh.org/HomePage)
 * [Saxon](http://www.saxonica.com)
-* [ImageMagick](http://www.imagemagick.org) (only needed for creating glyph images)
-* FontForge (only needed for creating glyph images)
 
-If you want to run the app your own you also need the [eXist-db](http://exist-db.org) XML database.
+If you want to run the app your own you also need the [eXist-db](http://exist-db.org) XML database. Please use a recent build from 2015 since the [HTML5 serializer](https://github.com/eXist-db/exist/pull/433) has been modified.
 
 
 
@@ -29,19 +27,14 @@ ANT Tasks
 
 For working with the ANT tasks you need to have the above dependencies installed. Then, copy `build.properties` to `local.build.properties` and modify paths and version numbers according to your system and to match the desired SMuFL version and download location.
 
-All resulting files will be stored within the `build.dir` which defaults to `./build`.
 
 ### Target `charDecl`
 
 This will create a TEI file based on the template charDecl.xml.template with charDecl elements (one for each SMuFL range). This task relies on Saxon and XML Shell.
 
-### Target `otf2eps`
+### Target `otf2png`
 
-This will create eps shapes from the Bravura font glyphs via FontForge.
-
-### Target `eps2png`
-
-This will create png images from the eps shapes via ImageMagick.
+This will create png images from the Bravura font through a small program written by [Alexander Erhard](https://github.com/aerhard).
 
 ### Target `xar`
 
