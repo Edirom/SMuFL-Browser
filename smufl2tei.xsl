@@ -65,10 +65,18 @@
                 <xsl:attribute name="type" select="'smufl'"/>
                 <xsl:value-of select="$glyph//jxml:member[@name='codepoint']/normalize-space(jxml:string)"/>
             </xsl:element>
-            <xsl:if test="$glyph//jxml:member[@name='alternateCodepoint']">
+            <xsl:variable name="alternateCodepoint" select="$glyph//jxml:member[@name='alternateCodepoint']/normalize-space(jxml:string)"/>
+            <xsl:if test="$alternateCodepoint">
                 <xsl:element name="mapping">
                     <xsl:attribute name="type" select="'standard'"/>
-                    <xsl:value-of select="$glyph//jxml:member[@name='alternateCodepoint']/normalize-space(jxml:string)"/>
+                    <xsl:choose>
+                        <xsl:when test="starts-with($alternateCodepoint, 'U+')">
+                            <xsl:value-of select="$alternateCodepoint"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="concat('U+', $alternateCodepoint)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:element>
             </xsl:if>
             <xsl:if test="not(contains($glyph/@name, 'Unused'))">
