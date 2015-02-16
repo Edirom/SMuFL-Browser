@@ -14,7 +14,7 @@ import module namespace config="http://edirom.de/smufl-browser/config" at "modul
 import module namespace tei-funcs="http://edirom.de/smufl-browser/tei-funcs" at "modules/tei-funcs.xqm";
 (:import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";:)
 import module namespace json="http://www.json.org";
-(:import module namespace functx="http://www.functx.com";:)
+import module namespace functx="http://www.functx.com";
 
 (:~
  : Content Negotiation 
@@ -47,7 +47,7 @@ declare function local:media-type() as xs:string {
  : Dispatch single chars according to the requested media type
 ~:)
 declare function local:dispatch() {
-    let $resourceName := substring-before($exist:resource, '.')
+    let $resourceName := functx:substring-before-if-contains($exist:resource, '.')
     let $char :=
         if(matches($resourceName, $config:valid-unicode-range-regex)) then config:get-char-by-codepoint($resourceName)
         else config:get-char-by-name($resourceName)
@@ -159,18 +159,6 @@ else if ($exist:path eq "/") then
 else if (starts-with($exist:path, '/index')) then 
     local:dispatch-index()
     
-(:else if (matches($exist:path, '^/index.html?$')) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/templates/index.html"/>
-        <view>
-            <forward url="{$exist:controller}/modules/view.xql"/>
-        </view>
-		<error-handler>
-			<forward url="{$exist:controller}/templates/error-page.html" method="get"/>
-			<forward url="{$exist:controller}/modules/view.xql"/>
-		</error-handler>
-    </dispatch>
-:)
 else if (matches($exist:path, '^/about.html?$')) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/templates/about.html"/>
@@ -189,12 +177,6 @@ else if (starts-with($exist:path, '/resources/')) then
         <cache-control cache="yes"/>
     </dispatch>
 
-(: other (during development) resources are loaded from the app's components collection :)
-(:else if (starts-with($exist:path, '/components/')) then 
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <cache-control cache="yes"/>
-    </dispatch>:)
-    
 (: everything else will be run through the general dispatcher --
     if it fails there, an error will be returned :)
 else
