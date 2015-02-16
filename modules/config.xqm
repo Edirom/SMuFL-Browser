@@ -38,7 +38,7 @@ declare variable $config:expath-descriptor := doc(concat($config:app-root, "/exp
 
 declare variable $config:charDecl := doc(concat($config:app-root, "/data/charDecl.xml"));
 
-declare variable $config:valid-unicode-range-regex := '^[Ee][a-fA-F0-9]{3}$';
+declare variable $config:valid-unicode-range-regex := '^([Ee][a-fA-F0-9]{3})|(1[dD]1[a-fA-F0-9]{2})|(266[defDEF])$';
 
 declare variable $config:server-url := 'http://edirom.de/smufl-browser';
 
