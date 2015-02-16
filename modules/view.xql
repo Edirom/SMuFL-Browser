@@ -43,5 +43,6 @@ let $lookup := function($functionName as xs:string, $arity as xs:int) {
  : Run it through the templating system and return the result.
  :)
 let $content := request:get-data()
+let $setStatusCode := if(request:get-attribute('error-code')) then response:set-status-code(xs:int(request:get-attribute('error-code'))) else()
 return
     templates:apply($content, $lookup, $model, $config)

@@ -67,20 +67,22 @@ declare function local:dispatch() {
  : Dispatch the index of chars according to the requested media type
 ~:)
 declare function local:dispatch-index() {
-    switch(local:media-type())
-        case 'tei' return tei-funcs:index()
-        case 'html' return
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{$exist:controller}/templates/index.html"/>
-                <view>
-                    <forward url="{$exist:controller}/modules/view.xql"/>
-                </view>
-        		<error-handler>
-        			<forward url="{$exist:controller}/templates/error-page.html" method="get"/>
-        			<forward url="{$exist:controller}/modules/view.xql"/>
-        		</error-handler>
-            </dispatch>
-        default return local:error()
+    if(functx:substring-before-if-contains($exist:resource, '.') = 'index') then 
+        switch(local:media-type())
+            case 'tei' return tei-funcs:index()
+            case 'html' return
+                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                    <forward url="{$exist:controller}/templates/index.html"/>
+                    <view>
+                        <forward url="{$exist:controller}/modules/view.xql"/>
+                    </view>
+            		<error-handler>
+            			<forward url="{$exist:controller}/templates/error-page.html" method="get"/>
+            			<forward url="{$exist:controller}/modules/view.xql"/>
+            		</error-handler>
+                </dispatch>
+            default return local:error()
+    else local:error()
 };
 
 (:~
@@ -137,6 +139,15 @@ declare function local:error() as element(exist:dispatch) {
     	<forward url="{$exist:controller}/templates/error-page.html">
     	   <cache-control cache="yes"/>
     	</forward>
+    	<view>
+            <forward url="{$exist:controller}/modules/view.xql">
+                <set-attribute name="error-code" value="404"/>
+            </forward>
+        </view>
+		<error-handler>
+			<forward url="{$exist:controller}/templates/error-page.html" method="get"/>
+			<forward url="{$exist:controller}/modules/view.xql"/>
+		</error-handler>
     </dispatch>
 };
 
