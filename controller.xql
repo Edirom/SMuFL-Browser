@@ -119,7 +119,7 @@ declare function local:dispatch-char($char as element(tei:char)?) as element(exi
  : Return a png image of a single char
 ~:)
 declare function local:dispatch-image($char as element(tei:char)?) as element(exist:dispatch) {
-    let $res := request:get-parameter('size', 'hi')[. = ('low', 'hi')] (: Two allowed values only :)
+    let $res := request:get-parameter('res', 'hi')[. = ('low', 'hi')] (: Two allowed values only :)
     let $codepoint := substring($char/tei:mapping[@type='smufl'], 3) 
     return
         if($res and $codepoint) then 
