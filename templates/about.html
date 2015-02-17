@@ -1,9 +1,64 @@
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
-    <div class="row">
-        <h1>SMuFL-Browser</h1>
+    <!--<div class="row">
+        <h1>About SMuFL-Browser</h1>
         <p>A web based viewer for the Standard Music Font Layout specification</p>
-    </div>
+    </div>-->
     <div class="row">
+        <div class="col-md-9">
+            <div>
+                <h1>About SMuFL-Browser</h1>
+                <p>SMuFL-Browser is a small web service build upon the <i><a href="http://www.smufl.org" title="Standard Music Font Layout specification">Standard Music Font Layout specification</a></i> (SMuFL) and the <i><a href="http://www.tei-c.org" title="Text Encoding Initiative">Text Encoding Initiative</a></i> (TEI) which can – hopefully – serve multiple purposes.</p>
+                <ol>
+                    <li>As a browser and search interface for SMuFL glyphs</li>
+                    <li>As a reference for the declaration of musical symbols in a TEI encoded text</li>
+                </ol>
+                <p>The first point was made more or less obsolete by the development of the browsing facility on the original SMuFL website. Still, this site offers some basic search and autocompletion features you might find useful.</p>
+            </div>
+            <div>
+                <h3>SMuFL and TEI</h3>
+                <p>If you want to use SMuFL for encoding musical symbols in your TEI documents, you could simply use the appropriate Unicode Codepoints from the SMuFL specification (i.e. entering <code>&amp;#xE262;</code> for a &#x266F; in the running text).
+                    Since the very most of the SMuFL codepoints are from the Private Use Area, this is really an idiosyncratic solution and not the right approach for data interchange.
+                </p>
+                <p>The preferred approach would be to use the <code>&lt;g&gt;</code> element in the text and link to detailed character declarations in the TEI header (cf. chapter 5 of the TEI Guidelines: 
+                    <a href="http://www.tei-c.org/release/doc/tei-p5-doc/en/html/WD.html" title="Characters, Glyphs, and Writing Modes">Characters, Glyphs, and Writing Modes</a>.). 
+                    So, while you're probably not interested in that declaring stuff but simply want to add that muscial symbol to your text, this is where SMuFL-Browser comes in with providing those declarations for you.
+                    All you need to do, is find the right character with the SMuFL-Browser and copy the "TEI code for embedding" into your TEI text.
+                </p>
+            </div>
+            <div>
+                <h3>Webservice specification</h3>
+                <p>SMuFL-Browser was developed with both the encoder as well as the developer in mind. 
+                    For the developer, this web service provides the information concerning each character in several formats:</p>
+                <dl>
+                    <dt>TEI-XML</dt>
+                    <dd>The webservice will send TEI-XML when queried for the suffix <code>.tei</code> or <code>.xml</code>. 
+                        Alternatively you can skip the file extension and provide the request headers <code>application/xml</code> or <code>application/tei+xml</code></dd>
+                </dl>
+                
+                    
+            </div>
+            <div>
+                <h3>Credits</h3>
+                <p>First and foremost big thanks to Daniel Spreadbury for his great work on SMuFL and for making it publicly available under an open license.</p>
+                <p>Second, SMuFL-Browser was inspired to a great deal by the <a href="http://www.manuscriptorium.com/apps/gbank/gbank_table.php" title="ENRICH Gaiji Bank">ENRICH Gaiji Bank</a> which builds upon the <a href="http://www.mufi.info/">Medieval Unicode Font Initiative (MUFI) standard</a>.</p>
+                <p>Last not least thanks to Alexander Erhard for pull requests, testing and various feedback.</p>
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Application Information</h3>
+                </div>
+            
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="https://github.com/Edirom/SMuFL-Browser" title="SMuFL-Browser Releases @ GitHub">SMuFL-Browser-Version: <span data-template="app:version" data-template-key="smufl-browser">0.9.0</span> <i class="fa fa-github"></i></a></li>
+                    <li class="list-group-item"><a href="https://github.com/steinbergmedia/smufl/releases" title="SMuFL Releases @ GitHub">SMuFL-Version: <span  data-template="app:version" data-template-key="smufl">0.9.0</span> <i class="fa fa-github"></i></a></li>
+                    <li class="list-group-item"><a href="https://github.com/steinbergmedia/bravura/releases" title="Bravura Releases @ GitHub">Bravura-Version: <span  data-template="app:version" data-template-key="bravura">0.9.0</span> <i class="fa fa-github"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="row">
         <div class="col-md-3 col-md-offset-2">
             <div class="panel">
                 <h2>SMuFL</h2>
@@ -33,5 +88,5 @@
                 <p><a class="btn btn-primary btn-lg" role="button" href="http://www.manuscriptorium.com/apps/gbank/gbank_table.php">Learn more</a></p>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>

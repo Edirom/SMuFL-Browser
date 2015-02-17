@@ -171,3 +171,13 @@ declare
             }</li>
         )
 };
+
+declare 
+    %templates:default("key", "smufl")
+    function app:version($node as node(), $model as map(*), $key as xs:string) as xs:string {
+        switch($key)
+        case 'smufl-browser' return $config:expath-descriptor/data(@version)
+        case 'smufl' return $config:charDecl//tei:num[@type='smufl-version']
+        case 'bravura' return $config:charDecl//tei:num[@type='bravura-version']
+        default return ''
+};
