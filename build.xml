@@ -127,6 +127,8 @@
 			<param name="glyphnames" expression="${tmp.dir}/glyphnames.xml"/>
 			<param name="current.version" expression="${project.version}"/>
 			<param name="image.server" expression="${image.server}"/>
+			<param name="smufl.font" expression="${smufl.font}"/>
+			<param name="smufl.metadata" expression="${smufl.metadata}"/>
 		</xslt>
 	</target>
 	

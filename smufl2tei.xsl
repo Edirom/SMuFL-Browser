@@ -14,11 +14,41 @@
     <xsl:param name="glyphnames"/>
     <xsl:param name="current.version"/>
     <xsl:param name="image.server"/>
+    <xsl:param name="smufl.metadata" select="'http://www.smufl.org/files/smufl-metadata-1.12.zip'"/>
+    <xsl:param name="smufl.font"/>
     
     <xsl:key name="glyphs" match="jxml:member" use="normalize-space(@name)"/>
     
     <xsl:template match="/">
         <xsl:apply-templates/>
+    </xsl:template>
+    
+    <xsl:template match="tei:sourceDesc">
+        <xsl:copy>
+            <xsl:element name="p">
+                Born digital, created with SMuFL-Browser version
+                <xsl:element name="num">
+                    <xsl:attribute name="type" select="'smufl-browser-version'"/>
+                    <xsl:value-of select="$current.version"/>
+                </xsl:element>
+                on
+                <xsl:element name="date">
+                    <xsl:value-of select="current-dateTime()"/>
+                </xsl:element>
+            </xsl:element>
+            <xsl:element name="p">
+                Based upon SMuFL version
+                <xsl:element name="num">
+                    <xsl:attribute name="type" select="'smufl-version'"/>
+                    <xsl:value-of select="tei:extract-version-number($smufl.metadata)"/>
+                </xsl:element>
+                and Bravura version 
+                <xsl:element name="num">
+                    <xsl:attribute name="type" select="'bravura-version'"/>
+                    <xsl:value-of select="tei:extract-version-number($smufl.font)"/>
+                </xsl:element>
+            </xsl:element>
+        </xsl:copy>
     </xsl:template>
     
     <xsl:template match="tei:encodingDesc">
@@ -29,12 +59,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="tei:revisionDesc">
-        <xsl:copy>
-            <xsl:call-template name="create-change-entry"/>
-            <xsl:apply-templates/>
-        </xsl:copy>
-    </xsl:template>
+    <xsl:template match="tei:revisionDesc"/>
     
     <xsl:template name="charDecl">
         <xsl:element name="charDecl">
@@ -106,17 +131,19 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template name="create-change-entry">
-        <xsl:element name="change">
-            <xsl:attribute name="when" select="current-date()"/>
-            <xsl:value-of select="concat('Automated transformation to version ', $current.version)"/>
-        </xsl:element>
-    </xsl:template>
-    
     <xsl:template match="node()|@*">
         <xsl:copy>
             <xsl:apply-templates select="node()|@*"/>
         </xsl:copy>
     </xsl:template>
+    
+    <xsl:function name="tei:extract-version-number">
+        <xsl:param name="url" as="xs:string"/>
+        <xsl:analyze-string select="$url" regex="(\d+\.\d+)">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+            </xsl:matching-substring>
+        </xsl:analyze-string>
+    </xsl:function>
     
 </xsl:stylesheet>
