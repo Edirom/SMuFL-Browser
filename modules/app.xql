@@ -112,8 +112,8 @@ declare
     function app:list-chars($node as node(), $model as map(*), $range as xs:string*, $class as xs:string*, $glyphname as xs:string*) as map(*) {
         let $chars := 
             if(($range,$class,$glyphname) != 'all') then (
-                $config:charDecl//tei:char[.//tei:item = $class] | 
-                $config:charDecl//tei:char[parent::tei:charDecl/tei:desc = $range][@xml:id] |
+                $config:charDecl//tei:item[. = $class]/ancestor::tei:char | 
+                $config:charDecl//tei:desc[. = $range]/following-sibling::tei:char[@xml:id] |
                 $config:charDecl//id($glyphname)
             )
             else $config:charDecl//tei:char[@xml:id]
