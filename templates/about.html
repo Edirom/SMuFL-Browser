@@ -34,7 +34,7 @@
                     Since the very most of the SMuFL codepoints are from the Private Use Area, this is really an idiosyncratic solution and not the right approach for data interchange.
                 </p>
                 <p>The preferred approach would be to use the <code>&lt;g&gt;</code> element in the text and link to detailed character declarations in the TEI header (cf. chapter 5 of the TEI Guidelines: 
-                    <a href="http://www.tei-c.org/release/doc/tei-p5-doc/en/html/WD.html" title="Characters, Glyphs, and Writing Modes">Characters, Glyphs, and Writing Modes</a>.). 
+                    <a href="http://www.tei-c.org/release/doc/tei-p5-doc/en/html/WD.html" title="Characters, Glyphs, and Writing Modes">Characters, Glyphs, and Writing Modes</a>). 
                     So, while you're probably not interested in that declaring stuff but simply want to add that muscial symbol to your text, this is where SMuFL-Browser comes in with providing those declarations for you.
                     It creates a nice <code>&lt;charDecl&gt;</code> with according <code>&lt;char&gt;</code> definitions from the SMuFL metadata (which comes in JSON format) and makes those available online.   
                     All you need to do, is find the right character with the SMuFL-Browser and copy the "TEI code for embedding" into your TEI text.
@@ -43,7 +43,7 @@
             <div>
                 <h3>Webservice specification</h3>
                 <p>SMuFL-Browser was developed with both the encoder as well as the developer in mind. 
-                    For the developer, this web service provides the information concerning each character in several formats, at a stable URL, via both glyphname and codepoint:</p>
+                    For the developer, this web service provides the information concerning each character in several formats, at a stable URL, via both glyphname and codepoint (NB: the glyphnames are case sensitive while the codepoints are not):</p>
                 <dl>
                     <dt>TEI-XML</dt>
                     <dd>The webservice will send TEI-XML when queried for the suffix <code>.tei</code> or <code>.xml</code>. 
@@ -110,6 +110,14 @@
                         </div>
                     </dd>
                 </dl>
+            </div>
+            <div>
+                <h3>Source Code</h3>
+                <p>The source code for creating the TEI character declarations from the SMuFL JSON metadata files as well as the source code for this web service is hosted on <a href="https://github.com/Edirom/SMuFL-Browser">GitHub <i class="fa fa-github"/></a>.</p>
+            </div>
+            <div>
+                <h3>License</h3>
+                <p>SMuFL-Browser is available under dual license: <a href="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</a> and <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License (CC BY 3.0)</a>.</p>
             </div>
             <div>
                 <h3>Credits</h3>
