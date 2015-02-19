@@ -49,7 +49,7 @@ declare function local:media-type() as xs:string {
 declare function local:dispatch() {
     let $resourceName := functx:substring-before-if-contains($exist:resource, '.')
     let $char :=
-        if(matches($resourceName, $config:valid-unicode-range-regex)) then config:get-char-by-codepoint($resourceName)
+        if(matches($resourceName, $config:valid-unicode-range-regex, 'i')) then config:get-char-by-codepoint(upper-case($resourceName))
         else config:get-char-by-name($resourceName)
     return 
         if($char) then 
@@ -170,7 +170,7 @@ else if ($exist:path eq "/") then
 else if (starts-with($exist:path, '/index')) then 
     local:dispatch-index()
     
-else if (matches($exist:path, '^/about.html?$')) then
+else if ($exist:path eq '/about.html') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/templates/about.html"/>
         <view>
