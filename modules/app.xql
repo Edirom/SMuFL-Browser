@@ -61,14 +61,14 @@ declare function app:charImage($node as node(), $model as map(*)) as element(img
 
 declare 
     %templates:wrap
-    %templates:default("ranges", "all")
-    function app:ranges-list($node as node(), $model as map(*), $ranges as xs:string*) as element(option)* {
-        for $range in $config:charDecl//tei:desc
-        let $name := normalize-space($range)
+    %templates:default("range", "all")
+    function app:ranges-list($node as node(), $model as map(*), $range as xs:string*) as element(option)* {
+        for $desc in $config:charDecl//tei:desc
+        let $name := normalize-space($desc)
         order by $name ascending
         return 
             <option value="{$name}">{
-                if($ranges = $name) then attribute {'selected'} {'selected'} 
+                if($range = $name) then attribute {'selected'} {'selected'} 
                 else (),
                 $name
             }</option>
@@ -76,14 +76,14 @@ declare
 
 declare 
     %templates:wrap
-    %templates:default("glyphnames", "all")
-    function app:glyphnames-list($node as node(), $model as map(*), $glyphnames as xs:string*) as element(option)* {
+    %templates:default("glyphname", "all")
+    function app:glyphnames-list($node as node(), $model as map(*), $glyphname as xs:string*) as element(option)* {
         for $glyph in $config:charDecl//tei:char
         let $name := normalize-space($glyph/@xml:id)
         order by $name ascending
         return 
             <option value="{$name}">{
-                if($glyphnames = $name) then attribute {'selected'} {'selected'} 
+                if($glyphname = $name) then attribute {'selected'} {'selected'} 
                 else (),
                 $name
             }</option>
@@ -91,14 +91,14 @@ declare
 
 declare 
     %templates:wrap 
-    %templates:default("classes", "all")
-    function app:classes-list($node as node(), $model as map(*), $classes as xs:string*) as element(option)* {
-        for $class in distinct-values($config:charDecl//tei:item)
-        let $name := normalize-space($class)
+    %templates:default("class", "all")
+    function app:classes-list($node as node(), $model as map(*), $class as xs:string*) as element(option)* {
+        for $cl in distinct-values($config:charDecl//tei:item)
+        let $name := normalize-space($cl)
         order by $name ascending
         return 
             <option value="{$name}">{
-                if($classes = $name) then attribute {'selected'} {'selected'} 
+                if($class = $name) then attribute {'selected'} {'selected'} 
                 else (),
                 $name
             }</option>
