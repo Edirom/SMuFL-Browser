@@ -10,6 +10,11 @@
             </classpath>
         </javac>
     </target>
+    
+    <target name="clean">
+        <delete dir="build/"/>
+        <delete dir="bin/"/>
+    </target>
 
     <target name="jar" depends="compile">
         <jar destfile="build/otf2png.jar" filesetmanifest="mergewithoutmain">
