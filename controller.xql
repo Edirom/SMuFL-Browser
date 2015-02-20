@@ -29,13 +29,15 @@ declare function local:media-type() as xs:string {
         (: explicit suffix takes precedence :)
         if(matches($suffix, '^x?html?$', 'i')) then 'html'
         else if(matches($suffix, '^(xml)|(tei)$', 'i')) then 'tei'
-        else if(matches($suffix, '^js(on)?$', 'i')) then 'json'
+        else if(matches($suffix, '^json$', 'i')) then 'json'
+        else if(matches($suffix, '^js(onp)?$', 'i')) then 'jsonp'
         else if(matches($suffix, '^png$', 'i')) then 'png'
         
         (: Accept header follows if no suffix is given :)
         else if($accepted-content-types[1] = ('text/html', 'application/xhtml+xml')) then 'html'
         else if($accepted-content-types[1] = ('application/xml', 'application/tei+xml')) then 'tei'
         else if($accepted-content-types[1] = ('application/json')) then 'json'
+        else if($accepted-content-types[1] = ('application/javascript')) then 'jsonp'
         else if($accepted-content-types[1] = ('image/png', 'application/png', 'application/x-png')) then 'png'
         
         (: if nothing matches fall back to TEI-XML :)
@@ -58,6 +60,7 @@ declare function local:dispatch() {
                 case 'rdf' return local:error()
                 case 'html' return local:dispatch-char($char)
                 case 'json' return local:return-json($char)
+                case 'jsonp' return local:return-jsonp($char)
                 case 'png' return local:dispatch-image($char)
                 default return local:error()
         else local:error()
@@ -93,6 +96,19 @@ declare function local:return-json($char as element(tei:char)?) {
     return
         response:stream(
                 json:xml-to-json($char),
+                string-join($serializationParameters, ' ')
+            )
+};
+
+(:~
+ : Return a single char as jsonp (http://en.wikipedia.org/wiki/JSONP)
+~:)
+declare function local:return-jsonp($char as element(tei:char)?) {
+    let $serializationParameters := ('method=text', 'media-type=application/javascript', 'indent=no', 'encoding=utf-8')
+    let $callback := request:get-parameter('callback', 'callback')
+    return
+        response:stream(
+                normalize-space($callback) || '(' || json:xml-to-json($char) || ');',
                 string-join($serializationParameters, ' ')
             )
 };

@@ -60,7 +60,7 @@
                         </div>
                     </dd>
                     <dt>JSON</dt>
-                    <dd>The webservice will send a JSON serialization of the TEI data when queried for the suffix <code>.js</code> or <code>.json</code> (NB: This is <i>not</i> the original SMuFL JSON metadata). 
+                    <dd>The webservice will send a JSON serialization of the TEI data when queried for the suffix <code>.json</code> (NB: This is <i>not</i> the original SMuFL JSON metadata). 
                         Alternatively you can omit the file extension and provide the <i>Content-Type</i> request header <code>application/json</code>.
                         <div class="panel panel-info">
                             <div class="panel-heading">
@@ -68,15 +68,30 @@
                             </div>
                             
                             <ul class="list-group">
-                                <li class="list-group-item"><a href="http://edirom.de/smufl-browser/note8thUp.js" title="JSON example URL">http://edirom.de/smufl-browser/note8thUp.js</a></li>
-                                <li class="list-group-item"><a href="http://edirom.de/smufl-browser/E1D7.js" title="JSON example URL">http://edirom.de/smufl-browser/E1D7.js</a></li>
+                                <li class="list-group-item"><a href="http://edirom.de/smufl-browser/note8thUp.json" title="JSON example URL">http://edirom.de/smufl-browser/note8thUp.json</a></li>
+                                <li class="list-group-item"><a href="http://edirom.de/smufl-browser/E1D7.json" title="JSON example URL">http://edirom.de/smufl-browser/E1D7.json</a></li>
+                            </ul>
+                        </div>
+                    </dd>
+                    <dt>JSONP</dt>
+                    <dd>The webservice will send the above JSON serialization of the TEI data wrapped in a javascript function call when queried for the suffix <code>.js</code> or <code>.jsonp</code>. 
+                        Alternatively you can omit the file extension and provide the <i>Content-Type</i> request header <code>application/javascript</code>. 
+                        You can provide yor own wrapper function name with the <code>callback</code> URL parameter. Otherwise, the default is <code>callback=callback</code>.
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Examples</h4>
+                            </div>
+                            
+                            <ul class="list-group">
+                                <li class="list-group-item"><a href="http://edirom.de/smufl-browser/note8thUp.jsonp" title="JSONP example URL">http://edirom.de/smufl-browser/note8thUp.jsonp</a></li>
+                                <li class="list-group-item"><a href="http://edirom.de/smufl-browser/E1D7.js" title="JSONP example URL">http://edirom.de/smufl-browser/E1D7.js?callback=myFunctionName</a></li>
                             </ul>
                         </div>
                     </dd>
                     <dt>PNG</dt>
                     <dd>The webservice will send an image file of the glyph shape when queried for the suffix <code>.png</code>. 
                         Alternatively you can omit the file extension and provide the <i>Content-Type</i> request headers <code>image/png</code>, <code>application/png</code> or <code>application/x-png</code>.
-                        The default resolution is 120x120 pixels; with the URL parameter <code>?res=low</code> you'll get 40x40 pixels.
+                        The default resolution is 120x120 pixels; with the URL parameter <code>res=low</code> you'll get 40x40 pixels.
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h4 class="panel-title">Examples</h4>
@@ -90,7 +105,8 @@
                         </div>
                     </dd>
                     <dt>Multiple characters</dt>
-                    <dd>If you want to receive a list of several character definitions, you can query <code>http://edirom.de/smufl-browser/index</code> with the suffixes <code>.tei</code> or <code>.xml</code> (or the respective request headers, see above).
+                    <dd>If you want to receive a list of several character definitions, you can query <code>http://edirom.de/smufl-browser/index</code> with the suffixes <code>.tei</code> or <code>.xml</code> (or the respective request headers, see above). 
+                        JSON and JSONP are <i>not</i> supported at present.
                         Following GET-parameters are supported:
                         <ul>
                             <li>range</li>
@@ -127,35 +143,4 @@
             </div>
         </div>
     </div>
-    <!--<div class="row">
-        <div class="col-md-3 col-md-offset-2">
-            <div class="panel">
-                <h2>SMuFL</h2>
-                <p>The Standard Music Font Layout (SMuFL) is a specification that provides a standard way of mapping the thousands of musical symbols required by conventional music notation into the Private Use Area in Unicode’s Basic Multilingual Plane.</p>
-                <p><a class="btn btn-primary btn-lg" role="button" href="http://www.smufl.org">Learn more</a></p>
-            </div>
-        </div>
-        <div class="col-md-3 col-md-offset-1">
-            <div class="panel">
-                <h2>TEI</h2>
-                <p>The Text Encoding Initiative (TEI) is a consortium which collectively develops and maintains a standard for the representation of texts in digital form. </p>
-                <p><a class="btn btn-primary btn-lg" role="button" href="http://www.tei-c.org">Learn more</a></p>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-3 col-md-offset-2">
-            <div>
-                <h2>About</h2>
-                <p>Some more text …</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-md-offset-1">
-            <div>
-                <h2>Inspiration</h2>
-                <p>The SMuFL-Browser has been inspired by the ENRICH Gaiji Bank which builds upon the <a href="http://www.mufi.info/">Medieval Unicode Font Initiative (MUFI) standard</a>.</p>
-                <p><a class="btn btn-primary btn-lg" role="button" href="http://www.manuscriptorium.com/apps/gbank/gbank_table.php">Learn more</a></p>
-            </div>
-        </div>
-    </div>-->
 </div>
