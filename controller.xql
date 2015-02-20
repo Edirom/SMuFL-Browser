@@ -89,7 +89,7 @@ declare function local:dispatch-index() {
  : Return a single char as json
 ~:)
 declare function local:return-json($char as element(tei:char)?) {
-    let $serializationParameters := ('method=text', 'media-type=text/javascript', 'indent=no', 'omit-xml-declaration=no', 'encoding=utf-8')
+    let $serializationParameters := ('method=text', 'media-type=application/json', 'indent=no', 'encoding=utf-8')
     return
         response:stream(
                 json:xml-to-json($char),
