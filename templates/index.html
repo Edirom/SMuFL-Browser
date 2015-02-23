@@ -1,32 +1,7 @@
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
     <div class="row">
-        <div class="col-md-8" data-template="app:list-chars">
-            <div class="row">
-                <ul class="pagination" data-template="app:pagination">
-                    <li><a href="#">&lt;</a></li>
-                </ul>
-            </div>
-            <div data-template="app:one-page">
-                <div class="row" data-template="templates:each" data-template-from="chars" data-template-to="char">
-                    <div class="col-md-3 text-center">
-                        <img data-template="app:charImage" src="resources/images/E080.png"/>
-                    </div>
-                    <div class="col-md-9">
-                        <dl data-template="app:charDesc">
-                            <dt>Character name</dt>
-                            <dd/>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <ul class="pagination" data-template="app:pagination">
-                    <li><a href="#">&lt;</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <form class="form-horizontal" role="form" action="index.html">
+        <div class="col-sm-4 col-sm-push-8">
+            <form role="form" action="index.html">
                 <div class="form-group">
                     <h3>Ranges</h3>
                     <select id="ranges-list" multiple="" data-template="app:ranges-list" name="range"/>
@@ -44,5 +19,32 @@
                 <!--<input type="submit"/>-->
             </form>
         </div>
+        
+        <div class="col-sm-8 col-sm-pull-4" data-template="app:list-chars">
+            <div class="row">
+                <ul class="pagination" data-template="app:pagination">
+                    <li><a href="#">&lt;</a></li>
+                </ul>
+            </div>
+            <div data-template="app:one-page">
+                <div class="row" data-template="templates:each" data-template-from="chars" data-template-to="char">
+                    <div class="col-sm-3 text-center">
+                        <img data-template="app:charImage" src="resources/images/E080.png"/>
+                    </div>
+                    <div class="col-sm-9">
+                        <dl data-template="app:charDesc">
+                            <dt>Character name</dt>
+                            <dd/>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="pagination" data-template="app:pagination">
+                    <li><a href="#">&lt;</a></li>
+                </ul>
+            </div>
+        </div>
+        
     </div>
 </div>
