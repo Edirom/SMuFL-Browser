@@ -22,7 +22,7 @@ let $config := map {
 }
 
 let $model := map {
-    'char' := config:get-char-by-name(request:get-parameter('id', ()))
+    'char' := config:get-char-by-id(request:get-parameter('id', ()))
 }
 
 (:

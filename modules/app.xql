@@ -26,7 +26,7 @@ declare function app:test($node as node(), $model as map(*)) {
 };
 
 declare function app:charID($node as node(), $model as map(*)) as element(h1) {
-    <h1>{map:get($model, 'char')/normalize-space(@xml:id)}</h1>
+    <h1>{map:get($model, 'char')/normalize-space(tei:charName)}</h1>
 };
 
 declare function app:charDesc($node as node(), $model as map(*)) as element(dl) {
@@ -35,6 +35,8 @@ declare function app:charDesc($node as node(), $model as map(*)) as element(dl) 
         <dl class="charDesc">
             <dt>Character name</dt>
             <dd>{normalize-space($char/tei:charName)}</dd>
+            <dt>Character description</dt>
+            <dd>{normalize-space($char/tei:desc)}</dd>
             <dt>SMuFL codepoint</dt>
             <dd>{normalize-space($char/tei:mapping[@type='smufl'])}</dd>
             <dt>HTML entity (hex)</dt>
@@ -44,11 +46,11 @@ declare function app:charDesc($node as node(), $model as map(*)) as element(dl) 
             <dd>{normalize-space($char/tei:mapping[@type='unicode'])}</dd>)
             else ()}
             <dt>Range</dt>
-            <dd>{normalize-space($char/ancestor::tei:charDecl/tei:desc)}</dd>
+            <dd>{if($char/ancestor::tei:charDecl/tei:desc) then normalize-space($char/ancestor::tei:charDecl/tei:desc) else 'n.a.'}</dd>
             <dt>Classes</dt>
-            <dd>{string-join($char//tei:item/normalize-space(), ', ')}</dd>
+            <dd>{if($char//tei:item) then string-join($char//tei:item/normalize-space(), ', ') else 'n.a.'}</dd>
             <dt>TEI code for embedding</dt>
-            <dd><code>&lt;g ref="{string-join(($config:server-url, normalize-space($char/@xml:id) || '.xml'), '/')}"/&gt;</code></dd>
+            <dd><code>&lt;g ref="{string-join(($config:server-url, normalize-space($char/tei:charName) || '.xml'), '/')}"/&gt;</code></dd>
         </dl>
 };
 
@@ -79,7 +81,7 @@ declare
     %templates:default("glyphname", "all")
     function app:glyphnames-list($node as node(), $model as map(*), $glyphname as xs:string*) as element(option)* {
         for $glyph in $config:charDecl//tei:char
-        let $name := normalize-space($glyph/@xml:id)
+        let $name := normalize-space($glyph/tei:charName)
         order by $name ascending
         return 
             <option value="{$name}">{
@@ -114,7 +116,7 @@ declare
             if(($range,$class,$glyphname) != 'all') then (
                 $config:charDecl//tei:item[. = $class]/ancestor::tei:char | 
                 $config:charDecl//tei:desc[. = $range]/following-sibling::tei:char[@xml:id] |
-                $config:charDecl//id($glyphname)
+                $config:charDecl//tei:charName[. = $glyphname]
             )
             else $config:charDecl//tei:char[@xml:id]
         return 
