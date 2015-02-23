@@ -116,7 +116,7 @@ declare
             if(($range,$class,$glyphname) != 'all') then (
                 $config:charDecl//tei:item[. = $class]/ancestor::tei:char | 
                 $config:charDecl//tei:desc[. = $range]/following-sibling::tei:char[@xml:id] |
-                $config:charDecl//tei:charName[. = $glyphname]
+                $config:charDecl//tei:charName[. = $glyphname]/parent::tei:char
             )
             else $config:charDecl//tei:char[@xml:id]
         return 
