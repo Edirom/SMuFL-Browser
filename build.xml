@@ -163,12 +163,12 @@
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/fonts">
-			<fileset dir="${tmp.dir}">
+			<!--<fileset dir="${tmp.dir}">
 				<include name="eot/"/>
 				<include name="woff/"/>
 				<include name="otf/"/>
 				<include name="svg/"/>
-			</fileset>
+			</fileset>-->
 			<fileset dir="bower_components/bootstrap/dist/fonts">
 				<include name="*.*"/>
 			</fileset>
