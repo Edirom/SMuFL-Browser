@@ -80,10 +80,11 @@
         <xsl:variable name="glyph" select="key('glyphs', normalize-space(.), doc($glyphnames))"/>
         <xsl:element name="char">
             <!-- glyph names with a leading digit get an underscore prefix -->
-            <xsl:attribute name="xml:id" select="
-                if(matches($glyph/normalize-space(@name), '^\d')) then concat('_', $glyph/normalize-space(@name))
-                else $glyph/normalize-space(@name)"/>
+            <xsl:attribute name="xml:id" select="concat('_', $glyph/normalize-space(@name))"/>
             <xsl:element name="charName">
+                <xsl:value-of select="$glyph/normalize-space(@name)"/>
+            </xsl:element>
+            <xsl:element name="desc">
                 <xsl:value-of select="$glyph//jxml:member[@name='description']/normalize-space(jxml:string)"/>
             </xsl:element>
             <xsl:element name="mapping">
