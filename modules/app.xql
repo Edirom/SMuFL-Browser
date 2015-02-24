@@ -65,7 +65,7 @@ declare
     %templates:wrap
     %templates:default("range", "all")
     function app:ranges-list($node as node(), $model as map(*), $range as xs:string*) as element(option)* {
-        for $desc in $config:charDecl//tei:desc
+        for $desc in $config:charDecl//tei:desc[parent::tei:charDecl]
         let $name := normalize-space($desc)
         order by $name ascending
         return 
