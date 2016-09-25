@@ -43,10 +43,9 @@
             <os family="mac"/>
         </condition>
         
-        <condition property="bower.executable" value="${bower.executable.windows}" else="bower">
+    	<condition property="bower.executable" value="${bower.executable.windows}" else="node_modules/bower/bin/bower">
             <os family="windows"/>
         </condition>
-        
     </target>
 	
 	<target name="bower" depends="init">
