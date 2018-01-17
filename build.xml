@@ -17,12 +17,12 @@
 	
 	<target name="clean">
 		<description>Delete all temporary files except eXist packages with the extension .xar</description>
-		<delete includeemptydirs="true">
+		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${build.dir}" includes="**/*" excludes="*.xar" defaultexcludes="false"/>
 		</delete>
-		<delete dir="${tmp.dir}"/>
-		<delete dir="${dist.dir}"/>
-		<delete file="expath-pkg.xml"/>
+		<delete dir="${tmp.dir}" failonerror="false"/>
+		<delete dir="${dist.dir}" failonerror="false"/>
+		<delete file="expath-pkg.xml" failonerror="false"/>
 	</target>
 	
     <target name="init" depends="set-paths-for-external-programs">
