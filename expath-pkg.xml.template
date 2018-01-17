@@ -2,5 +2,4 @@
 <package xmlns="http://expath.org/ns/pkg" name="https://github.com/Edirom/SMuFL-Browser" abbrev="smufl-browser" version="@project.version@" spec="1.0">
     <title>@project.app@</title>
     <dependency package="http://www.functx.com"/>
-    <dependency package="http://xqilla.sourceforge.net/pkg/xqjson"/>
 </package>
