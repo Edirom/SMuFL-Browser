@@ -24,9 +24,16 @@ RUN apt-get update \
     && unzip /tmp/saxon.zip -d ${SMUFL_BUILD_HOME}/saxon \
     && mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh \
     && chmod 755 /opt/smufl-build/xmlsh/unix/xmlsh \
-    && npm install bower
+    && npm install bower \
+    && ln -s /usr/bin/nodejs /usr/local/bin/node
 
 COPY . .
+
+RUN addgroup smuflbuilder \
+    && adduser smuflbuilder --ingroup smuflbuilder --disabled-password --system \
+    && chown -R smuflbuilder:smuflbuilder ${SMUFL_BUILD_HOME}
+
+USER smuflbuilder:smuflbuilder
 
 RUN ant -lib saxon -Dimage.server=${IMAGE_SERVER} rebuild
 
