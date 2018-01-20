@@ -15,7 +15,6 @@ ARG IMAGE_SERVER="http://edirom.de/smufl-browser/"
 ADD ${XMLSH_URL} /tmp/xmlsh.zip
 ADD ${SAXON_URL} /tmp/saxon.zip
 
-RUN mkdir ${SMUFL_BUILD_HOME}
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
