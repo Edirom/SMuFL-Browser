@@ -14,11 +14,17 @@ ARG IMAGE_SERVER="http://edirom.de/smufl-browser/"
 
 ADD ${XMLSH_URL} /tmp/xmlsh.zip
 ADD ${SAXON_URL} /tmp/saxon.zip
+ADD https://deb.nodesource.com/setup_8.x /tmp/nodejs_setup 
 
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
-    && apt-get install -y --force-yes ant npm \
+    && apt-get install -y --force-yes ant \
+    # installing nodejs
+    && chmod 755 /tmp/nodejs_setup \
+    && /tmp/nodejs_setup \
+    && apt-get install -y nodejs \
+    # installing XMLShell and Saxon
     && unzip /tmp/xmlsh.zip -d ${SMUFL_BUILD_HOME}/ \
     && unzip /tmp/saxon.zip -d ${SMUFL_BUILD_HOME}/saxon \
     && mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh \
