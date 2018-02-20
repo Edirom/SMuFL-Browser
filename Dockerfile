@@ -21,7 +21,7 @@ WORKDIR ${SMUFL_BUILD_HOME}
 RUN apt-get update \
     && apt-get install -y --force-yes ant \
     # installing nodejs
-    && chmod 755 /tmp/nodejs_setup \
+    && chmod 755 /tmp/nodejs_setup; sync \
     && /tmp/nodejs_setup \
     && apt-get install -y nodejs \
     # installing XMLShell and Saxon
