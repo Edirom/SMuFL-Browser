@@ -80,9 +80,8 @@
 	
 	<target name="download-smufl-metadata" depends="init">
 		<description>Download SMuFL metadata from the official website</description>
-		<get src="${smufl.metadata}/classes.json" dest="${tmp.dir}" skipexisting="yes"/>
-		<get src="${smufl.metadata}/glyphnames.json" dest="${tmp.dir}" skipexisting="yes"/>
-		<get src="${smufl.metadata}/ranges.json" dest="${tmp.dir}" skipexisting="yes"/>
+		<get src="${smufl.metadata}" dest="${tmp.dir}/metadata.zip" skipexisting="yes"/>
+		<unzip src="${tmp.dir}/metadata.zip" dest="${tmp.dir}"/>
 	</target>
 	
 	<target name="download-smufl-font" depends="init">
