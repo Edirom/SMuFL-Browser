@@ -19,7 +19,7 @@ ADD https://deb.nodesource.com/setup_8.x /tmp/nodejs_setup
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
-    && apt-get install -y --force-yes ant \
+    && apt-get install -y --force-yes ant git \
     # installing nodejs
     && chmod 755 /tmp/nodejs_setup; sync \
     && /tmp/nodejs_setup \
