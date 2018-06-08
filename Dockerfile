@@ -9,24 +9,21 @@ LABEL maintainer="Peter Stadler"
 ENV SMUFL_BUILD_HOME="/opt/smufl-build"
 
 ARG XMLSH_URL="http://xmlsh-org-downloads.s3-website-us-east-1.amazonaws.com/archives%2Frelease-1_3_1%2Fxmlsh_1_3_1.zip"
-ARG SAXON_URL="http://downloads.sourceforge.net/project/saxon/Saxon-HE/9.6/SaxonHE9-6-0-7J.zip" 
 ARG IMAGE_SERVER="http://edirom.de/smufl-browser/"
 
 ADD ${XMLSH_URL} /tmp/xmlsh.zip
-ADD ${SAXON_URL} /tmp/saxon.zip
 ADD https://deb.nodesource.com/setup_8.x /tmp/nodejs_setup 
 
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
-    && apt-get install -y --force-yes ant git \
+    && apt-get install -y --force-yes ant git libsaxonhe-java \
     # installing nodejs
     && chmod 755 /tmp/nodejs_setup; sync \
     && /tmp/nodejs_setup \
     && apt-get install -y nodejs \
-    # installing XMLShell and Saxon
+    # installing XMLShell
     && unzip /tmp/xmlsh.zip -d ${SMUFL_BUILD_HOME}/ \
-    && unzip /tmp/saxon.zip -d ${SMUFL_BUILD_HOME}/saxon \
     && mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh \
     && chmod 755 /opt/smufl-build/xmlsh/unix/xmlsh \
     && npm install bower \
@@ -40,7 +37,7 @@ RUN addgroup smuflbuilder \
 
 USER smuflbuilder:smuflbuilder
 
-RUN ant -lib saxon -Dimage.server=${IMAGE_SERVER} rebuild
+RUN ant -lib /usr/share/java -Dimage.server=${IMAGE_SERVER} rebuild
 
 #########################
 # Now running the eXist-db
