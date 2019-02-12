@@ -11,7 +11,7 @@
 	<target name="clean-all" depends="clean">
 		<description>Delete the whole build directory with all temporary files and eXist packages</description>
 		<delete dir="${build.dir}"/>
-		<delete dir="bower_components"/>
+		<delete dir="node_modules"/>
 		<ant antfile="tools/otf2png/build.xml" inheritall="false" target="clean"/>
 	</target>
 	
@@ -32,7 +32,7 @@
 	</target>
     
     <target name="set-paths-for-external-programs">
-        <description>Set paths for external programs (i.e. Bower and XMLShell)</description>
+        <description>Set paths for external programs (i.e. Yarn and XMLShell)</description>
         <condition property="xmlsh.cmdpath" value="win32/xmlsh.bat">
             <os family="windows"/>
         </condition>
@@ -43,15 +43,15 @@
             <os family="mac"/>
         </condition>
         
-    	<condition property="bower.executable" value="${bower.executable.windows}" else="node_modules/bower/bin/bower">
+    	<condition property="yarn.executable" value="${yarn.executable.windows}" else="yarn">
             <os family="windows"/>
         </condition>
     </target>
 	
-	<target name="bower" depends="init">
-		<description>Update javascript libraries via bower</description>
-		<exec executable="${bower.executable}">
-			<arg value="update"/>
+	<target name="yarn" depends="init">
+		<description>Update javascript libraries via yarn</description>
+		<exec executable="${yarn.executable}" failonerror="yes">
+			<arg value="install"/>
 		</exec>
 	</target>
 	
@@ -128,7 +128,7 @@
 		</xslt>
 	</target>
 	
-	<target name="dist" depends="init, bower, charDecl, otf2png">
+	<target name="dist" depends="init, yarn, charDecl, otf2png">
 		<copy file="expath-pkg.xml.template" tofile="${dist.dir}/expath-pkg.xml" filtering="true" overwrite="true">
 			<filterset>
 				<filter token="project.version" value="${project.version}"/>
@@ -147,11 +147,12 @@
 				<!--<exclude name="${tmp.dir}/*"/>-->
 				<!--<exclude name="${build.dir}/*"/>-->
 				<exclude name="build.xml"/>
-				<exclude name="bower.json"/>
+				<exclude name="package.json"/>
 				<exclude name="*.template"/>
 				<exclude name="*.properties"/>
 				<exclude name="*.xsl"/>
 				<exclude name="*.xpr"/>
+				<exclude name="*.lock"/>
 			</fileset>
 		</copy>
 		<mkdir dir="${dist.dir}/resources/images"/>
@@ -168,33 +169,33 @@
 				<include name="otf/"/>
 				<include name="svg/"/>
 			</fileset>-->
-			<fileset dir="bower_components/bootstrap/dist/fonts">
+			<fileset dir="node_modules/bootstrap/dist/fonts">
 				<include name="*.*"/>
 			</fileset>
-			<fileset dir="bower_components/fontawesome/fonts/">
+			<fileset dir="node_modules/font-awesome/fonts/">
 				<include name="fontawesome-webfont.*"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/css">
-			<fileset dir="bower_components/bootstrap/dist/css">
+			<fileset dir="node_modules/bootstrap/dist/css">
 				<include name="bootstrap.min.css"/>
 			</fileset>
-			<fileset dir="bower_components/selectize/dist/css">
+			<fileset dir="node_modules/selectize/dist/css">
 				<include name="selectize.bootstrap3.css"/>
 			</fileset>
-			<fileset dir="bower_components/fontawesome/css">
+			<fileset dir="node_modules/font-awesome/css">
 				<include name="font-awesome.min.css"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/js">
-			<fileset dir="bower_components/bootstrap/dist/js">
+			<fileset dir="node_modules/bootstrap/dist/js">
 				<include name="bootstrap.min.js"/>
 			</fileset>
-			<fileset dir="bower_components/jquery/dist">
+			<fileset dir="node_modules/jquery/dist">
 				<include name="jquery.min.js"/>
 				<include name="jquery.min.map"/>
 			</fileset>
-			<fileset dir="bower_components/selectize/dist/js/standalone/">
+			<fileset dir="node_modules/selectize/dist/js/standalone/">
 				<include name="selectize.min.js"/>
 			</fileset>
 		</copy>
