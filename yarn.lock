@@ -19,6 +19,10 @@ bootstrap@^3.3.7:
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.4.0.tgz#f8d77540dd3062283d2ae7687e21c1e691961640"
   integrity sha512-F1yTDO9OHKH0xjl03DsOe8Nu1OWBIeAugGMhy3UTIYDdbbIPesQIhCEbj+HEr6wqlwweGAlP8F3OBC6kEuhFuw==
 
+"bravura@https://github.com/steinbergmedia/bravura#e5d667e00d92962510fb487241cad003b61d3855":
+  version "0.0.0"
+  resolved "https://github.com/steinbergmedia/bravura#e5d667e00d92962510fb487241cad003b61d3855"
+
 cardinal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cardinal/-/cardinal-1.0.0.tgz#50e21c1b0aa37729f9377def196b5a9cec932ee9"
@@ -100,6 +104,10 @@ sifter@^0.5.1:
     csv-parse "^2.0.0"
     humanize "^0.0.9"
     optimist "^0.6.1"
+
+"smufl@https://github.com/w3c/smufl#v1.3":
+  version "0.0.0"
+  resolved "https://github.com/w3c/smufl#74db8e3e637d23baaa5bad21467deb572bcfe23d"
 
 wordwrap@~0.0.2:
   version "0.0.3"

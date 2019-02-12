@@ -8,8 +8,10 @@
   "private": false,
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "bravura": "https://github.com/steinbergmedia/bravura#e5d667e00d92962510fb487241cad003b61d3855",
     "font-awesome": "^4.7.0",
     "jquery": "^3",
-    "selectize": "^0.12.0"
+    "selectize": "^0.12.0",
+    "smufl": "https://github.com/w3c/smufl#v1.3"
   }
 }
