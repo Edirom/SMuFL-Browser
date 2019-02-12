@@ -1,1 +1,11 @@
 local.build.properties
+.DS_Store
+build
+tmp
+dist
+bower_components
+tools/otf2png/.classpath
+tools/otf2png/.project
+tools/otf2png/bin
+smufl-browser.xpr
+node_modules

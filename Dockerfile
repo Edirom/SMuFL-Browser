@@ -9,7 +9,7 @@ LABEL maintainer="Peter Stadler"
 ENV SMUFL_BUILD_HOME="/opt/smufl-build"
 
 ARG XMLSH_URL="http://xmlsh-org-downloads.s3-website-us-east-1.amazonaws.com/archives%2Frelease-1_3_1%2Fxmlsh_1_3_1.zip"
-ARG IMAGE_SERVER="http://edirom.de/smufl-browser/"
+ARG IMAGE_SERVER="https://smufl-browser.edirom.de/"
 
 ADD ${XMLSH_URL} /tmp/xmlsh.zip
 ADD https://deb.nodesource.com/setup_8.x /tmp/nodejs_setup 
@@ -26,7 +26,7 @@ RUN apt-get update \
     && unzip /tmp/xmlsh.zip -d ${SMUFL_BUILD_HOME}/ \
     && mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh \
     && chmod 755 /opt/smufl-build/xmlsh/unix/xmlsh \
-    && npm install bower \
+    && npm install -g yarn \
     && ln -s /usr/bin/nodejs /usr/local/bin/node
 
 COPY . .
