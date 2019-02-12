@@ -55,58 +55,60 @@
 		</exec>
 	</target>
 	
-	<target name="json2xml" depends="init, download-smufl-metadata">
+	<target name="json2xml" depends="init">
 		<description>Transforms SMuFL metadata files from json to xml</description>
 		<!-- xmlsh is needed for json2xml transformation -->
 		<echo>Transforming classes.json</echo>
-		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/classes.xml">
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/classes.xml">
 			<arg value="-c"/>
 			<arg line="'json2xml classes.json'"/>
 			<env key="XMLSH" value="${xmlsh.home}"/>
 		</exec>
 		<echo>Transforming ranges.json</echo>
-		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/ranges.xml">
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/ranges.xml">
 			<arg value="-c"/>
 			<arg line="'json2xml ranges.json'"/>
 			<env key="XMLSH" value="${xmlsh.home}"/>
 		</exec>
 		<echo>Transforming glyphnames.json</echo>
-		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="${tmp.dir}" output="${tmp.dir}/glyphnames.xml">
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/glyphnames.xml">
 			<arg value="-c"/>
 			<arg line="'json2xml glyphnames.json'"/>
 			<env key="XMLSH" value="${xmlsh.home}"/>
 		</exec>
 	</target>
 	
-	<target name="download-smufl-metadata" depends="init">
+	<!-- deprecated -->
+	<!--<target name="download-smufl-metadata" depends="init">
 		<description>Download SMuFL metadata from the official website</description>
 		<get src="${smufl.metadata}" dest="${tmp.dir}/metadata.zip" skipexisting="yes"/>
 		<unzip src="${tmp.dir}/metadata.zip" dest="${tmp.dir}"/>
-	</target>
+	</target>-->
 	
-	<target name="download-smufl-font" depends="init">
+	<!-- deprecated -->
+	<!--<target name="download-smufl-font" depends="init">
 		<description>Download Bravura font from the official website</description>
 		<get src="${smufl.font}" dest="${tmp.dir}/bravura.zip" skipexisting="yes"/>
 		<unzip src="${tmp.dir}/bravura.zip" dest="${tmp.dir}"/>
-	</target>
+	</target>-->
 	
 	<target name="build-otf2png">
 		<description>Build the otf2png tool by invoking the ant file in the tool's folder</description>
 		<ant antfile="tools/otf2png/build.xml" inheritall="false" />
 	</target>
 	
-	<target name="otf2png" depends="init, download-smufl-font, build-otf2png" unless="skip.images">
+	<target name="otf2png" depends="init, build-otf2png" unless="skip.images">
 		<description>Create png images for every glyph</description>
 		<mkdir dir="${tmp.dir}/png-glyphs"/>
 		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
-			<arg line="-font ${tmp.dir}/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs/hi -regex E.* -padding 0 -fontsize 1000 -height 120 -width 120 -mode fit"/>
+			<arg line="-font node_modules/bravura/redist/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs/hi -regex E.* -padding 0 -fontsize 1000 -height 120 -width 120 -mode fit"/>
 			<classpath>
 				<pathelement location="tools/otf2png/build/otf2png.jar"/>
 				<pathelement path="${java.class.path}"/>
 			</classpath>
 		</java>
 		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
-			<arg line="-font ${tmp.dir}/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs/low -regex E.* -padding 0 -fontsize 1000 -height 40 -width 40 -mode fit"/>
+			<arg line="-font node_modules/bravura/redist/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs/low -regex E.* -padding 0 -fontsize 1000 -height 40 -width 40 -mode fit"/>
 			<classpath>
 				<pathelement location="tools/otf2png/build/otf2png.jar"/>
 				<pathelement path="${java.class.path}"/>
@@ -123,8 +125,8 @@
 			<param name="glyphnames" expression="${tmp.dir}/glyphnames.xml"/>
 			<param name="current.version" expression="${project.version}"/>
 			<param name="image.server" expression="${image.server}"/>
-			<param name="smufl.font" expression="${smufl.font}"/>
-			<param name="smufl.metadata" expression="${smufl.metadata}"/>
+			<param name="smufl.version" expression="${smufl.version}"/>
+			<param name="bravura.version" expression="${bravura.version}"/>
 		</xslt>
 	</target>
 	

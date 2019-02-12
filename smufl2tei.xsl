@@ -14,8 +14,8 @@
     <xsl:param name="glyphnames"/>
     <xsl:param name="current.version"/>
     <xsl:param name="image.server"/>
-    <xsl:param name="smufl.metadata" select="'http://www.smufl.org/files/smufl-metadata-1.12.zip'"/>
-    <xsl:param name="smufl.font"/>
+    <xsl:param name="bravura.version"/>
+    <xsl:param name="smufl.version"/>
     
     <xsl:key name="glyphs" match="jxml:member" use="normalize-space(@name)"/>
     
@@ -40,12 +40,12 @@
                 Based upon SMuFL version
                 <xsl:element name="num">
                     <xsl:attribute name="type" select="'smufl-version'"/>
-                    <xsl:value-of select="tei:extract-version-number($smufl.metadata)"/>
+                    <xsl:value-of select="$smufl.version"/>
                 </xsl:element>
                 and Bravura version 
                 <xsl:element name="num">
                     <xsl:attribute name="type" select="'bravura-version'"/>
-                    <xsl:value-of select="tei:extract-version-number($smufl.font)"/>
+                    <xsl:value-of select="$bravura.version"/>
                 </xsl:element>
             </xsl:element>
         </xsl:copy>
