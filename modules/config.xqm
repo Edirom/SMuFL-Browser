@@ -4,7 +4,7 @@ xquery version "3.0";
  : A set of helper functions to access the application context from
  : within a module.
  :)
-module namespace config="http://edirom.de/smufl-browser/config";
+module namespace config="http://smufl-browser.edirom.de/config";
 
 declare namespace templates="http://exist-db.org/xquery/templates";
 
@@ -40,7 +40,7 @@ declare variable $config:charDecl := doc(concat($config:app-root, "/data/charDec
 
 declare variable $config:valid-unicode-range-regex := '^([Ee][a-fA-F0-9]{3})|(1[dD]1[a-fA-F0-9]{2})|(266[defDEF])$';
 
-declare variable $config:server-url := 'http://edirom.de/smufl-browser';
+declare variable $config:server-url := 'https://smufl-browser.edirom.de';
 
 (:~
  : Resolve the given path using the current application context.

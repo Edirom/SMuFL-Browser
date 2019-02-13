@@ -3,12 +3,12 @@ xquery version "3.0";
 (:~
  : A set of TEI related functions 
  :)
-module namespace tei-funcs="http://edirom.de/smufl-browser/tei-funcs";
+module namespace tei-funcs="http://smufl-browser.edirom.de/tei-funcs";
 
 declare namespace request="http://exist-db.org/xquery/request";
 declare namespace transform="http://exist-db.org/xquery/transform";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
-import module namespace config="http://edirom.de/smufl-browser/config" at "config.xqm";
+import module namespace config="http://smufl-browser.edirom.de/config" at "config.xqm";
 
 declare function tei-funcs:index() as document-node() {
     let $range := request:get-parameter('range', 'all')

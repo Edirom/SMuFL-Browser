@@ -1,9 +1,9 @@
 xquery version "3.0";
 
-module namespace app="http://edirom.de/smufl-browser/app";
+module namespace app="http://smufl-browser.edirom.de/app";
 
 import module namespace templates="http://exist-db.org/xquery/templates" ;
-import module namespace config="http://edirom.de/smufl-browser/config" at "config.xqm";
+import module namespace config="http://smufl-browser.edirom.de/config" at "config.xqm";
 import module namespace functx="http://www.functx.com";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";

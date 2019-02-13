@@ -3,18 +3,18 @@ xquery version "3.0";
 declare namespace exist="http://exist.sourceforge.net/NS/exist";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace response="http://exist-db.org/xquery/response";
+declare namespace request="http://exist-db.org/xquery/request";
+
+import module namespace config="http://smufl-browser.edirom.de/config" at "modules/config.xqm";
+import module namespace tei-funcs="http://smufl-browser.edirom.de/tei-funcs" at "modules/tei-funcs.xqm";
+import module namespace json="http://www.json.org";
+import module namespace functx="http://www.functx.com";
 
 declare variable $exist:path external;
 declare variable $exist:resource external;
 declare variable $exist:controller external;
 declare variable $exist:prefix external;
 declare variable $exist:root external;
-
-import module namespace config="http://edirom.de/smufl-browser/config" at "modules/config.xqm";
-import module namespace tei-funcs="http://edirom.de/smufl-browser/tei-funcs" at "modules/tei-funcs.xqm";
-(:import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";:)
-import module namespace json="http://www.json.org";
-import module namespace functx="http://www.functx.com";
 
 (:~
  : Content Negotiation 
