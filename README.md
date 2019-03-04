@@ -1,6 +1,15 @@
 SMuFL-Browser
 ================
 
+
+[![](https://img.shields.io/badge/license-BSD2-green.svg)](https://github.com/Edirom/SMuFL-Browser/blob/dev/LICENSE)
+[![](https://img.shields.io/badge/license-CC--BY--4.0-green.svg)](https://github.com/Edirom/SMuFL-Browser/blob/dev/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/Edirom/SMuFL-Browser.svg)](https://github.com/Edirom/SMuFL-Browser/releases)
+[![Docker Automated build](https://img.shields.io/docker/automated/stadlerpeter/smufl-browser.svg)](https://hub.docker.com/r/stadlerpeter/smufl-browser/)
+[![Docker Build Status](https://img.shields.io/docker/build/stadlerpeter/smufl-browser.svg)](https://hub.docker.com/r/stadlerpeter/smufl-browser/)
+
+
+
 SMuFL-Browser is a web based viewer for the [Standard Music Font Layout specification](http://www.smufl.org) which facilitates searching and browsing of musical symbols. Additionally it serves as a [TEI](http://www.tei-c.org) reference for the SMuFL specification so encoders can easily add musical symbols to their texts. For that purpose a set of ANT tasks has been developed for creating TEI charDecl descriptions from SMuFL.
 
 
