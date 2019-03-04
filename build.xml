@@ -55,7 +55,7 @@
 		</exec>
 	</target>
 	
-	<target name="json2xml" depends="init">
+	<target name="json2xml" depends="yarn">
 		<description>Transforms SMuFL metadata files from json to xml</description>
 		<!-- xmlsh is needed for json2xml transformation -->
 		<echo>Transforming classes.json</echo>
