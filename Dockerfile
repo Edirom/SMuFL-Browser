@@ -12,7 +12,7 @@ ARG XMLSH_URL="http://xmlsh-org-downloads.s3-website-us-east-1.amazonaws.com/arc
 ARG IMAGE_SERVER="https://smufl-browser.edirom.de/"
 
 ADD ${XMLSH_URL} /tmp/xmlsh.zip
-ADD https://deb.nodesource.com/setup_8.x /tmp/nodejs_setup 
+ADD https://deb.nodesource.com/setup_13.x /tmp/nodejs_setup 
 
 WORKDIR ${SMUFL_BUILD_HOME}
 
