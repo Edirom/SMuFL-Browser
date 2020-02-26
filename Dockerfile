@@ -3,7 +3,7 @@
 # 1. set up the build environment and build the expath-package
 # 2. run the eXist-db
 #########################
-FROM openjdk:8-jdk as builder
+FROM openjdk:9-jdk as builder
 LABEL maintainer="Peter Stadler"
 
 ENV SMUFL_BUILD_HOME="/opt/smufl-build"
