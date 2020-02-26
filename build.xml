@@ -59,19 +59,19 @@
 		<description>Transforms SMuFL metadata files from json to xml</description>
 		<!-- xmlsh is needed for json2xml transformation -->
 		<echo>Transforming classes.json</echo>
-		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/classes.xml">
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/classes.xml" error="${tmp.dir}/json2xml.classes.error">
 			<arg value="-c"/>
 			<arg line="'json2xml classes.json'"/>
 			<env key="XMLSH" value="${xmlsh.home}"/>
 		</exec>
 		<echo>Transforming ranges.json</echo>
-		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/ranges.xml">
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/ranges.xml" error="${tmp.dir}/json2xml.ranges.error">
 			<arg value="-c"/>
 			<arg line="'json2xml ranges.json'"/>
 			<env key="XMLSH" value="${xmlsh.home}"/>
 		</exec>
 		<echo>Transforming glyphnames.json</echo>
-		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/glyphnames.xml">
+		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/glyphnames.xml" error="${tmp.dir}/json2xml.glyphnames.error">
 			<arg value="-c"/>
 			<arg line="'json2xml glyphnames.json'"/>
 			<env key="XMLSH" value="${xmlsh.home}"/>
