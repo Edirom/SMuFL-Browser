@@ -182,8 +182,8 @@
 			<fileset dir="node_modules/bootstrap/dist/css">
 				<include name="bootstrap.min.css"/>
 			</fileset>
-			<fileset dir="node_modules/selectize/dist/css">
-				<include name="selectize.bootstrap3.css"/>
+			<fileset dir="node_modules/select2/dist/css">
+				<include name="select2.min.css"/>
 			</fileset>
 			<fileset dir="node_modules/font-awesome/css">
 				<include name="font-awesome.min.css"/>
@@ -197,8 +197,8 @@
 				<include name="jquery.min.js"/>
 				<include name="jquery.min.map"/>
 			</fileset>
-			<fileset dir="node_modules/selectize/dist/js/standalone/">
-				<include name="selectize.min.js"/>
+			<fileset dir="node_modules/select2/dist/js/">
+				<include name="select2.min.js"/>
 			</fileset>
 		</copy>
 	</target>

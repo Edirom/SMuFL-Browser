@@ -13,6 +13,10 @@
     padding: 0px 15px;
 }
 
+select {
+    width: 100%;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
