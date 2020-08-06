@@ -1,6 +1,6 @@
 {
   "name": "smufl-browser",
-  "version": "1.4.0-beta",
+  "version": "1.4.0",
   "description": "A web based browser for the Standard Music Font Layout",
   "repository": "https://github.com/Edirom/SMuFL-Browser.git",
   "author": "Peter Stadler <stadlerpeter@yahoo.fr>",
