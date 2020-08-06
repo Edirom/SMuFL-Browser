@@ -7,9 +7,9 @@ bootstrap@^3.3.7:
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.4.1.tgz#c3a347d419e289ad11f4033e3c4132b87c081d72"
   integrity sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA==
 
-"bravura@https://github.com/steinbergmedia/bravura#e5d667e00d92962510fb487241cad003b61d3855":
+"bravura@https://github.com/steinbergmedia/bravura#bravura-1.380":
   version "0.0.0"
-  resolved "https://github.com/steinbergmedia/bravura#e5d667e00d92962510fb487241cad003b61d3855"
+  resolved "https://github.com/steinbergmedia/bravura#f97d82af70bbbfde5808b4119018dbe5553e620c"
 
 font-awesome@^4.7.0:
   version "4.7.0"

@@ -8,7 +8,7 @@
   "private": false,
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "bravura": "https://github.com/steinbergmedia/bravura#e5d667e00d92962510fb487241cad003b61d3855",
+    "bravura": "https://github.com/steinbergmedia/bravura#bravura-1.380",
     "font-awesome": "^4.7.0",
     "jquery": "^3",
     "select2": "^4",
