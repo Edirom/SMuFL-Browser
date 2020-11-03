@@ -17,7 +17,7 @@ ADD https://deb.nodesource.com/setup_12.x /tmp/nodejs_setup
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ant git libsaxonhe-java \
+    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false ant git libsaxonhe-java  \
     # installing nodejs
     && chmod 755 /tmp/nodejs_setup; sync \
     && /tmp/nodejs_setup \
