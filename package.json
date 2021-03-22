@@ -12,6 +12,6 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3",
     "select2": "^4",
-    "smufl": "https://github.com/w3c/smufl#v1.3"
+    "smufl": "https://github.com/w3c/smufl#v1.4"
   }
 }
