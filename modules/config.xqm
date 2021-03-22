@@ -9,6 +9,8 @@ module namespace config="http://smufl-browser.edirom.de/config";
 declare namespace templates="http://exist-db.org/xquery/templates";
 
 declare namespace repo="http://exist-db.org/xquery/repo";
+declare namespace request="http://exist-db.org/xquery/request";
+declare namespace system="http://exist-db.org/xquery/system";
 declare namespace expath="http://expath.org/ns/pkg";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 

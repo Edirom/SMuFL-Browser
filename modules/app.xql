@@ -8,6 +8,7 @@ import module namespace functx="http://www.functx.com";
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace request="http://exist-db.org/xquery/request";
+declare namespace map="http://www.w3.org/2005/xpath-functions/map";
 
 declare variable $app:entriesPerPage := 10 ;
 
