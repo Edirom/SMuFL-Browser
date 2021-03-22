@@ -23,10 +23,11 @@ jobs:
             mkdir -p ${SMUFL_BUILD_HOME}
             unzip xmlshell.zip -d ${SMUFL_BUILD_HOME}
             mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh 
+            chmod 755 ${SMUFL_BUILD_HOME}/xmlsh/unix/xmlsh
       - name: Build with Ant
-        run: ant clean xar
-      - name: Archive xar package
+        run: ant clean charDecl
+      - name: Archive artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Save artifact
+          name: Save charDecl
           path: dist/data/charDecl.xml
