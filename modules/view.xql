@@ -19,12 +19,12 @@ import module namespace app="http://smufl-browser.edirom.de/app" at "app.xql";
 declare option exist:serialize "method=xhtml5 media-type=text/html enforce-xhtml=yes";
 
 let $config := map {
-    $templates:CONFIG_APP_ROOT := $config:app-root,
-    $templates:CONFIG_STOP_ON_ERROR := true()
+    $templates:CONFIG_APP_ROOT : $config:app-root,
+    $templates:CONFIG_STOP_ON_ERROR : true()
 }
 
 let $model := map {
-    'char' := config:get-char-by-id(request:get-parameter('id', ()))
+    'char': config:get-char-by-id(request:get-parameter('id', ()))
 }
 
 (:

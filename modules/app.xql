@@ -121,7 +121,7 @@ declare
             )
             else $config:charDecl//tei:char[@xml:id]
         return 
-            map { "chars" := $chars }
+            map { "chars": $chars }
 };
 
 declare
@@ -129,7 +129,7 @@ declare
     function app:one-page($node as node(), $model as map(*), $page as xs:string) as map(*) {
         let $page := if($page castable as xs:int) then xs:int($page) else 1
         return
-            map { "chars" := subsequence($model('chars'), ($page - 1) * 10 + 1, $app:entriesPerPage) }
+            map { "chars": subsequence($model('chars'), ($page - 1) * 10 + 1, $app:entriesPerPage) }
 };
 
 
