@@ -1,6 +1,9 @@
 name: charDecl
 
-on: push
+on: 
+  push:
+    branches:
+      - main
 
 env:
   SMUFL_BUILD_HOME: /opt/smufl-build
