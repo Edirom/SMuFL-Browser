@@ -5,8 +5,8 @@ SMuFL-Browser
 [![](https://img.shields.io/badge/license-BSD2-green.svg)](https://github.com/Edirom/SMuFL-Browser/blob/dev/LICENSE)
 [![](https://img.shields.io/badge/license-CC--BY--4.0-green.svg)](https://github.com/Edirom/SMuFL-Browser/blob/dev/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/Edirom/SMuFL-Browser.svg)](https://github.com/Edirom/SMuFL-Browser/releases)
-[![Docker Automated build](https://img.shields.io/docker/automated/stadlerpeter/smufl-browser.svg)](https://hub.docker.com/r/stadlerpeter/smufl-browser/)
-[![Docker Build Status](https://img.shields.io/docker/build/stadlerpeter/smufl-browser.svg)](https://hub.docker.com/r/stadlerpeter/smufl-browser/)
+[![Docker Automated build](https://img.shields.io/docker/cloud/automated/stadlerpeter/smufl-browser.svg)](https://hub.docker.com/r/stadlerpeter/smufl-browser/)
+[![Docker Build Status](https://img.shields.io/docker/cloud/build/stadlerpeter/smufl-browser.svg)](https://hub.docker.com/r/stadlerpeter/smufl-browser/)
 
 
 
