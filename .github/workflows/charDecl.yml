@@ -1,0 +1,32 @@
+name: charDecl
+
+on: push
+
+env:
+  SMUFL_BUILD_HOME: /opt/smufl-build
+
+jobs:
+  build:
+    name: Create the charDecl TEI file
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Install XMLShell
+        run: |
+            curl -L "http://xmlsh-org-downloads.s3-website-us-east-1.amazonaws.com/archives%2Frelease-1_3_1%2Fxmlsh_1_3_1.zip" -o xmlshell.zip
+            mkdir -p ${SMUFL_BUILD_HOME}
+            unzip xmlshell.zip -d ${SMUFL_BUILD_HOME}
+            mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh 
+      - name: Build with Ant
+        run: ant clean xar
+      - name: Archive xar package
+        uses: actions/upload-artifact@v2
+        with:
+          name: Save artifact
+          path: dist/data/charDecl.xml
