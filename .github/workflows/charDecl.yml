@@ -4,10 +4,11 @@ on: push
 
 env:
   SMUFL_BUILD_HOME: /opt/smufl-build
+  IMAGE_SERVER: https://smufl-browser.edirom.de/
 
 jobs:
   build:
-    name: Create the charDecl TEI file
+    name: Create charDecl
     runs-on: ubuntu-latest
     
     steps:
@@ -17,6 +18,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Install Saxon
+        run: sudo apt-get install libsaxonhe-java
       - name: Install XMLShell
         run: |
             curl -L "http://xmlsh-org-downloads.s3-website-us-east-1.amazonaws.com/archives%2Frelease-1_3_1%2Fxmlsh_1_3_1.zip" -o xmlshell.zip
@@ -25,7 +28,7 @@ jobs:
             mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh 
             chmod 755 ${SMUFL_BUILD_HOME}/xmlsh/unix/xmlsh
       - name: Build with Ant
-        run: ant clean charDecl
+        run: ant -lib /usr/share/java clean charDecl -Dimage.server=${IMAGE_SERVER}
       - name: Archive artifact
         uses: actions/upload-artifact@v2
         with:
