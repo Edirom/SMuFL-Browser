@@ -1,0 +1,36 @@
+name: application XAR package
+
+on: push
+
+env:
+  SMUFL_BUILD_HOME: /opt/smufl-build
+  IMAGE_SERVER: http://localhost:8080/exist/apps/smufl-browser/
+
+jobs:
+  build:
+    name: Create XAR package
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Install Saxon
+        run: sudo apt-get install libsaxonhe-java
+      - name: Install XMLShell
+        run: |
+            curl -L "http://xmlsh-org-downloads.s3-website-us-east-1.amazonaws.com/archives%2Frelease-1_3_1%2Fxmlsh_1_3_1.zip" -o xmlshell.zip
+            mkdir -p ${SMUFL_BUILD_HOME}
+            unzip xmlshell.zip -d ${SMUFL_BUILD_HOME}
+            mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh 
+            chmod 755 ${SMUFL_BUILD_HOME}/xmlsh/unix/xmlsh
+      - name: Build with Ant
+        run: ant -lib /usr/share/java -Dimage.server=${IMAGE_SERVER} rebuild
+      - name: Archive artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Save charDecl
+          path: build/*.xar
