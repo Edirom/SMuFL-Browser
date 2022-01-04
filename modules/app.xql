@@ -2,7 +2,7 @@ xquery version "3.0";
 
 module namespace app="http://smufl-browser.edirom.de/app";
 
-import module namespace templates="http://exist-db.org/xquery/templates" ;
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace config="http://smufl-browser.edirom.de/config" at "config.xqm";
 import module namespace functx="http://www.functx.com";
 
