@@ -3,7 +3,7 @@
 # 1. set up the build environment and build the expath-package
 # 2. run the eXist-db
 #########################
-FROM openjdk:9-jdk as builder
+FROM openjdk:11-jdk as builder
 LABEL maintainer="Peter Stadler"
 
 ENV SMUFL_BUILD_HOME="/opt/smufl-build"
@@ -43,7 +43,7 @@ RUN ant -lib /usr/share/java -Dimage.server=${IMAGE_SERVER} rebuild
 # Now running the eXist-db
 # and adding our freshly built xar-package
 #########################
-FROM stadlerpeter/existdb:5.2
+FROM stadlerpeter/existdb:5
 
 # add SMuFL-browser specific settings 
 # for a production ready environment with 
