@@ -80,7 +80,10 @@ public class Otf2png {
         } catch (PatternSyntaxException e) {
             fail("Could not compile regular expression \"" + regex + "\".");
         }
-        FontRenderContext frc = new FontRenderContext(null, true, true);
+        //This seemed to have caused an error of not all images being created in different java versions
+        //see https://stackoverflow.com/questions/11967854/is-it-possible-to-get-vector-form-of-characters-from-font
+        //FontRenderContext frc = new FontRenderContext(null, true, true);
+        //now moved to l.101
         createFont();
 
         //TODO add other parameters
@@ -92,6 +95,9 @@ public class Otf2png {
         System.out.print("Image sizing mode: ");
 
         OutlineTransformer outlineTransformer;
+        Canvas c = new Canvas();
+        FontMetrics fm = c.getFontMetrics(font);
+        FontRenderContext frc = fm.getFontRenderContext();
         if (MODE_FIT.equals(mode)) {
             if (width == 0 || height == 0) {
                 fail("Width and height parameters must be specified and > 0 in \"fit\" mode.");
@@ -104,17 +110,11 @@ public class Otf2png {
             if (height == 0) {
                 fail("height parameters must be specified and > 0 in \"fixed\" mode.");
             }
-
-//                    Canvas c = new Canvas();
-//        FontMetrics fm = c.getFontMetrics(font);
-//            Rectangle fontBounds = fm.getMaxCharBounds(c.getGraphics());
-
-            Rectangle2D fontBounds = font.getMaxCharBounds(frc);
-
+            Rectangle2D fontBounds = fm.getMaxCharBounds(c.getGraphics());
             outlineTransformer = new FixedHeightOutlineTransformer(fontBounds, height, padding);
             System.out.println(MODE_FIXED);
             System.out.println("Height: " + height);
-        } else  {
+        } else {
             outlineTransformer = new OriginalHeightOutlineTransformer(padding);
             System.out.println(MODE_ORIGINAL);
         }

@@ -23,9 +23,15 @@ public class ImageExtractor {
     }
 
     public BufferedImage getImage(int codePoint) {
-        GlyphVector gv = font.createGlyphVector(frc, Character.toString((char) codePoint));
+        String characterString = Character.toString((char) codePoint);
+        GlyphVector gv = font.createGlyphVector(frc, characterString);
         Shape outline = gv.getOutline();
-        Rectangle bounds = gv.getPixelBounds(frc, 0, 0);
+        Rectangle zero = new Rectangle();
+        //there seems to be a problem in Java 11 & 17 with the method in getPixelBounds, which doesn't convert all glyphs, while gv.getVisualBounds() seems to work
+        Rectangle bounds = gv.getVisualBounds().getBounds();
+        if (bounds.equals(zero) && verbose) {
+            System.out.println("WARNING: bounds are empty for " + codePoint + " : " + bounds);
+        }
         outline = outlineTransformer.transform(outline, bounds);
         Dimension resultDimension = outlineTransformer.getResultDimension();
         if (verbose) {
