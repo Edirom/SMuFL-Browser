@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:jxml="http://www.xmlsh.org/jxml"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:tei="http://www.tei-c.org/ns/1.0"
     xmlns="http://www.tei-c.org/ns/1.0"
     exclude-result-prefixes="xs"
-    version="2.0">
+    version="3.1">
     
     <xsl:output indent="yes" encoding="UTF-8" method="xml"/>
     
@@ -16,8 +16,6 @@
     <xsl:param name="image.server"/>
     <xsl:param name="bravura.version"/>
     <xsl:param name="smufl.version"/>
-    
-    <xsl:key name="glyphs" match="jxml:member" use="normalize-space(@name)"/>
     
     <xsl:template match="/">
         <xsl:apply-templates/>
@@ -53,7 +51,8 @@
     
     <xsl:template match="tei:encodingDesc">
         <xsl:copy>
-            <xsl:for-each select="doc($ranges)/jxml:object/jxml:member">
+            <xsl:for-each select="json-doc($ranges)?*">
+                <xsl:sort select=".?description"/>
                 <xsl:call-template name="charDecl"/>
             </xsl:for-each>
         </xsl:copy>
@@ -64,12 +63,12 @@
     <xsl:template name="charDecl">
         <xsl:element name="charDecl">
             <xsl:element name="desc">
-                <xsl:value-of select="normalize-space(.//jxml:member[@name='description'])"/>
+                <xsl:value-of select="normalize-space(.?description)"/>
             </xsl:element>
-            <xsl:for-each select=".//jxml:member[@name='glyphs']/jxml:array/jxml:string">
+            <xsl:for-each select=".?glyphs?*">
                 <xsl:call-template name="char"/>
             </xsl:for-each>
-            <xsl:if test="count(.//jxml:member[@name='glyphs']/jxml:array/jxml:string) eq 0">
+            <xsl:if test="count(.?glyphs) eq 0">
                 <!-- Provide an empty char to make the resulting file valid … -->
                 <xsl:element name="char"/>
             </xsl:if>
@@ -77,21 +76,22 @@
     </xsl:template>
     
     <xsl:template name="char">
-        <xsl:variable name="glyph" select="key('glyphs', normalize-space(.), doc($glyphnames))"/>
+        <xsl:variable name="glyphName" select="normalize-space(.)"/>
+        <xsl:variable name="glyph" select="json-doc($glyphnames)?($glyphName)"/>
         <xsl:element name="char">
             <!-- glyph names with a leading digit get an underscore prefix -->
-            <xsl:attribute name="xml:id" select="concat('_', $glyph/normalize-space(@name))"/>
+            <xsl:attribute name="xml:id" select="concat('_', $glyphName)"/>
             <xsl:element name="charName">
-                <xsl:value-of select="$glyph/normalize-space(@name)"/>
+                <xsl:value-of select="$glyphName"/>
             </xsl:element>
             <xsl:element name="desc">
-                <xsl:value-of select="$glyph//jxml:member[@name='description']/normalize-space(jxml:string)"/>
+                <xsl:value-of select="$glyph?description => normalize-space()"/>
             </xsl:element>
             <xsl:element name="mapping">
                 <xsl:attribute name="type" select="'smufl'"/>
-                <xsl:value-of select="$glyph//jxml:member[@name='codepoint']/normalize-space(jxml:string)"/>
+                <xsl:value-of select="$glyph?codepoint => normalize-space()"/>
             </xsl:element>
-            <xsl:variable name="alternateCodepoint" select="$glyph//jxml:member[@name='alternateCodepoint']/normalize-space(jxml:string)"/>
+            <xsl:variable name="alternateCodepoint" select="$glyph?alternateCodepoint => normalize-space()"/>
             <xsl:if test="$alternateCodepoint">
                 <xsl:element name="mapping">
                     <xsl:attribute name="type" select="'standard'"/>
@@ -105,10 +105,10 @@
                     </xsl:choose>
                 </xsl:element>
             </xsl:if>
-            <xsl:if test="not(contains($glyph/@name, 'Unused'))">
+            <xsl:if test="not(contains($glyphName, 'Unused'))">
                 <!-- A dirty hack to exclude those 4 accSagittalUnused* glyphs which only exist in the metadata files but not in the Bravura font -->
                 <xsl:element name="graphic">
-                    <xsl:attribute name="url" select="concat($image.server, substring-after($glyph//jxml:member[@name='codepoint']/normalize-space(jxml:string), 'U+'), '.png')"/>
+                    <xsl:attribute name="url" select="concat($image.server, substring-after($glyph?codepoint => normalize-space(), 'U+'), '.png')"/>
                 </xsl:element>
             </xsl:if>
             <xsl:call-template name="classes"/>
@@ -117,14 +117,16 @@
     
     <xsl:template name="classes">
         <xsl:variable name="glyphName" select="normalize-space(.)"/>
-        <xsl:variable name="classNames" select="doc($classes)/jxml:object/jxml:member[.//jxml:string/normalize-space() = $glyphName]"/>
-        <xsl:if test="$classNames">
+        <xsl:variable name="classesMap" select="json-doc($classes)" as="map(*)"/>
+        <xsl:variable name="classNames" select="for $class in map:keys($classesMap) return if($classesMap?($class)?* = $glyphName) then normalize-space($class) else ()"/>
+        <xsl:if test="count($classNames) gt 0">
             <xsl:element name="note">
                 <xsl:element name="list">
                     <xsl:element name="head">Classes</xsl:element>
                     <xsl:for-each select="$classNames">
+                        <xsl:sort/>
                         <xsl:element name="item">
-                            <xsl:value-of select="normalize-space(@name)"/>
+                            <xsl:value-of select="$glyphName"/>
                         </xsl:element>
                     </xsl:for-each>
                 </xsl:element>
