@@ -3,33 +3,19 @@
 # 1. set up the build environment and build the expath-package
 # 2. run the eXist-db
 #########################
-FROM openjdk:11-jdk as builder
+FROM openjdk:17-jdk-bullseye as builder
 LABEL maintainer="Peter Stadler"
 
-ENV SMUFL_BUILD_HOME="/opt/smufl-build"
-
-ARG XMLSH_URL="http://xmlsh-org-downloads.s3-website-us-east-1.amazonaws.com/archives%2Frelease-1_3_1%2Fxmlsh_1_3_1.zip"
 ARG IMAGE_SERVER="https://smufl-browser.edirom.de/"
-
-ADD ${XMLSH_URL} /tmp/xmlsh.zip
+ENV SMUFL_BUILD_HOME="/opt/smufl-build"
 
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false ant git libsaxonhe-java nodejs npm \
-    # installing XMLShell
-    && unzip /tmp/xmlsh.zip -d ${SMUFL_BUILD_HOME}/ \
-    && mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh \
-    && chmod 755 /opt/smufl-build/xmlsh/unix/xmlsh \
+    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false ant libsaxonhe-java npm \
     && npm install -g yarn
 
 COPY . .
-
-RUN addgroup smuflbuilder \
-    && adduser smuflbuilder --ingroup smuflbuilder --disabled-password --system \
-    && chown -R smuflbuilder:smuflbuilder ${SMUFL_BUILD_HOME}
-
-USER smuflbuilder:smuflbuilder
 
 RUN ant -lib /usr/share/java -Dimage.server=${IMAGE_SERVER} rebuild
 
