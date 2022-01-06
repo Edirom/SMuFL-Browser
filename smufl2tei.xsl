@@ -126,7 +126,7 @@
                     <xsl:for-each select="$classNames">
                         <xsl:sort/>
                         <xsl:element name="item">
-                            <xsl:value-of select="$glyphName"/>
+                            <xsl:value-of select="."/>
                         </xsl:element>
                     </xsl:for-each>
                 </xsl:element>
