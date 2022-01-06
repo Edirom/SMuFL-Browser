@@ -12,22 +12,16 @@ ARG XMLSH_URL="http://xmlsh-org-downloads.s3-website-us-east-1.amazonaws.com/arc
 ARG IMAGE_SERVER="https://smufl-browser.edirom.de/"
 
 ADD ${XMLSH_URL} /tmp/xmlsh.zip
-ADD https://deb.nodesource.com/setup_12.x /tmp/nodejs_setup 
 
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false ant git libsaxonhe-java  \
-    # installing nodejs
-    && chmod 755 /tmp/nodejs_setup; sync \
-    && /tmp/nodejs_setup \
-    && apt-get install -y nodejs \
+    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false ant git libsaxonhe-java nodejs npm \
     # installing XMLShell
     && unzip /tmp/xmlsh.zip -d ${SMUFL_BUILD_HOME}/ \
     && mv ${SMUFL_BUILD_HOME}/xmlsh* ${SMUFL_BUILD_HOME}/xmlsh \
     && chmod 755 /opt/smufl-build/xmlsh/unix/xmlsh \
-    && npm install -g yarn \
-    && ln -s /usr/bin/nodejs /usr/local/bin/node
+    && npm install -g yarn
 
 COPY . .
 
