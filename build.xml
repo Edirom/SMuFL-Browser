@@ -32,17 +32,7 @@
 	</target>
     
     <target name="set-paths-for-external-programs">
-        <description>Set paths for external programs (i.e. Yarn and XMLShell)</description>
-        <condition property="xmlsh.cmdpath" value="win32/xmlsh.bat">
-            <os family="windows"/>
-        </condition>
-        <condition property="xmlsh.cmdpath" value="unix/xmlsh">
-            <os family="unix"/>
-        </condition>
-        <condition property="xmlsh.cmdpath" value="unix/xmlsh">
-            <os family="mac"/>
-        </condition>
-        
+        <description>Set paths for external programs (i.e. Yarn)</description>
     	<condition property="yarn.executable" value="${yarn.executable.windows}" else="yarn">
             <os family="windows"/>
         </condition>
@@ -54,10 +44,11 @@
 			<arg value="install"/>
 		</exec>
 	</target>
-	
-	<target name="json2xml" depends="yarn">
+
+	<!-- deprecated -->
+	<!--<target name="json2xml" depends="yarn">
 		<description>Transforms SMuFL metadata files from json to xml</description>
-		<!-- xmlsh is needed for json2xml transformation -->
+		<!-/- xmlsh is needed for json2xml transformation -/->
 		<echo>Transforming classes.json</echo>
 		<exec executable="${xmlsh.home}/${xmlsh.cmdpath}" dir="node_modules/smufl/metadata" output="${tmp.dir}/classes.xml" error="${tmp.dir}/json2xml.classes.error">
 			<arg value="-c"/>
@@ -76,7 +67,7 @@
 			<arg line="'json2xml glyphnames.json'"/>
 			<env key="XMLSH" value="${xmlsh.home}"/>
 		</exec>
-	</target>
+	</target>-->
 	
 	<!-- deprecated -->
 	<!--<target name="download-smufl-metadata" depends="init">
@@ -116,13 +107,13 @@
 		</java>
 	</target>
 	
-	<target name="charDecl" depends="init, json2xml">
+	<target name="charDecl" depends="init, yarn">
 		<description>Merge SMuFL metadata to one TEI file</description>
 		<mkdir dir="${dist.dir}/data"/>
 		<xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${dist.dir}/data/charDecl.xml">
-			<param name="ranges" expression="${tmp.dir}/ranges.xml"/>
-			<param name="classes" expression="${tmp.dir}/classes.xml"/>
-			<param name="glyphnames" expression="${tmp.dir}/glyphnames.xml"/>
+			<param name="ranges" expression="node_modules/smufl/metadata/ranges.json"/>
+			<param name="classes" expression="node_modules/smufl/metadata/classes.json"/>
+			<param name="glyphnames" expression="node_modules/smufl/metadata/glyphnames.json"/>
 			<param name="current.version" expression="${project.version}"/>
 			<param name="image.server" expression="${image.server}"/>
 			<param name="smufl.version" expression="${smufl.version}"/>
