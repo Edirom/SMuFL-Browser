@@ -23,7 +23,7 @@ RUN ant -lib /usr/share/java -Dimage.server=${IMAGE_SERVER} rebuild
 # Now running the eXist-db
 # and adding our freshly built xar-package
 #########################
-FROM stadlerpeter/existdb:5
+FROM stadlerpeter/existdb:6
 
 # add SMuFL-browser specific settings 
 # for a production ready environment with 
