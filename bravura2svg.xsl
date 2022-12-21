@@ -28,7 +28,7 @@
         <!-- Extract the Unicode Codepoint from the @glyph-name attribute, e.g. "uniE050" -->
         <xsl:variable name="codePoint" select="substring-after(@glyph-name, 'uni')" as="xs:string"/>
         <!-- Lookup the glyph name by codepoint from our TEI file charDecl.xml -->
-        <xsl:variable name="glyphName" select="$charDecl//tei:mapping[@type='smufl'][substring-after(., 'U+') eq $codePoint]/preceding-sibling::tei:charName => data()" as="xs:string?"/>
+        <xsl:variable name="glyphName" select="$charDecl//tei:mapping[@type='smufl'][substring(., 3) eq $codePoint]/preceding-sibling::tei:charName => data()" as="xs:string?"/>
         <!-- Lookup the bounding box from the Bravura metadata JSON file by glyphName -->
         <xsl:variable name="glyphBBox" select="$bravuraMetadata?glyphBBoxes?($glyphName)" as="map(*)?"/>
         
