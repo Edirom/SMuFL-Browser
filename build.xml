@@ -110,7 +110,7 @@
 	<target name="glyph2svg" depends="charDecl">
 		<description>Extract individual SVG shapes from the SVG font</description>
 		<mkdir dir="${tmp.dir}/svg-glyphs"/>
-		<xslt processor="trax" style="bravura2svg.xsl" basedir="node_modules/bravura/redist/svg" includes="BravuraText.svg" destdir="${tmp.dir}/svg-glyphs">
+		<xslt processor="trax" style="bravura2svg.xsl" basedir="node_modules/bravura/redist/svg" includes="Bravura.svg" destdir="${tmp.dir}/svg-glyphs">
 			<param name="charDeclPath" expression="${dist.dir}/data/charDecl.xml"/>
 			<param name="bravuraMetadataPath" expression="node_modules/bravura/redist/bravura_metadata.json"/>
 		</xslt>
