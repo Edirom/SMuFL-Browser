@@ -20,7 +20,7 @@ declare variable $exist:root external;
  : Content Negotiation 
  : Evaluate Accept header and resource suffix to serve appropriate media type
  :
- : @return ('html' | 'json' | 'tei' | 'png') 
+ : @return ('html' | 'json' | 'tei' | 'png' | 'svg') 
 ~:)
 declare function local:media-type() as xs:string {
     let $suffix := substring-after($exist:resource, '.')
@@ -32,6 +32,7 @@ declare function local:media-type() as xs:string {
         else if(matches($suffix, '^json$', 'i')) then 'json'
         else if(matches($suffix, '^js(onp)?$', 'i')) then 'jsonp'
         else if(matches($suffix, '^png$', 'i')) then 'png'
+        else if(matches($suffix, '^svg$', 'i')) then 'svg'
         
         (: Accept header follows if no suffix is given :)
         else if($accepted-content-types[1] = ('text/html', 'application/xhtml+xml')) then 'html'
@@ -39,6 +40,7 @@ declare function local:media-type() as xs:string {
         else if($accepted-content-types[1] = ('application/json')) then 'json'
         else if($accepted-content-types[1] = ('application/javascript')) then 'jsonp'
         else if($accepted-content-types[1] = ('image/png', 'application/png', 'application/x-png')) then 'png'
+        else if($accepted-content-types[1] = ('image/svg+xml')) then 'svg'
         
         (: if nothing matches fall back to TEI-XML :)
         else 'tei'
@@ -62,6 +64,7 @@ declare function local:dispatch() {
                 case 'json' return local:return-json($char)
                 case 'jsonp' return local:return-jsonp($char)
                 case 'png' return local:dispatch-image($char)
+                case 'svg' return local:dispatch-svgGlyph($char)
                 default return local:error()
         else local:error()
 };
@@ -141,6 +144,21 @@ declare function local:dispatch-image($char as element(tei:char)?) as element(ex
         if($res and $codepoint) then 
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/resources/images/{$res}/{$codepoint}.png">
+            	   <cache-control cache="yes"/>
+            	</forward>
+            </dispatch>
+        else local:error()
+};
+
+(:~
+ : Return an SVG XML file of a single char
+~:)
+declare function local:dispatch-svgGlyph($char as element(tei:char)?) as element(exist:dispatch) {
+    let $codepoint := substring($char/tei:mapping[@type='smufl'], 3)
+    return
+        if($codepoint) then 
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{$exist:controller}/resources/images/{$codepoint}.svg">
             	   <cache-control cache="yes"/>
             	</forward>
             </dispatch>
