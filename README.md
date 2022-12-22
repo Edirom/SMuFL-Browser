@@ -53,6 +53,10 @@ This will create a TEI file based on the template charDecl.xml.template with cha
 
 This will create png images from the Bravura font through a small program written by [Alexander Erhard](https://github.com/aerhard).
 
+### Target `glyph2svg`
+
+This will extract individual svg paths from the Bravura font.
+
 ### Target `xar`
 
 This will create all the above and bundle it as an eXist app package.

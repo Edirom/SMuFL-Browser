@@ -104,6 +104,20 @@
                             </ul>
                         </div>
                     </dd>
+                    <dt>SVG</dt>
+                    <dd>The webservice will send an SVG file of the glyph shape when queried for the suffix <code>.svg</code>.
+                        Alternatively you can omit the file extension and provide the <i>Content-Type</i> request header <code>image/svg+xml</code>.
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Examples</h4>
+                            </div>
+                            
+                            <ul class="list-group">
+                                <li class="list-group-item"><a href="https://smufl-browser.edirom.de/note8thUp.svg" title="SVG example URL">https://smufl-browser.edirom.de/note8thUp.svg</a></li>
+                                <li class="list-group-item"><a href="https://smufl-browser.edirom.de/E1D7.svg" title="SVG example URL">https://smufl-browser.edirom.de/E1D7.svg</a></li>
+                            </ul>
+                        </div>
+                    </dd>
                     <dt>Multiple characters</dt>
                     <dd>If you want to receive a list of several character definitions, you can query <code>https://smufl-browser.edirom.de/index</code> with the suffixes <code>.tei</code> or <code>.xml</code> (or the respective request headers, see above). 
                         JSON and JSONP are <i>not</i> supported at present.
@@ -119,9 +133,9 @@
                             </div>
                             
                             <ul class="list-group">
-                                <li class="list-group-item"><a href="https://smufl-browser.edirom.de/index.tei" title="complete charDecl">https://smufl-browser.edirom.de/index.tei</a> – this will give you the complete SMuFL specification as TEI file</li>
-                                <li class="list-group-item"><a href="https://smufl-browser.edirom.de/index.xml?range=Rests">https://smufl-browser.edirom.de/index.xml?range=Rests</a></li>
-                                <li class="list-group-item"><a href="https://smufl-browser.edirom.de/index.tei?class=noteheadSetRoundLarge&amp;class=noteheadSetCircled" title="PNG example URL">https://smufl-browser.edirom.de/index.tei?class=noteheadSetRoundLarge&amp;class=noteheadSetCircled</a></li>
+                                <li class="list-group-item"><a href="https://smufl-browser.edirom.de/index.tei" title="Request for the complete charDecl">https://smufl-browser.edirom.de/index.tei</a> – this will give you the complete SMuFL specification as TEI file</li>
+                                <li class="list-group-item"><a href="https://smufl-browser.edirom.de/index.xml?range=Rests" title="Request for a charDecl consisting of the range 'rests' only">https://smufl-browser.edirom.de/index.xml?range=Rests</a></li>
+                                <li class="list-group-item"><a href="https://smufl-browser.edirom.de/index.tei?class=noteheadSetRoundLarge&amp;class=noteheadSetCircled" title="Request for a charDecl consisting of two different classes">https://smufl-browser.edirom.de/index.tei?class=noteheadSetRoundLarge&amp;class=noteheadSetCircled</a></li>
                             </ul>
                         </div>
                     </dd>

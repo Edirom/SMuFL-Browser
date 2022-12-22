@@ -107,6 +107,15 @@
 		</java>
 	</target>
 	
+	<target name="glyph2svg" depends="charDecl">
+		<description>Extract individual SVG shapes from the SVG font</description>
+		<mkdir dir="${tmp.dir}/svg-glyphs"/>
+		<xslt processor="trax" style="bravura2svg.xsl" basedir="node_modules/bravura/redist/svg" includes="Bravura.svg" destdir="${tmp.dir}/svg-glyphs">
+			<param name="charDeclPath" expression="${dist.dir}/data/charDecl.xml"/>
+			<param name="bravuraMetadataPath" expression="node_modules/bravura/redist/bravura_metadata.json"/>
+		</xslt>
+	</target>
+	
 	<target name="charDecl" depends="init, yarn">
 		<description>Merge SMuFL metadata to one TEI file</description>
 		<mkdir dir="${dist.dir}/data"/>
@@ -121,7 +130,7 @@
 		</xslt>
 	</target>
 	
-	<target name="dist" depends="init, yarn, charDecl, otf2png">
+	<target name="dist" depends="init, yarn, charDecl, otf2png, glyph2svg">
 		<copy file="expath-pkg.xml.template" tofile="${dist.dir}/expath-pkg.xml" filtering="true" overwrite="true">
 			<filterset>
 				<filter token="project.version" value="${project.version}"/>
@@ -153,6 +162,9 @@
 		<copy todir="${dist.dir}/resources/images">
 			<fileset dir="${tmp.dir}/png-glyphs">
 				<include name="**/*.png"/>
+			</fileset>
+			<fileset dir="${tmp.dir}/svg-glyphs">
+				<include name="**/*.svg"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/fonts">
