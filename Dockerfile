@@ -3,7 +3,7 @@
 # 1. set up the build environment and build the expath-package
 # 2. run the eXist-db
 #########################
-FROM openjdk:17-jdk-bullseye as builder
+FROM eclipse-temurin:17-jdk as builder
 LABEL maintainer="Peter Stadler"
 
 ARG IMAGE_SERVER="https://smufl-browser.edirom.de/"
@@ -12,7 +12,7 @@ ENV SMUFL_BUILD_HOME="/opt/smufl-build"
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false ant libsaxonhe-java npm \
+    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false ant libsaxonhe-java npm git \
     && npm install -g yarn
 
 COPY . .
