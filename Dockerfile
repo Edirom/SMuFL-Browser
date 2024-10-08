@@ -3,8 +3,7 @@
 # 1. set up the build environment and build the expath-package
 # 2. run the eXist-db
 #########################
-FROM eclipse-temurin:17-jdk as builder
-LABEL maintainer="Peter Stadler"
+FROM eclipse-temurin:17-jdk AS builder
 
 ARG IMAGE_SERVER="https://smufl-browser.edirom.de/"
 ENV SMUFL_BUILD_HOME="/opt/smufl-build"
@@ -24,6 +23,8 @@ RUN ant -lib /usr/share/java -Dimage.server=${IMAGE_SERVER} rebuild
 # and adding our freshly built xar-package
 #########################
 FROM stadlerpeter/existdb:6
+LABEL org.opencontainers.image.authors="Peter Stadler"
+LABEL org.opencontainers.image.source="https://github.com/Edirom/SMuFL-Browser"
 
 # add SMuFL-browser specific settings 
 # for a production ready environment with 
