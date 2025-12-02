@@ -20,7 +20,7 @@
                     <li class="list-group-item">SMuFL-Version: <span
                             data-template="app:version"
                             data-template-key="smufl">0.9.0</span> <a
-                            href="http://www.smufl.org/"
+                            href="https://www.smufl.org/"
                             title="SMuFL home"><i class="fa-solid fa-house"/></a> <a
                             href="https://github.com/w3c/smufl"
                             title="SMuFL @ GitHub"><i
@@ -28,7 +28,7 @@
                     <li class="list-group-item">Bravura-Version: <span
                             data-template="app:version"
                             data-template-key="bravura">0.9.0</span> <a
-                            href="http://www.smufl.org/fonts/"
+                            href="https://www.smufl.org/fonts/"
                             title="Bravura home"><i class="fa-solid fa-house"/></a>
                         <a href="https://github.com/steinbergmedia/bravura"
                            title="Bravura @ GitHub"><i
@@ -46,7 +46,9 @@
         <div class="col-md-9 order-md-1">
             <div>
                 <h1>About SMuFL-Browser</h1>
-                <p>SMuFL-Browser is a small web service build upon the <i><a href="http://www.smufl.org" title="Standard Music Font Layout specification">Standard Music Font Layout specification</a></i> (SMuFL) and the <i><a href="http://www.tei-c.org" title="Text Encoding Initiative">Text Encoding Initiative</a></i> (TEI) which can – hopefully – serve multiple purposes.</p>
+                <p>SMuFL-Browser is a small web service build upon the <i><a
+                        href="https://www.smufl.org"
+                        title="Standard Music Font Layout specification">Standard Music Font Layout specification</a></i> (SMuFL) and the <i><a href="https://www.tei-c.org" title="Text Encoding Initiative">Text Encoding Initiative</a></i> (TEI) which can – hopefully – serve multiple purposes.</p>
                 <ol>
                     <li>As a browser and search interface for SMuFL glyphs</li>
                     <li>As a reference for the declaration of musical symbols in a TEI encoded text</li>
@@ -59,16 +61,20 @@
                     Since the very most of the SMuFL codepoints are from the Private Use Area, this is really an idiosyncratic solution and not the right approach for data interchange.
                 </p>
                 <p>The preferred approach would be to use the <code>&lt;g&gt;</code> element in the text and link to detailed character declarations in the TEI header (cf. chapter 5 of the TEI Guidelines: 
-                    <a href="http://www.tei-c.org/release/doc/tei-p5-doc/en/html/WD.html" title="Characters, Glyphs, and Writing Modes">Characters, Glyphs, and Writing Modes</a>). 
-                    So, while you're probably not interested in that declaring stuff but simply want to add that muscial symbol to your text, this is where SMuFL-Browser comes in with providing those declarations for you.
+                    <a
+                            href="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/WD.html" title="Characters, Glyphs, and Writing Modes">Characters, Glyphs, and Writing Modes</a>).
+                    So, while you're probably not interested in that
+                    declaring stuff but simply want to add that musical symbol to your text, this is where SMuFL-Browser comes in with providing those declarations for you.
                     It creates a nice <code>&lt;charDecl&gt;</code> with according <code>&lt;char&gt;</code> definitions from the SMuFL metadata (which comes in JSON format) and makes those available online.   
                     All you need to do, is find the right character with the SMuFL-Browser and copy the "TEI code for embedding" into your TEI text.
                 </p>
             </div>
             <div>
                 <h3>Webservice specification</h3>
-                <p>SMuFL-Browser was developed with both the encoder as well as the developer in mind. 
-                    For the developer, this web service provides the information concerning each character in several formats, at a stable URL, via both glyphname and codepoint (NB: the glyphnames are case sensitive while the codepoints are not):</p>
+                <p>SMuFL-Browser was developed with both the encoder and the
+                    developer in mind.
+                    For the developer, this web service provides the
+                    information concerning each character in several formats, at a stable URL, via both glyphname and codepoint (NB: the glyphnames are case-sensitive while the codepoints are not):</p>
                 <dl>
                     <dt>TEI-XML</dt>
                     <dd>The webservice will send TEI-XML when queried for the suffix <code>.tei</code> or <code>.xml</code>. 
@@ -172,12 +178,15 @@
             </div>
             <div>
                 <h3>License</h3>
-                <p>SMuFL-Browser is available under dual license: <a href="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</a> and <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a>.</p>
+                <p>SMuFL-Browser is available under dual license: <a
+                        href="https://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</a> and <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a>.</p>
             </div>
             <div>
                 <h3>Credits</h3>
                 <p>First and foremost big thanks to Daniel Spreadbury for his great work on SMuFL and for making it publicly available under an open license.</p>
-                <p>Second, SMuFL-Browser was inspired to a great deal by the <a href="http://www.manuscriptorium.com/apps/gbank/gbank_table.php" title="ENRICH Gaiji Bank">ENRICH Gaiji Bank</a> which builds upon the <a href="http://www.mufi.info/">Medieval Unicode Font Initiative (MUFI) standard</a>.</p>
+                <p>Second, SMuFL-Browser was inspired to a great deal by the
+                    <a
+                            href="https://web.archive.org/web/20240715071553/https://www.manuscriptorium.com/apps/gbank/gbank_table.php" title="ENRICH Gaiji Bank">ENRICH Gaiji Bank</a> which builds upon the <a href="https://www.mufi.info/">Medieval Unicode Font Initiative (MUFI) standard</a>.</p>
                 <p>Last not least thanks to Alexander Erhard for pull requests, testing and various feedback.</p>
             </div>
         </div>
