@@ -158,7 +158,7 @@
 			</fileset>
 		</copy>
 		<mkdir dir="${dist.dir}/resources/images"/>
-		<mkdir dir="${dist.dir}/resources/fonts"/>
+		<mkdir dir="${dist.dir}/resources/webfonts"/>
 		<copy todir="${dist.dir}/resources/images">
 			<fileset dir="${tmp.dir}/png-glyphs">
 				<include name="**/*.png"/>
@@ -167,41 +167,28 @@
 				<include name="**/*.svg"/>
 			</fileset>
 		</copy>
-		<copy todir="${dist.dir}/resources/fonts">
+		<copy todir="${dist.dir}/resources/webfonts">
 			<!--<fileset dir="${tmp.dir}">
 				<include name="eot/"/>
 				<include name="woff/"/>
 				<include name="otf/"/>
 				<include name="svg/"/>
 			</fileset>-->
-			<fileset dir="node_modules/bootstrap/dist/fonts">
-				<include name="*.*"/>
-			</fileset>
-			<fileset dir="node_modules/font-awesome/fonts/">
-				<include name="fontawesome-webfont.*"/>
+			<fileset dir="node_modules/@fortawesome/fontawesome-free/webfonts/">
+				<include name="**/*"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/css">
 			<fileset dir="node_modules/bootstrap/dist/css">
-				<include name="bootstrap.min.css"/>
+				<include name="*.css"/>
 			</fileset>
-			<fileset dir="node_modules/select2/dist/css">
-				<include name="select2.min.css"/>
-			</fileset>
-			<fileset dir="node_modules/font-awesome/css">
-				<include name="font-awesome.min.css"/>
+			<fileset dir="node_modules/@fortawesome/fontawesome-free/css">
+				<include name="*.css"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/js">
 			<fileset dir="node_modules/bootstrap/dist/js">
 				<include name="bootstrap.min.js"/>
-			</fileset>
-			<fileset dir="node_modules/jquery/dist">
-				<include name="jquery.min.js"/>
-				<include name="jquery.min.map"/>
-			</fileset>
-			<fileset dir="node_modules/select2/dist/js/">
-				<include name="select2.min.js"/>
 			</fileset>
 		</copy>
 	</target>

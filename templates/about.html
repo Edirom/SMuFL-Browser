@@ -4,21 +4,46 @@
         <p>A web based viewer for the Standard Music Font Layout specification</p>
     </div>-->
     <div class="row">
-        <div class="col-md-3 col-md-push-9">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Application Information</h3>
+        <div class="col-md-3 order-md-2">
+            <div class="card">
+                <div class="card-header text-bg-info">
+                    <h5 class="card-title">Application Information</h5>
                 </div>
                 
                 <ul class="list-group">
-                    <li class="list-group-item">SMuFL-Browser-Version: <span data-template="app:version" data-template-key="smufl-browser">0.9.0</span> <a href="https://github.com/Edirom/SMuFL-Browser" title="SMuFL-Browser Releases @ GitHub"><i class="fa fa-github"/></a></li>
-                    <li class="list-group-item">SMuFL-Version: <span data-template="app:version" data-template-key="smufl">0.9.0</span> <a href="http://www.smufl.org/" title="SMuFL home"><i class="fa fa-home"/></a> <a href="https://github.com/w3c/smufl" title="SMuFL @ GitHub"><i class="fa fa-github"/></a></li>
-                    <li class="list-group-item">Bravura-Version: <span data-template="app:version" data-template-key="bravura">0.9.0</span> <a href="http://www.smufl.org/fonts/" title="Bravura home"><i class="fa fa-home"/></a> <a href="https://github.com/steinbergmedia/bravura" title="Bravura @ GitHub"><i class="fa fa-github"/></a></li>
-                    <li class="list-group-item">Author: Peter Stadler <a title="mail me at stadler at edirom dot de"><i class="fa fa-envelope-o"/></a> <a href="https://twitter.com/ps_tadler"><i class="fa fa-twitter"/></a> <a href="https://github.com/peterstadler"><i class="fa fa-github"/></a></li>
+                    <li class="list-group-item">SMuFL-Browser-Version: <span
+                            data-template="app:version"
+                            data-template-key="smufl-browser">0.9.0</span> <a
+                            href="https://github.com/Edirom/SMuFL-Browser"
+                            title="SMuFL-Browser Releases @ GitHub"><i
+                            class="fa-brands fa-github"/></a></li>
+                    <li class="list-group-item">SMuFL-Version: <span
+                            data-template="app:version"
+                            data-template-key="smufl">0.9.0</span> <a
+                            href="http://www.smufl.org/"
+                            title="SMuFL home"><i class="fa-solid fa-house"/></a> <a
+                            href="https://github.com/w3c/smufl"
+                            title="SMuFL @ GitHub"><i
+                            class="fa-brands fa-github"/></a></li>
+                    <li class="list-group-item">Bravura-Version: <span
+                            data-template="app:version"
+                            data-template-key="bravura">0.9.0</span> <a
+                            href="http://www.smufl.org/fonts/"
+                            title="Bravura home"><i class="fa-solid fa-house"/></a>
+                        <a href="https://github.com/steinbergmedia/bravura"
+                           title="Bravura @ GitHub"><i
+                                class="fa-brands fa-github"/></a></li>
+                    <li class="list-group-item">Author: Peter Stadler <a
+                            title="mail me at stadler at edirom dot de"><i
+                            class="fa-solid fa-envelope"/></a> <a
+                            href="https://fedihum.org/@ps_tadler"><i
+                            class="fa-brands fa-mastodon"/></a> <a
+                            href="https://github.com/peterstadler"><i
+                            class="fa-brands fa-github"/></a></li>
                 </ul>
             </div>
         </div>
-        <div class="col-md-9 col-md-pull-3">
+        <div class="col-md-9 order-md-1">
             <div>
                 <h1>About SMuFL-Browser</h1>
                 <p>SMuFL-Browser is a small web service build upon the <i><a href="http://www.smufl.org" title="Standard Music Font Layout specification">Standard Music Font Layout specification</a></i> (SMuFL) and the <i><a href="http://www.tei-c.org" title="Text Encoding Initiative">Text Encoding Initiative</a></i> (TEI) which can – hopefully – serve multiple purposes.</p>
@@ -48,9 +73,9 @@
                     <dt>TEI-XML</dt>
                     <dd>The webservice will send TEI-XML when queried for the suffix <code>.tei</code> or <code>.xml</code>. 
                         Alternatively you can omit the file extension and provide the <i>Content-Type</i> request headers <code>application/xml</code> or <code>application/tei+xml</code>.
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">Examples</h4>
+                        <div class="card">
+                            <div class="card-header text-bg-info">
+                                <h5 class="card-title">Examples</h5>
                             </div>
                             
                             <ul class="list-group">
@@ -62,9 +87,9 @@
                     <dt>JSON</dt>
                     <dd>The webservice will send a JSON serialization of the TEI data when queried for the suffix <code>.json</code> (NB: This is <i>not</i> the original SMuFL JSON metadata). 
                         Alternatively you can omit the file extension and provide the <i>Content-Type</i> request header <code>application/json</code>.
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">Examples</h4>
+                        <div class="card">
+                            <div class="card-header text-bg-info">
+                                <h5 class="card-title">Examples</h5>
                             </div>
                             
                             <ul class="list-group">
@@ -77,9 +102,9 @@
                     <dd>The webservice will send the above JSON serialization of the TEI data wrapped in a javascript function call when queried for the suffix <code>.js</code> or <code>.jsonp</code>. 
                         Alternatively you can omit the file extension and provide the <i>Content-Type</i> request header <code>application/javascript</code>. 
                         You can provide yor own wrapper function name with the <code>callback</code> URL parameter. Otherwise, the default is <code>callback=callback</code>.
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">Examples</h4>
+                        <div class="card">
+                            <div class="card-header text-bg-info">
+                                <h5 class="card-title">Examples</h5>
                             </div>
                             
                             <ul class="list-group">
@@ -92,9 +117,9 @@
                     <dd>The webservice will send an image file of the glyph shape when queried for the suffix <code>.png</code>. 
                         Alternatively you can omit the file extension and provide the <i>Content-Type</i> request headers <code>image/png</code>, <code>application/png</code> or <code>application/x-png</code>.
                         The default resolution is 120x120 pixels; with the URL parameter <code>res=low</code> you'll get 40x40 pixels.
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">Examples</h4>
+                        <div class="card">
+                            <div class="card-header text-bg-info">
+                                <h5 class="card-title">Examples</h5>
                             </div>
                             
                             <ul class="list-group">
@@ -107,9 +132,9 @@
                     <dt>SVG</dt>
                     <dd>The webservice will send an SVG file of the glyph shape when queried for the suffix <code>.svg</code>.
                         Alternatively you can omit the file extension and provide the <i>Content-Type</i> request header <code>image/svg+xml</code>.
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">Examples</h4>
+                        <div class="card">
+                            <div class="card-header text-bg-info">
+                                <h5 class="card-title">Examples</h5>
                             </div>
                             
                             <ul class="list-group">
@@ -127,9 +152,9 @@
                             <li>class</li>
                             <li>glyphname</li>
                         </ul>
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">Examples</h4>
+                        <div class="card">
+                            <div class="card-header text-bg-info">
+                                <h5 class="card-title">Examples</h5>
                             </div>
                             
                             <ul class="list-group">
@@ -143,7 +168,7 @@
             </div>
             <div>
                 <h3>Source Code</h3>
-                <p>The source code for creating the TEI character declarations from the SMuFL JSON metadata files as well as the source code for this web service is hosted on <a href="https://github.com/Edirom/SMuFL-Browser">GitHub <i class="fa fa-github"/></a>.</p>
+                <p>The source code for creating the TEI character declarations from the SMuFL JSON metadata files as well as the source code for this web service is hosted on <a href="https://github.com/Edirom/SMuFL-Browser">GitHub <i class="fa-brands fa-github"/></a>.</p>
             </div>
             <div>
                 <h3>License</h3>
