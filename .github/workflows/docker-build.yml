@@ -20,7 +20,7 @@ jobs:
 
       # Login against DockerHub registry except on PR
       - name: Log in to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.PETERS_DOCKERHUB_USERNAME }}
           password: ${{ secrets.PETERS_DOCKERHUB_TOKEN }}
