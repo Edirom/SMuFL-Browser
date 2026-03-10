@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="jar" name="Create Runnable Jar for Project otf2png">
-    <!-- ANT 1.7 is required -->
 
     <target name="compile">
         <mkdir dir="bin"/>
-        <javac srcdir="src" destdir="bin" debug="on" source="1.7" includeantruntime="false">
+        <javac srcdir="src" destdir="bin" debug="on" source="1.8" target="1.8" includeantruntime="false" release="8">
             <classpath>
                 <fileset dir="lib"/>
             </classpath>
