@@ -3,7 +3,8 @@
     --bs-body-font-size: 14px;
     --bs-body-color: #333;
     --bs-primary: #23527c;
-    --bs-link-color: #23527c;
+    --bs-link-color: #337ab7;
+    --bs-navbar-brand-color: #777;
 }
 
 /* Application styles could go here */
@@ -14,15 +15,24 @@
 
 .charDesc {
     font-size:larger;
-    padding: 0px 15px;
+    padding: 0 15px;
 }
 
 .pagination {
-    padding: 0px 15px;
+    padding: 0 15px;
 }
 
 select {
     width: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.pagination .disabled {
+    pointer-events: none;
+    cursor: not-allowed;
 }
 
 /* Sticky footer styles
