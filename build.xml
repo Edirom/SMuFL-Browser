@@ -185,10 +185,16 @@
 			<fileset dir="node_modules/@fortawesome/fontawesome-free/css">
 				<include name="*.css"/>
 			</fileset>
+			<fileset dir="node_modules/choices.js/public/assets/styles">
+				<include name="*.css"/>
+			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/js">
 			<fileset dir="node_modules/bootstrap/dist/js">
 				<include name="bootstrap.min.js"/>
+			</fileset>
+			<fileset dir="node_modules/choices.js/public/assets/scripts">
+				<include name="*.js"/>
 			</fileset>
 		</copy>
 	</target>

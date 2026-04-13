@@ -31,7 +31,6 @@ a {
 }
 
 .pagination .disabled {
-    pointer-events: none;
     cursor: not-allowed;
 }
 

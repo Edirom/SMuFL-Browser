@@ -16,6 +16,18 @@ bootstrap@^5.3.8:
   version "0.0.0"
   resolved "https://github.com/steinbergmedia/bravura#301087ca0b0d30b65d81bc3e718ff64b613e2a9a"
 
+choices.js@^11.2.1:
+  version "11.2.1"
+  resolved "https://registry.yarnpkg.com/choices.js/-/choices.js-11.2.1.tgz#3c496ceb5a6df003c6e207d9100b32a3d9bfb3c0"
+  integrity sha512-SyA0FRr0+UHOjKO/9oR0/hVYRgk3v5C9ZD+CLnQfLFR7ZSiNb/rQeAUOsqXaPTk/552X5dtvRaDiG94Ga7G2Gg==
+  dependencies:
+    fuse.js "^7.0.0"
+
+fuse.js@^7.0.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-7.1.0.tgz#306228b4befeee11e05b027087c2744158527d09"
+  integrity sha512-trLf4SzuuUxfusZADLINj+dE8clK1frKdmqiJNb1Es75fmI5oY6X2mxLVUciLLjxqw/xr72Dhy+lER6dGd02FQ==
+
 "smufl@https://github.com/w3c/smufl#v1.4":
   version "0.0.0"
   resolved "https://github.com/w3c/smufl#753f551ca6f96bf24ba38aa2d8a317e706238c51"
