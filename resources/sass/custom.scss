@@ -1,12 +1,3 @@
-:root {
-    --bs-body-font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    --bs-body-font-size: 14px;
-    --bs-body-color: #333;
-    --bs-primary: #23527c;
-    --bs-link-color: #337ab7;
-    --bs-navbar-brand-color: #777;
-}
-
 /* Application styles could go here */
 .charImage {
     max-width:100%;
@@ -28,10 +19,17 @@ select {
 
 a {
     text-decoration: none;
+    &.navbar-brand {
+        color: #777;
+    }
 }
 
 .pagination .disabled {
     cursor: not-allowed;
+}
+
+.card-title {
+    color: $primary;
 }
 
 /* Sticky footer styles
