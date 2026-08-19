@@ -26,3 +26,6 @@ $font-family-sans-serif: "Helvetica Neue",Helvetica,Arial,sans-serif;
 
 // other local files
 @import "custom";
+
+//@import "../../node_modules/choices.js/src/styles/base.scss";
+@import "../../node_modules/choices.js/src/styles/choices.scss";
