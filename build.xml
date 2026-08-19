@@ -45,6 +45,13 @@
 		</exec>
 	</target>
 
+	<target name="sass" depends="init, yarn">
+		<description>Create CSS files via sass</description>
+		<exec executable="node_modules/sass/sass.js">
+			<arg line="--silence-deprecation=import,color-functions,global-builtin,abs-percent,if-function resources/sass/main.scss ${dist.dir}/resources/css/styles.css"/>
+		</exec>
+	</target>
+
 	<!-- deprecated -->
 	<!--<target name="json2xml" depends="yarn">
 		<description>Transforms SMuFL metadata files from json to xml</description>
@@ -130,7 +137,7 @@
 		</xslt>
 	</target>
 	
-	<target name="dist" depends="init, yarn, charDecl, otf2png, glyph2svg">
+	<target name="dist" depends="init, yarn, sass, charDecl, otf2png, glyph2svg">
 		<copy file="expath-pkg.xml.template" tofile="${dist.dir}/expath-pkg.xml" filtering="true" overwrite="true">
 			<filterset>
 				<filter token="project.version" value="${project.version}"/>
@@ -179,12 +186,6 @@
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/css">
-			<fileset dir="node_modules/bootstrap/dist/css">
-				<include name="*.css"/>
-			</fileset>
-			<fileset dir="node_modules/@fortawesome/fontawesome-free/css">
-				<include name="*.css"/>
-			</fileset>
 			<fileset dir="node_modules/choices.js/public/assets/styles">
 				<include name="*.css"/>
 			</fileset>
