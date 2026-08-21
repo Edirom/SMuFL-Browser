@@ -155,6 +155,7 @@
 				<!--<exclude name="${dist.dir}/*"/>-->
 				<!--<exclude name="${tmp.dir}/*"/>-->
 				<!--<exclude name="${build.dir}/*"/>-->
+				<exclude name="resources/sass/**"/>
 				<exclude name="build.xml"/>
 				<exclude name="package.json"/>
 				<exclude name="*.template"/>
@@ -183,11 +184,6 @@
 			</fileset>-->
 			<fileset dir="node_modules/@fortawesome/fontawesome-free/webfonts/">
 				<include name="**/*"/>
-			</fileset>
-		</copy>
-		<copy todir="${dist.dir}/resources/css">
-			<fileset dir="node_modules/choices.js/public/assets/styles">
-				<include name="*.css"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/resources/js">
