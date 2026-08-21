@@ -11,3 +11,4 @@ smufl-browser.xpr
 node_modules
 .git/
 .github/
+.idea/

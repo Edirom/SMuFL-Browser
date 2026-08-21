@@ -1,0 +1,33 @@
+// Fort Awesome
+// use rules have to go first
+/*
+@use '../../node_modules/@fortawesome/fontawesome-free/scss/variables' with (
+  // customizing $font-path
+  $font-path: '../fonts'
+);
+
+ */
+@use '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
+@use '../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss' as fa-solid;
+@use '../../node_modules/@fortawesome/fontawesome-free/scss/brands.scss' as fa-brands;
+@use '../../node_modules/@fortawesome/fontawesome-free/scss/regular.scss' as fa-regular;
+
+
+$primary:         #337ab7;
+$blue-light:      #018eff;
+$success:         #c8e5c4;
+$info:            #d9edf7;
+$warning:         #ffe9a7;
+$danger:          #e78c8a;
+$link-color:      #337ab7;
+$font-family-sans-serif: "Helvetica Neue",Helvetica,Arial,sans-serif;
+
+$choices-primary-color: $primary !default;
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// other local files
+@import "custom";
+
+// import choices.js styles
+@import "../../node_modules/choices.js/src/styles/choices.scss";

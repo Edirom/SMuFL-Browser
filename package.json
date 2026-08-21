@@ -1,17 +1,17 @@
 {
   "name": "smufl-browser",
-  "version": "1.7.0-beta",
+  "version": "1.8.0-beta",
   "description": "A web based browser for the Standard Music Font Layout",
   "repository": "https://github.com/Edirom/SMuFL-Browser.git",
   "author": "Peter Stadler <stadlerpeter@yahoo.fr>",
   "license": "(BSD-2-Clause OR CC-BY-4.0)",
   "private": false,
   "dependencies": {
-    "bootstrap": "^3.3.7",
+    "@fortawesome/fontawesome-free": "^6.6.4",
+    "bootstrap": "^5.3.8",
     "bravura": "https://github.com/steinbergmedia/bravura#bravura-1.392",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3",
-    "select2": "^4",
+    "choices.js": "^11.2.1",
+    "sass": "^1.102.0",
     "smufl": "https://github.com/w3c/smufl#v1.4"
   }
 }

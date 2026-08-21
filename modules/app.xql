@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 module namespace app="http://smufl-browser.edirom.de/app";
 
@@ -151,26 +151,32 @@ declare
         return (
             <li>{
                 if($page le 1) then (
-                    attribute {'class'}{'disabled'},
-                    <span>&#x00AB; previous</span>
+                    attribute {'class'}{'disabled page-item'},
+                    <span class="page-link">&#x00AB; previous</span>
                 )
-                else <a href="{$page-link($page - 1)}">&#x00AB; previous</a> 
+                else (
+                    attribute {'class'}{'page-item'},
+                    <a class="page-link" href="{$page-link($page - 1)}">&#x00AB; previous</a>
+                )
             }</li>,
-            if($page gt 3) then <li><a href="{$page-link(1)}">1</a></li> else (),
-            if($page gt 4) then <li><a href="{$page-link(2)}">2</a></li> else (),
-            if($page gt 5) then <li><span>…</span></li> else (),
-            ($page - 2, $page - 1)[. gt 0] ! <li><a href="{$page-link(.)}">{string(.)}</a></li>,
-            <li class="active"><span>{$page}</span></li>,
-            ($page + 1, $page + 2)[. le $last-page] ! <li><a href="{$page-link(.)}">{string(.)}</a></li>,
-            if($page + 4 lt $last-page) then <li><span>…</span></li> else (),
-            if($page + 3 lt $last-page) then <li><a href="{$page-link($last-page - 1)}">{$last-page - 1}</a></li> else (),
-            if($page + 2 lt $last-page) then <li><a href="{$page-link($last-page)}">{$last-page}</a></li> else (),
+            if($page gt 3) then <li class="page-item"><a class="page-link" href="{$page-link(1)}">1</a></li> else (),
+            if($page gt 4) then <li class="page-item"><a class="page-link" href="{$page-link(2)}">2</a></li> else (),
+            if($page gt 5) then <li class="page-item"><span class="page-link">…</span></li> else (),
+            ($page - 2, $page - 1)[. gt 0] ! <li class="page-item"><a class="page-link" href="{$page-link(.)}">{string(.)}</a></li>,
+            <li class="active page-item"><span class="page-link">{$page}</span></li>,
+            ($page + 1, $page + 2)[. le $last-page] ! <li class="page-item"><a class="page-link" href="{$page-link(.)}">{string(.)}</a></li>,
+            if($page + 4 lt $last-page) then <li class="page-item"><span class="page-link">…</span></li> else (),
+            if($page + 3 lt $last-page) then <li class="page-item"><a class="page-link" href="{$page-link($last-page - 1)}">{$last-page - 1}</a></li> else (),
+            if($page + 2 lt $last-page) then <li class="page-item"><a class="page-link" href="{$page-link($last-page)}">{$last-page}</a></li> else (),
             <li>{
                 if($page ge $last-page) then (
-                    attribute {'class'}{'disabled'},
-                    <span>next &#x00BB;</span>
+                    attribute {'class'}{'disabled page-item'},
+                    <span class="page-link">next &#x00BB;</span>
                 )
-                else <a href="{$page-link($page + 1)}">next &#x00BB;</a> 
+                else (
+                    attribute {'class'}{'page-item'},
+                    <a class="page-link" href="{$page-link($page + 1)}">next &#x00BB;</a>
+                )
             }</li>
         )
 };

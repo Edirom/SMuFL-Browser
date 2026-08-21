@@ -6,15 +6,34 @@
 
 .charDesc {
     font-size:larger;
-    padding: 0px 15px;
+    padding: 0 15px;
 }
 
 .pagination {
-    padding: 0px 15px;
+    padding: 0 15px;
 }
 
 select {
     width: 100%;
+}
+
+a {
+    text-decoration: none;
+    &.navbar-brand {
+        color: #777;
+    }
+}
+
+.pagination .disabled {
+    cursor: not-allowed;
+}
+
+.card-title {
+    color: $primary;
+}
+
+.form-group {
+    margin-bottom: 1rem;
 }
 
 /* Sticky footer styles

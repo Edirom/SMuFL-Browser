@@ -3,7 +3,7 @@
 # 1. set up the build environment and build the expath-package
 # 2. run the eXist-db
 #########################
-FROM eclipse-temurin:17-jdk AS builder
+FROM eclipse-temurin:25-jdk AS builder
 
 ARG IMAGE_SERVER="https://smufl-browser.edirom.de/"
 ENV SMUFL_BUILD_HOME="/opt/smufl-build"
