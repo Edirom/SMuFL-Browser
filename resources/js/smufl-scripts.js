@@ -2,7 +2,10 @@
  * Some Javascript functions for SMuFL-Browser
  */
 
-/* Initialize select2 plugin for the input forms */
-$('select').select2({
-    closeOnSelect: false
+/* Initialize choices plugin for the input forms */
+document.querySelectorAll("select").forEach(function(e) {
+    new Choices(e, {
+            removeItemButton: true
+        }
+    );
 });
