@@ -27,7 +27,7 @@ declare function app:test($node as node(), $model as map(*)) {
 };
 
 declare function app:charID($node as node(), $model as map(*)) as element(h1) {
-    <h1>{map:get($model, 'char')/normalize-space(tei:charName)}</h1>
+    <h1>{map:get($model, 'char')/normalize-space(tei:localProp/@value)}</h1>
 };
 
 declare function app:charDesc($node as node(), $model as map(*)) as element(dl) {
@@ -35,7 +35,7 @@ declare function app:charDesc($node as node(), $model as map(*)) as element(dl) 
     return 
         <dl class="charDesc">
             <dt>Character name</dt>
-            <dd>{normalize-space($char/tei:charName)}</dd>
+            <dd>{normalize-space($char/tei:localProp/@value)}</dd>
             <dt>Character description</dt>
             <dd>{normalize-space($char/tei:desc)}</dd>
             <dt>SMuFL codepoint</dt>
@@ -51,7 +51,7 @@ declare function app:charDesc($node as node(), $model as map(*)) as element(dl) 
             <dt>Classes</dt>
             <dd>{if($char//tei:item) then string-join($char//tei:item/normalize-space(), ', ') else 'n.a.'}</dd>
             <dt>TEI code for embedding</dt>
-            <dd><code>&lt;g ref="{string-join(($config:server-url, normalize-space($char/tei:charName) || '.xml'), '/')}"/&gt;</code></dd>
+            <dd><code>&lt;g ref="{string-join(($config:server-url, normalize-space($char/tei:localProp/@value) || '.xml'), '/')}"/&gt;</code></dd>
         </dl>
 };
 
@@ -82,7 +82,7 @@ declare
     %templates:default("glyphname", "all")
     function app:glyphnames-list($node as node(), $model as map(*), $glyphname as xs:string*) as element(option)* {
         for $glyph in $config:charDecl//tei:char
-        let $name := normalize-space($glyph/tei:charName)
+        let $name := normalize-space($glyph/tei:localProp/@value)
         order by $name ascending
         return 
             <option value="{$name}">{
@@ -117,7 +117,7 @@ declare
             if(($range,$class,$glyphname) != 'all') then (
                 $config:charDecl//tei:item[. = $class]/ancestor::tei:char | 
                 $config:charDecl//tei:desc[. = $range]/following-sibling::tei:char[@xml:id] |
-                $config:charDecl//tei:charName[. = $glyphname]/parent::tei:char
+                $config:charDecl//tei:localProp[@value = $glyphname]/parent::tei:char
             )
             else $config:charDecl//tei:char[@xml:id]
         return 

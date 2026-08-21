@@ -81,8 +81,9 @@
         <xsl:element name="char">
             <!-- glyph names with a leading digit get an underscore prefix -->
             <xsl:attribute name="xml:id" select="concat('_', $glyphName)"/>
-            <xsl:element name="charName">
-                <xsl:value-of select="$glyphName"/>
+            <xsl:element name="localProp">
+                <xsl:attribute name="name">Name</xsl:attribute>
+                <xsl:attribute name="value" select="$glyphName"/>
             </xsl:element>
             <xsl:element name="desc">
                 <xsl:value-of select="$glyph?description => normalize-space()"/>
