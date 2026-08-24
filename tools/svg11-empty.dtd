@@ -1,0 +1,3 @@
+<!-- Empty stub DTD for SVG 1.1. Replaces the W3C remote DTD via xmlcatalog
+     to avoid JAXP entity size limit errors (jdk.xml.maxParameterEntitySizeLimit)
+     when parsing Bravura.svg with newer JDK versions (15+). -->
