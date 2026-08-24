@@ -120,6 +120,11 @@
 		<xslt processor="trax" style="bravura2svg.xsl" basedir="node_modules/bravura/redist/svg" includes="Bravura.svg" destdir="${tmp.dir}/svg-glyphs">
 			<param name="charDeclPath" expression="${dist.dir}/data/charDecl.xml"/>
 			<param name="bravuraMetadataPath" expression="node_modules/bravura/redist/bravura_metadata.json"/>
+			<!-- Redirect the W3C SVG 1.1 DTD to a local empty stub to avoid JAXP
+			     entity size limit errors on JDK 15+ (jdk.xml.maxParameterEntitySizeLimit). -->
+			<xmlcatalog>
+				<dtd publicId="-//W3C//DTD SVG 1.1//EN" location="tools/svg11-empty.dtd"/>
+			</xmlcatalog>
 		</xslt>
 	</target>
 	
