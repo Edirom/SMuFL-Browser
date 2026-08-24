@@ -112,8 +112,8 @@ declare function config:app-info($node as node(), $model as map(*)) {
  : Lookup char by xml:id
  : 
  : @param $name the xml:id of a SMuFl character, e.g. '_accidentalBakiyeSharp'
- : The xml:id is identical to the charName with a prefixed underscore
- : @return the corresponding tei:char element if succesful, the empty sequence otherwise
+ : The `xml:id` is identical to the `localProp/@value` with a prefixed underscore
+ : @return the corresponding tei:char element if successful, the empty sequence otherwise
 ~:)
 declare function config:get-char-by-id($id as xs:string?) as element(tei:char)? {
     $config:charDecl//id($id)
@@ -123,10 +123,10 @@ declare function config:get-char-by-id($id as xs:string?) as element(tei:char)? 
  : Lookup char by name
  : 
  : @param $name the name of a SMuFl character, e.g. 'accidentalBakiyeSharp'
- : @return the corresponding tei:char element if succesful, the empty sequence otherwise
+ : @return the corresponding tei:char element if successful, the empty sequence otherwise
 ~:)
 declare function config:get-char-by-name($name as xs:string?) as element(tei:char)? {
-    $config:charDecl//tei:charName[.= $name]/parent::tei:char
+    $config:charDecl//tei:localProp[@value = $name]/parent::tei:char
 };
 
 (:~
