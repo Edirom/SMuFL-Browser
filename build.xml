@@ -114,12 +114,21 @@
 		</java>
 	</target>
 	
-	<target name="glyph2svg" depends="charDecl">
+	<target name="otf2svgfont" depends="init">
+		<description>Generate an SVG font from Bravura.otf (requires Python 3 with fonttools)</description>
+		<exec executable="python3" failonerror="true">
+			<arg value="tools/otf2svgfont.py"/>
+			<arg value="node_modules/bravura/redist/otf/Bravura.otf"/>
+			<arg value="${tmp.dir}/Bravura.svg"/>
+		</exec>
+	</target>
+
+	<target name="glyph2svg" depends="charDecl, otf2svgfont">
 		<description>Extract individual SVG shapes from the SVG font</description>
 		<mkdir dir="${tmp.dir}/svg-glyphs"/>
-		<xslt processor="trax" style="bravura2svg.xsl" basedir="node_modules/bravura/redist/svg" includes="Bravura.svg" destdir="${tmp.dir}/svg-glyphs">
+		<xslt processor="trax" style="bravura2svg.xsl" basedir="${tmp.dir}" includes="Bravura.svg" destdir="${tmp.dir}/svg-glyphs">
 			<param name="charDeclPath" expression="${dist.dir}/data/charDecl.xml"/>
-			<param name="bravuraMetadataPath" expression="node_modules/bravura/redist/bravura_metadata.json"/>
+			<param name="bravuraMetadataPath" expression="node_modules/bravura/redist/Bravura.json"/>
 			<!-- Redirect the W3C SVG 1.1 DTD to a local empty stub to avoid JAXP
 			     entity size limit errors on JDK 15+ (jdk.xml.maxParameterEntitySizeLimit). -->
 			<xmlcatalog>

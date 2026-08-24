@@ -11,7 +11,8 @@ ENV SMUFL_BUILD_HOME="/opt/smufl-build"
 WORKDIR ${SMUFL_BUILD_HOME}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false ant libsaxonhe-java npm git \
+    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false \
+      ant libsaxonhe-java npm git python3 python3-fonttools python3-lxml \
     && npm install -g yarn
 
 COPY . .
