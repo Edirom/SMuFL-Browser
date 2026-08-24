@@ -7,7 +7,7 @@
     version="3.1">
     
     <xsl:param name="charDeclPath" as="xs:string" select="'dist/data/charDecl.xml'"/>
-    <xsl:param name="bravuraMetadataPath" as="xs:string" select="'node_modules/bravura/redist/bravura_metadata.json'"/>
+    <xsl:param name="bravuraMetadataPath" as="xs:string" select="'node_modules/bravura/redist/Bravura.json'"/>
     
     <xsl:output indent="yes" method="xml" encoding="UTF-8"/>
     
