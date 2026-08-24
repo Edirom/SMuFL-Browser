@@ -126,7 +126,7 @@ declare function config:get-char-by-id($id as xs:string?) as element(tei:char)? 
  : @return the corresponding tei:char element if successful, the empty sequence otherwise
 ~:)
 declare function config:get-char-by-name($name as xs:string?) as element(tei:char)? {
-    $config:charDecl//tei:localProp[@value= $name]/parent::tei:char
+    $config:charDecl//tei:localProp[@value = $name]/parent::tei:char
 };
 
 (:~
