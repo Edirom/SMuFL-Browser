@@ -34,7 +34,7 @@ declare function app:charDesc($node as node(), $model as map(*)) as element(dl) 
     let $char := map:get($model, 'char')
     return 
         <dl class="charDesc">
-            <dt>Character name</dt>
+            <dt>Character entity name</dt>
             <dd>{normalize-space($char/tei:localProp/@value)}</dd>
             <dt>Character description</dt>
             <dd>{normalize-space($char/tei:desc)}</dd>

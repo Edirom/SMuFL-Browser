@@ -82,7 +82,7 @@
             <!-- glyph names with a leading digit get an underscore prefix -->
             <xsl:attribute name="xml:id" select="concat('_', $glyphName)"/>
             <xsl:element name="localProp">
-                <xsl:attribute name="name">Name</xsl:attribute>
+                <xsl:attribute name="name">entity</xsl:attribute>
                 <xsl:attribute name="value" select="$glyphName"/>
             </xsl:element>
             <xsl:element name="desc">
