@@ -8,7 +8,12 @@ SMuFL-Browser
 [![Docker Build](https://github.com/Edirom/SMuFL-Browser/actions/workflows/docker-build.yml/badge.svg)](https://github.com/Edirom/SMuFL-Browser/actions/workflows/docker-build.yml)
 
 
-SMuFL-Browser is a web based viewer for the [Standard Music Font Layout specification](http://www.smufl.org) which facilitates searching and browsing of musical symbols. Additionally it serves as a [TEI](http://www.tei-c.org) reference for the SMuFL specification so encoders can easily add musical symbols to their texts. For that purpose a set of ANT tasks has been developed for creating TEI charDecl descriptions from SMuFL.
+SMuFL-Browser is a web-based viewer for the [Standard Music Font Layout 
+specification](http://www.smufl.org) which facilitates searching and browsing of musical symbols. 
+Additionally, it serves as a [TEI](http://www.tei-c.org) reference for the 
+SMuFL specification so encoders can easily add musical symbols to their texts. 
+For that purpose a set of ANT tasks has been developed for creating TEI 
+charDecl descriptions from SMuFL.
 
 
 Docker Image
@@ -25,9 +30,11 @@ docker run --rm -it \
 
 This will make your local SMuFL-Browser available at `http://localhost:8080`.  
 
-This image is derived from `stadlerpeter/existdb` and adds some SMuFL-browser specific settings 
-for a production ready environment with SMuFL-browser as the root app.
-For more details about available options see https://github.com/peterstadler/existdb-docker
+This image is derived from `stadlerpeter/existdb` and adds some 
+SMuFL-browser specific settings for a production ready environment with 
+SMuFL-browser as the root app.
+For more details about available options, 
+see https://github.com/peterstadler/existdb-docker
 
 
 Dependencies
@@ -37,7 +44,9 @@ Dependencies
 * [XML Shell](http://www.xmlsh.org/HomePage)
 * [Saxon](http://www.saxonica.com)
 
-If you want to run the app your own you also need the [eXist-db](http://exist-db.org) XML database. Please use a recent build from 2015 since the [HTML5 serializer](https://github.com/eXist-db/exist/pull/433) has been modified.
+If you want to run the app your own, you also need 
+the [eXist-db](http://exist-db.org) XML database. 
+The minimal eXist version required is 5.4.1.
 
 
 ANT Tasks
