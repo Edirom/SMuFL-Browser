@@ -7,7 +7,7 @@
   "license": "(BSD-2-Clause OR CC-BY-4.0)",
   "private": false,
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.6.4",
+    "@fortawesome/fontawesome-free": "^7.3.1",
     "bootstrap": "^5.3.8",
     "bravura": "https://github.com/steinbergmedia/bravura#bravura-1.392",
     "choices.js": "^11.2.1",
