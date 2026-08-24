@@ -97,7 +97,6 @@ bootstrap@^5.3.8:
 
 "bravura@https://github.com/steinbergmedia/bravura#bravura-1.481":
   version "0.0.0"
-  uid "632e925353aab2ac0a81c97a4662d315a82b56f4"
   resolved "https://github.com/steinbergmedia/bravura#632e925353aab2ac0a81c97a4662d315a82b56f4"
 
 choices.js@^11.2.1:
@@ -167,9 +166,9 @@ sass@^1.102.0:
   optionalDependencies:
     "@parcel/watcher" "^2.4.1"
 
-"smufl@https://github.com/w3c/smufl#v1.4":
+"smufl@https://github.com/w3c/smufl#d882e72fe0b35bd12732abb12874d97ea1789048":
   version "0.0.0"
-  resolved "https://github.com/w3c/smufl#753f551ca6f96bf24ba38aa2d8a317e706238c51"
+  resolved "https://github.com/w3c/smufl#d882e72fe0b35bd12732abb12874d97ea1789048"
 
 "source-map-js@>=0.6.2 <2.0.0":
   version "1.2.1"

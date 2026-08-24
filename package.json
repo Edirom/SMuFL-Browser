@@ -12,6 +12,6 @@
     "bravura": "https://github.com/steinbergmedia/bravura#bravura-1.481",
     "choices.js": "^11.2.1",
     "sass": "^1.102.0",
-    "smufl": "https://github.com/w3c/smufl#v1.4"
+    "smufl": "https://github.com/w3c/smufl#d882e72fe0b35bd12732abb12874d97ea1789048"
   }
 }
