@@ -81,13 +81,18 @@ declare
     %templates:wrap
     %templates:default("glyphname", "all")
     function app:glyphnames-list($node as node(), $model as map(*), $glyphname as xs:string*) as element(option)* {
-        for $glyph in $config:charDecl//tei:char
+        for $glyph in $config:charDecl//tei:char[tei:localProp/@value = $glyphname]
+        let $name := normalize-space($glyph/tei:localProp/@value)
+        order by $name ascending
+        return 
+            <option value="{$name}" selected="selected">{
+                $name
+            }</option>,
+        for $glyph in $config:charDecl//tei:char[tei:localProp/@value != $glyphname]
         let $name := normalize-space($glyph/tei:localProp/@value)
         order by $name ascending
         return 
             <option value="{$name}">{
-                if($glyphname = $name) then attribute {'selected'} {'selected'} 
-                else (),
                 $name
             }</option>
 };
