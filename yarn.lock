@@ -95,9 +95,9 @@ bootstrap@^5.3.8:
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.3.8.tgz#6401a10057a22752d21f4e19055508980656aeed"
   integrity sha512-HP1SZDqaLDPwsNiqRqi5NcP0SSXciX2s9E+RyqJIIqGo+vJeN5AJVM98CXmW/Wux0nQ5L7jeWUdplCEf0Ee+tg==
 
-"bravura@https://github.com/steinbergmedia/bravura#bravura-1.481":
+"bravura@https://github.com/steinbergmedia/bravura#bravura-1.482":
   version "0.0.0"
-  resolved "https://github.com/steinbergmedia/bravura#632e925353aab2ac0a81c97a4662d315a82b56f4"
+  resolved "https://github.com/steinbergmedia/bravura#37b194378b710cc40e406ab6c4b07608bb9548ae"
 
 choices.js@^11.2.1:
   version "11.2.3"
@@ -166,9 +166,9 @@ sass@^1.102.0:
   optionalDependencies:
     "@parcel/watcher" "^2.4.1"
 
-"smufl@https://github.com/w3c/smufl#d882e72fe0b35bd12732abb12874d97ea1789048":
+"smufl@https://github.com/w3c/smufl#14acb17a6a479036f38e337396ed605fc4197b23":
   version "0.0.0"
-  resolved "https://github.com/w3c/smufl#d882e72fe0b35bd12732abb12874d97ea1789048"
+  resolved "https://github.com/w3c/smufl#14acb17a6a479036f38e337396ed605fc4197b23"
 
 "source-map-js@>=0.6.2 <2.0.0":
   version "1.2.1"
