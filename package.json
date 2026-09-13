@@ -11,7 +11,7 @@
     "bootstrap": "^5.3.8",
     "bravura": "https://github.com/steinbergmedia/bravura#bravura-1.482",
     "choices.js": "^11.2.1",
-    "sass": "^1.102.0",
+    "sass": "^1.104.0",
     "smufl": "https://github.com/w3c/smufl#14acb17a6a479036f38e337396ed605fc4197b23"
   }
 }
