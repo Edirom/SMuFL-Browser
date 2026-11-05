@@ -99,14 +99,14 @@
 		<description>Create png images for every glyph</description>
 		<mkdir dir="${tmp.dir}/png-glyphs"/>
 		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
-			<arg line="-font ${smufl.font.otf} -out ${tmp.dir}/png-glyphs/hi -regex E.* -padding 0 -fontsize 1000 -height 120 -width 120 -mode fit"/>
+			<arg line="-font ${smufl.font.otf} -out ${tmp.dir}/png-glyphs/hi -regex (E.+|F0.+) -padding 0 -fontsize 1000 -height 120 -width 120 -mode fit"/>
 			<classpath>
 				<pathelement location="tools/otf2png/build/otf2png.jar"/>
 				<pathelement path="${java.class.path}"/>
 			</classpath>
 		</java>
 		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
-			<arg line="-font ${smufl.font.otf} -out ${tmp.dir}/png-glyphs/low -regex E.* -padding 0 -fontsize 1000 -height 40 -width 40 -mode fit"/>
+			<arg line="-font ${smufl.font.otf} -out ${tmp.dir}/png-glyphs/low -regex (E.+|F0.+) -padding 0 -fontsize 1000 -height 40 -width 40 -mode fit"/>
 			<classpath>
 				<pathelement location="tools/otf2png/build/otf2png.jar"/>
 				<pathelement path="${java.class.path}"/>
