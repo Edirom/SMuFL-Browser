@@ -99,14 +99,14 @@
 		<description>Create png images for every glyph</description>
 		<mkdir dir="${tmp.dir}/png-glyphs"/>
 		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
-			<arg line="-font node_modules/bravura/redist/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs/hi -regex E.* -padding 0 -fontsize 1000 -height 120 -width 120 -mode fit"/>
+			<arg line="-font ${smufl.font.otf} -out ${tmp.dir}/png-glyphs/hi -regex E.* -padding 0 -fontsize 1000 -height 120 -width 120 -mode fit"/>
 			<classpath>
 				<pathelement location="tools/otf2png/build/otf2png.jar"/>
 				<pathelement path="${java.class.path}"/>
 			</classpath>
 		</java>
 		<java classname="com.aerhard.otf2png.Otf2png" failonerror="true">
-			<arg line="-font node_modules/bravura/redist/otf/BravuraText.otf -out ${tmp.dir}/png-glyphs/low -regex E.* -padding 0 -fontsize 1000 -height 40 -width 40 -mode fit"/>
+			<arg line="-font ${smufl.font.otf} -out ${tmp.dir}/png-glyphs/low -regex E.* -padding 0 -fontsize 1000 -height 40 -width 40 -mode fit"/>
 			<classpath>
 				<pathelement location="tools/otf2png/build/otf2png.jar"/>
 				<pathelement path="${java.class.path}"/>
@@ -118,7 +118,7 @@
 		<description>Generate an SVG font from Bravura.otf (requires Python 3 with fonttools)</description>
 		<exec executable="python3" failonerror="true">
 			<arg value="tools/otf2svgfont.py"/>
-			<arg value="node_modules/bravura/redist/otf/Bravura.otf"/>
+			<arg value="${smufl.font.otf}"/>
 			<arg value="${tmp.dir}/Bravura.svg"/>
 		</exec>
 	</target>
@@ -128,7 +128,7 @@
 		<mkdir dir="${tmp.dir}/svg-glyphs"/>
 		<xslt processor="trax" style="bravura2svg.xsl" basedir="${tmp.dir}" includes="Bravura.svg" destdir="${tmp.dir}/svg-glyphs">
 			<param name="charDeclPath" expression="${dist.dir}/data/charDecl.xml"/>
-			<param name="bravuraMetadataPath" expression="node_modules/bravura/redist/Bravura.json"/>
+			<param name="bravuraMetadataPath" expression="${smufl.font.metadata}"/>
 			<!-- Redirect the W3C SVG 1.1 DTD to a local empty stub to avoid JAXP
 			     entity size limit errors on JDK 15+ (jdk.xml.maxParameterEntitySizeLimit). -->
 			<xmlcatalog>
@@ -141,9 +141,9 @@
 		<description>Merge SMuFL metadata to one TEI file</description>
 		<mkdir dir="${dist.dir}/data"/>
 		<xslt processor="trax" style="smufl2tei.xsl" in="charDecl.xml.template" out="${dist.dir}/data/charDecl.xml">
-			<param name="ranges" expression="node_modules/smufl/metadata/ranges.json"/>
-			<param name="classes" expression="node_modules/smufl/metadata/classes.json"/>
-			<param name="glyphnames" expression="node_modules/smufl/metadata/glyphnames.json"/>
+			<param name="ranges" expression="${smufl.ranges}"/>
+			<param name="classes" expression="${smufl.classes}"/>
+			<param name="glyphnames" expression="${smufl.glyphnames}"/>
 			<param name="current.version" expression="${project.version}"/>
 			<param name="image.server" expression="${image.server}"/>
 			<param name="smufl.version" expression="${smufl.version}"/>
